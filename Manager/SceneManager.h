@@ -5,6 +5,7 @@
 class Fader;
 class TitleScene;
 class Score;
+class ModeSelect;
 class GameScene;
 class GameOverScene;
 
@@ -37,7 +38,8 @@ private:
 
 	TitleScene* titleInst;						//タイトルクラスのインスタンス
 	Score* scoreInst;							//スコア画面クラスのインスタンス
-	GameScene* gameInst;						//ゲームシーンクラスのインスタンス	
+	ModeSelect* modeselectInst;
+	GameScene* gameInst;						//ゲームシーンクラスのインスタンス
 	GameOverScene* gameover;
 	Fader* fader;								//フェードクラスのインスタンス
 

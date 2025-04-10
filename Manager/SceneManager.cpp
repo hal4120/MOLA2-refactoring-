@@ -3,6 +3,7 @@
 #include"../Fader/Fader.h"
 #include"../Scene/TitleScene.h"
 #include"../Scene/Score.h"
+#include"../Scene/ModeSelectScene.h"
 //#include"GameScene.h"
 //#include"GameOverScene.h"
 
@@ -16,6 +17,7 @@ SceneManager::SceneManager()
 	
 	titleInst = nullptr;
 	scoreInst = nullptr;
+	modeselectInst = nullptr;
 	gameInst = nullptr;
 	gameover = nullptr;
 }
@@ -72,6 +74,8 @@ void SceneManager::Update(void)
 			nextSceneID = scoreInst->GetNextSceneID();
 			break;
 		case E_SCENE_MODESELECT:
+			modeselectInst->Update();
+			nextSceneID = modeselectInst->GetNextSceneID();
 			break;
 		case E_SCENE_GAME:
 			break;
@@ -103,6 +107,7 @@ void SceneManager::Draw(void)
 		scoreInst->Draw();
 		break;
 	case E_SCENE_MODESELECT:
+		modeselectInst->Draw();
 		break;
 	case E_SCENE_GAME:
 		break;
@@ -125,6 +130,7 @@ bool SceneManager::Release(void)
 
 	ReleaseScene(E_SCENE_TITLE);
 	ReleaseScene(E_SCENE_SCORE);
+	ReleaseScene(E_SCENE_MODESELECT);
 	ReleaseScene(E_SCENE_GAME);
 	ReleaseScene(E_SCENE_GAMEOVER);
 
@@ -159,6 +165,12 @@ bool SceneManager::ChangeScene(E_SCENE_ID id) {
 		}
 		break;
 	case E_SCENE_MODESELECT:
+		if (modeselectInst == nullptr) {
+			modeselectInst = new ModeSelect();
+			if (modeselectInst == nullptr)return false;
+			modeselectInst->SystemInit();
+			modeselectInst->GameInit();
+		}
 		break;
 	case E_SCENE_GAME:
 		break;
@@ -195,6 +207,11 @@ void SceneManager::ReleaseScene(E_SCENE_ID id)
 		}
 		break;
 	case E_SCENE_MODESELECT:
+		if (modeselectInst != nullptr) {
+			modeselectInst->Release();
+			delete modeselectInst;
+			modeselectInst = nullptr;
+		}
 		break;
 	case E_SCENE_GAME:
 		break;

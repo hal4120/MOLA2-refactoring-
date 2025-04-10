@@ -138,6 +138,10 @@
     <ClCompile Include="FPS\FPS.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager\SceneManager.cpp" />
+    <ClCompile Include="Object\Character\Player\Parry.cpp" />
+    <ClCompile Include="Object\Character\Player\Player.cpp" />
+    <ClCompile Include="Object\Character\Player\PlayerLaser.cpp" />
+    <ClCompile Include="Scene\ModeSelectScene.cpp" />
     <ClCompile Include="Scene\Score.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Vector2\Vector2.cpp" />
@@ -148,6 +152,10 @@
     <ClInclude Include="Fader\Fader.h" />
     <ClInclude Include="FPS\FPS.h" />
     <ClInclude Include="Manager\SceneManager.h" />
+    <ClInclude Include="Object\Character\Player\Parry.h" />
+    <ClInclude Include="Object\Character\Player\Player.h" />
+    <ClInclude Include="Object\Character\Player\PlayerLaser.h" />
+    <ClInclude Include="Scene\ModeSelectScene.h" />
     <ClInclude Include="Scene\Score.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="StDefineData.h" />
