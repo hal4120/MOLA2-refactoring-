@@ -14,16 +14,16 @@ ModeSelect::~ModeSelect()
 
 bool ModeSelect::SystemInit(void)
 {
-	haikeiimage = LoadGraph("image/GameModeSelect.png");
+	haikeiimage = LoadGraph("Data/image/GameModeSelect.png");
 	if (haikeiimage == -1)return false;
-	normalimage = LoadGraph("image/NormalMode.png");
+	normalimage = LoadGraph("Data/image/NormalMode.png");
 	if (normalimage == -1)return false;
-	hardimage = LoadGraph("image/HardMode.png");
+	hardimage = LoadGraph("Data/image/HardMode.png");
 	if (hardimage == -1)return false;
-	nowselectimage = LoadGraph("image/NowSelect.png");
+	nowselectimage = LoadGraph("Data/image/NowSelect.png");
 	if(nowselectimage==-1)return false;
 //	if (plInst.SystemInit() == -1)return false;
-	parryhitsound = LoadSoundMem("sound/K.O..mp3");
+	parryhitsound = LoadSoundMem("Data/sound/K.O..mp3");
 
 	return true;
 }

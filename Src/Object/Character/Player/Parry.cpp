@@ -16,13 +16,13 @@ Parry::~Parry()
 bool Parry::SystemInit(void)
 {
 	int err = -1;
-	err = LoadDivGraph("image/Parry.png", ANIM_MAX, ANIM_MAX, 1, SIZE_WID, SIZE_HIG, image);
+	err = LoadDivGraph("Data/image/Parry.png", ANIM_MAX, ANIM_MAX, 1, SIZE_WID, SIZE_HIG, image);
 	if (err == -1)return false;
 
-	arrowimage = LoadGraph("image/–îˆó.png");
+	arrowimage = LoadGraph("Data/image/–îˆó.png");
 	if (arrowimage == -1)return false;
 
-	sizeupimage = LoadGraph("image/sizeup.png");
+	sizeupimage = LoadGraph("Data/image/sizeup.png");
 	if (sizeupimage == -1)return false;
 
 	return true;

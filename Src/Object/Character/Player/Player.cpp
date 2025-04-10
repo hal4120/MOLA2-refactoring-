@@ -4,8 +4,7 @@
 //-------------------------------------------------------------------
 #include <DxLib.h>
 #include"Player.h"
-#include"../Manager/SceneManager.h"
-
+#include"../../../Application.h"
 Player::Player(void)
 {
 	image = -1;
@@ -19,34 +18,33 @@ Player::~Player(void)
 
 bool Player::SystemInit(void)
 {
-	image = LoadGraph("image/まぼ.png");
+	image = LoadGraph("Data/image/まぼ.png");
 	if (image == -1) {
 		return false;	
 	}
 
-	zanki = LoadGraph("image/ミニまぼ.png");
+	zanki = LoadGraph("Data/image/ミニまぼ.png");
 	if (zanki == -1) {
 		return false;
 	}
 
 	int err = -1;
-	err = LoadDivGraph("image/charge.png", 21,
+	err = LoadDivGraph("Data/image/charge.png", 21,
 		21, 1, LASER_CHARGE_DISP_X, LASER_CHARGE_DISP_Y, chargeimage);
 	if (err == -1)return false;
-	Vpush = LoadGraph("image/Vpush.png");
+	Vpush = LoadGraph("Data/image/Vpush.png");
 	if (Vpush == -1)return false;
 
 
-	err = LoadDivGraph("image/AttackRange.png", ATTACK_RANGE_MAX,
+	err = LoadDivGraph("Data/image/AttackRange.png", ATTACK_RANGE_MAX,
 		ATTACK_RANGE_MAX, 1, ATTACK_RANGE_SIZE_X, ATTACK_RANGE_SIZE_Y, attackrangeimage);
 	if (err == -1)return false;
 
 
-	parrysound = LoadSoundMem("sound/ParrySound.mp3");
+	parrysound = LoadSoundMem("Data/sound/ParrySound.mp3");
 
 	laser.SystemInit();
 	parry.SystemInit();
-	shot.SystemInit();
 
 	return true;
 }
@@ -54,7 +52,7 @@ bool Player::SystemInit(void)
 void Player::GameInit(void)
 {
 	pos.x = PLAYER_SIZE_WID * 2;
-	pos.y = SceneManager::SCREEN_SIZE_HIG / 2 - PLAYER_SIZE_HIG / 2;
+	pos.y = Application::SCREEN_SIZE_HIG / 2 - PLAYER_SIZE_HIG / 2;
 
 	exFlg = true;
 	reexFlg = true;
@@ -71,8 +69,6 @@ void Player::GameInit(void)
 
 	parrypenacounter = 0;
 
-	shot.GameInit();
-	prevGkey = nowGkey = 0;
 }
 
 void Player::Update(void)
@@ -88,7 +84,7 @@ void Player::Update(void)
 			parry.SetParryFlg(false);
 			parrypenacounter = 0;
 				pos.x = PLAYER_SIZE_WID * 2;
-				pos.y = SceneManager::SCREEN_SIZE_HIG / 2 - PLAYER_SIZE_HIG / 2;
+				pos.y = Application::SCREEN_SIZE_HIG / 2 - PLAYER_SIZE_HIG / 2;
 		}
 
 		if (respawncount > 120) {
@@ -173,16 +169,16 @@ void Player::Update(void)
 		pos.x = NUM_SIZE;
 	}
 	// 右端のチェック
-	if (pos.x > (SceneManager::SCREEN_SIZE_WID - PLAYER_SIZE_WID)) {
-		pos.x = (SceneManager::SCREEN_SIZE_WID - PLAYER_SIZE_WID);
+	if (pos.x > (Application::SCREEN_SIZE_WID - PLAYER_SIZE_WID)) {
+		pos.x = (Application::SCREEN_SIZE_WID - PLAYER_SIZE_WID);
 	}
 	// 上端のチェック
 	if (pos.y < 0) {
 		pos.y = 0;
 	}
 	// 下端のチェック
-	if (pos.y > (SceneManager::SCREEN_SIZE_HIG - PLAYER_SIZE_HIG)) {
-		pos.y = (SceneManager::SCREEN_SIZE_HIG - PLAYER_SIZE_HIG);
+	if (pos.y > (Application::SCREEN_SIZE_HIG - PLAYER_SIZE_HIG)) {
+		pos.y = (Application::SCREEN_SIZE_HIG - PLAYER_SIZE_HIG);
 	}
 
 	//レーザー処理
@@ -237,12 +233,6 @@ void Player::Update(void)
 	//パリィミスのペナルティ時間
 	if (parrypenacounter > 0) { parrypenacounter -= 2; }
 
-	prevGkey = nowGkey;
-	nowGkey = CheckHitKey(KEY_INPUT_G);
-	if (shot.Getflg()==false) {
-		if (prevGkey == 0 && nowGkey == 1) { shot.OnShot(pos); }
-	}
-	shot.Update();
 }
 
 void Player::SetPlayernum(void) { num--; }
@@ -269,7 +259,7 @@ void Player::Draw(void)
 
 	//残機表示
 	for (int ii = num - 1; ii > 0; ii--) {
-		DrawGraph(0, SceneManager::SCREEN_SIZE_HIG - NUM_SIZE * ii, zanki, true);
+		DrawGraph(0, Application::SCREEN_SIZE_HIG - NUM_SIZE * ii, zanki, true);
 	}
 
 
@@ -286,14 +276,12 @@ void Player::Draw(void)
 
 	DrawGraph(0, 5 + LASER_CHARGE_DISP_Y + 35, attackrangeimage[attackrangecount], true);
 	
-	if (shot.Getflg()) { shot.Draw(); }
 
 }
 
 
 bool Player::Release(void)
 {
-	shot.Release();
 	parry.Release();
 	laser.Release();
 

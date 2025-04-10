@@ -103,18 +103,18 @@ Vector2 Application::Round(Vector2F val)
 //âÊëúÇ∆âπê∫ÇÃì«Ç›çûÇ›
 bool Application::Load(void)
 {
-	selectSound = LoadSoundMem("sound/select.mp3");
+	selectSound = LoadSoundMem("Data/sound/select.mp3");
 	if (selectSound == -1)return false;
-	button = LoadSoundMem("sound/button.mp3");
+	button = LoadSoundMem("Data/sound/button.mp3");
 	if (button == -1)return false;
-	clearsound = LoadSoundMem("sound/ClearBGM.mp3");
+	clearsound = LoadSoundMem("Data/sound/ClearBGM.mp3");
 	if (clearsound == -1)return false;
 
-	pauseimage[0] = LoadGraph("image/PAUSE.png");
-	pauseimage[1] = LoadGraph("image/PauseSystemEnd.png");
-	pauseimage[2] = LoadGraph("image/PauseGame.png");
-	pauseimage[3] = LoadGraph("image/PauseTitle.png");
-	pauseimage[4] = LoadGraph("image/PauseSelect.png");
+	pauseimage[0] = LoadGraph("Data/image/PAUSE.png");
+	pauseimage[1] = LoadGraph("Data/image/PauseSystemEnd.png");
+	pauseimage[2] = LoadGraph("Data/image/PauseGame.png");
+	pauseimage[3] = LoadGraph("Data/image/PauseTitle.png");
+	pauseimage[4] = LoadGraph("Data/image/PauseSelect.png");
 	for (int ii = 0; ii < 5; ii++) {
 		if (pauseimage[ii] == -1)return false;
 	}

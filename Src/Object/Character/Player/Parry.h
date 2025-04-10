@@ -1,6 +1,7 @@
 #pragma once
-#include"../StDefine.h"
-#include"../Vector2/Vector2.h"
+#include"../../../Vector2/Vector2.h"
+#include"../../../Vector2/Vector2F.h"
+#include"../../../StDefineData.h"
 
 class Parry
 {

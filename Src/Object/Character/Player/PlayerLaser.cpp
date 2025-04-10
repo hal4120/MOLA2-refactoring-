@@ -18,20 +18,20 @@ PlayerLaser::~PlayerLaser()
 bool PlayerLaser::SystemInit(void)
 {
 	int err = -1;
-	err = LoadDivGraph("image/PlayerYobiLaser.png", CHARGE_MAX,
+	err = LoadDivGraph("Data/image/PlayerYobiLaser.png", CHARGE_MAX,
 		1, CHARGE_MAX,
 		SIZE_WID, SIZE_HIG, chargeimage);
 	if (err == -1) {
 		return false;
 	}
 
-	image = LoadGraph("image/PlayerLaser.png");
+	image = LoadGraph("Data/image/PlayerLaser.png");
 	if (image == -1) return false;
 
-	ChargeSound = LoadSoundMem("sound/laserCharge.mp3");
+	ChargeSound = LoadSoundMem("Data/sound/laserCharge.mp3");
 	if (ChargeSound == -1)return false;
 
-	LaserSound = LoadSoundMem("sound/laser.mp3");
+	LaserSound = LoadSoundMem("Data/sound/laser.mp3");
 	if (LaserSound == -1)return false;
 
 	return true;

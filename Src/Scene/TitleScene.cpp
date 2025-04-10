@@ -18,7 +18,7 @@ TitleScene::~TitleScene(void)
 
 bool TitleScene::SystemInit(void)
 {
-	image = LoadGraph("image/Title.png");
+	image = LoadGraph("Data/image/Title.png");
 	if (image == -1)return false;
 
 	return true;

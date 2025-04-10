@@ -1,8 +1,7 @@
 #pragma once
-#include"../Vector2/Vector2.h"
+#include"../../../Vector2/Vector2.h"
 #include"PlayerLaser.h"
 #include"Parry.h"
-#include"Bullet.h"
 
 class Player {
 public:
@@ -113,11 +112,6 @@ private:
 	int parrypenacounter;
 
 	int attackrangeimage[ATTACK_RANGE_MAX];
-
-
-	Bullet shot;
-	int nowGkey, prevGkey;
-
 
 
 	MODE_ID nowmode;

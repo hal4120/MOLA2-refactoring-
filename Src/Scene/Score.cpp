@@ -13,7 +13,7 @@ Score::~Score()
 
 bool Score::SystemInit(void)
 {
-	haikeiimage = LoadGraph("image/Ranking.png");
+	haikeiimage = LoadGraph("Data/image/Ranking.png");
 	if (haikeiimage == -1)return false;
 
 	for (int ii = 0; ii < RANKING_MAX; ii++) {
