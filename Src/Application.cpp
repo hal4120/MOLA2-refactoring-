@@ -47,12 +47,22 @@ void Application::SystemInit(void)
 
 	SetDrawScreen(DX_SCREEN_BACK);
 
+
+	pause = end = false;
+	nowEscape = prevEscaoe = 0;
+	nowSpaceKey = prevSpaceKey = 0;
+
+	pausegame.x = SCREEN_SIZE_WID / 4;
+	pausegame.y = SCREEN_SIZE_HIG / 7 * 3;
+	pausetitle.x = SCREEN_SIZE_WID / 4 * 3;
+	pausetitle.y = SCREEN_SIZE_HIG / 7 * 3;
+
 	return;
 }
 
 void Application::Run(void)
 {
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
+	while (ProcessMessage() == 0 && end == false) {
 		if (!fps->UpdateFrameRate())continue;
 		Update();
 		Draw();
@@ -61,7 +71,46 @@ void Application::Run(void)
 
 void Application::Update(void)
 {
-	SceneManager::GetInstance().Update();
+	prevEscaoe = nowEscape;
+	nowEscape = CheckHitKey(KEY_INPUT_ESCAPE);
+
+	if (pause) {
+		if (CheckHitKey(KEY_INPUT_Q) == 1 && nowEscape == 1)end = true;
+
+		prevSpaceKey = nowSpaceKey;
+		nowSpaceKey = CheckHitKey(KEY_INPUT_SPACE);
+
+		if (select) {
+
+			if (CheckHitKey(KEY_INPUT_D) == 1 || CheckHitKey(KEY_INPUT_RIGHT) == 1 || !((GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_RIGHT) == 0)) {
+				PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
+				select = false;
+			}
+			if (nowSpaceKey == 0 && prevSpaceKey == 1 || !((GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_2) == 0)) {
+				PlaySoundMem(button, DX_PLAYTYPE_BACK, true);
+				pause = false;
+			}
+		}
+		else {
+
+			if (CheckHitKey(KEY_INPUT_A) == 1 || CheckHitKey(KEY_INPUT_LEFT) == 1 || !((GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_LEFT) == 0)) {
+				PlaySoundMem(selectSound, DX_PLAYTYPE_BACK, true);
+				select = true;
+			}
+			if (nowSpaceKey == 0 && prevSpaceKey == 1 || !((GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_2) == 0)) {
+				PlaySoundMem(button, DX_PLAYTYPE_BACK, true);
+				SceneManager::GetInstance().ChangeTitle();
+				pause = false;
+			}
+		}
+		
+	}
+	else {
+		if (prevEscaoe == 0 && nowEscape == 1 || !((GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_8) == 0)) pause = true;
+
+		SceneManager::GetInstance().Update();
+
+	}
 }
 
 void Application::Draw(void)
@@ -71,6 +120,24 @@ void Application::Draw(void)
 	fps->CalcFrameRate();
 
 	SceneManager::GetInstance().Draw();
+
+	//ƒ|[ƒY’†‚Ì•`‰æˆ—------------------------------------------------------------------------
+	if (pause) {
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(200));
+		DrawBox(0, 0, SCREEN_SIZE_WID, SCREEN_SIZE_HIG, RGB(50, 50, 50), true);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		DrawRotaGraph(SCREEN_SIZE_WID / 2, 50, 1, 0, pauseimage[0], true);
+		DrawRotaGraph(SCREEN_SIZE_WID - 240, SCREEN_SIZE_HIG - 100, 1, 0, pauseimage[1], true);
+		DrawRotaGraph(pausegame.x, pausegame.y, 1, 0, pauseimage[2], true);
+		DrawRotaGraph(pausetitle.x, pausetitle.y, 1, 0, pauseimage[3], true);
+		if (select) {
+			DrawRotaGraph(pausegame.x, pausegame.y, 1, 0, pauseimage[4], true);
+		}
+		else {
+			DrawRotaGraph(pausetitle.x, pausetitle.y, 1, 0, pauseimage[4], true);
+		}
+	}
+	//-------------------------------------------------------------------------------------------
 
 	fps->DrawFrameRate();
 

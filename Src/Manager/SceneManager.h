@@ -30,7 +30,7 @@ public:
 	void Draw(void);							//描画処理
 	bool Release(void);							//解放処理
 
-
+	void ChangeTitle(void) { ChangeScene(E_SCENE_TITLE); }
 
 private:
 	//静的インスタンス
