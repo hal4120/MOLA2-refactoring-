@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Manager\Score\Score.h" />
+    <ClInclude Include="Src\Object\Base.h" />
     <ClInclude Include="Src\Scene\StageSelect\SelectScene.h" />
     <ClInclude Include="Src\Application\Application.h" />
     <ClInclude Include="Src\Common\Vector2.h" />
