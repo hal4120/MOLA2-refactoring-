@@ -5,6 +5,8 @@
 
 #include"../../Application/Application.h"
 
+#include"../../Object/Player/Player.h"
+
 int GameScene::hitStop_ = 0;
 
 int GameScene::shake_ = 0;
@@ -22,15 +24,20 @@ GameScene::~GameScene()
 
 void GameScene::Load(void)
 {
+	mainScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
+
+	player_ = new Player();
+	player_->Load();
+
 }
 void GameScene::Init(void)
 {
+	player_->Init();
 
 	// ヒットストップカウンターの初期化
 	hitStop_ = 0;
 
 	// 画面揺れ関係の初期化-----------------------------------------------------------
-	mainScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 	shake_ = 0;
 	shakeKinds_ = ShakeKinds::DIAG;
 	shakeSize_ = ShakeSize::MEDIUM;;
@@ -41,6 +48,7 @@ void GameScene::Update(void)
 	if (hitStop_ > 0) { hitStop_--; return; }
 	if (shake_ > 0) { shake_--; }
 
+	player_->Update();
 
 }
 void GameScene::Draw(void)
@@ -53,7 +61,9 @@ void GameScene::Draw(void)
 	int x = app::SCREEN_SIZE_X / 2;
 	int y = app::SCREEN_SIZE_Y / 2;
 
-	DrawBox(x / 2, y / 2, x, y, 0xffffff, true);
+	player_->Draw();
+
+
 	//-------------------------------------------------
 
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -63,6 +73,8 @@ void GameScene::Draw(void)
 }
 void GameScene::Release(void)
 {
+	player_->Release();
+
 	DeleteGraph(mainScreen_);
 }
 

@@ -71,12 +71,39 @@ public:
 
 	//ââéZ
 
+	// ë„ì¸---------------------------------------
+	void operator=(const float value);
+	//--------------------------------------------
+
+	// â¡éZ---------------------------------------
 	Vector2 operator+(const Vector2 value)const;
 	void operator+=(const Vector2 value);
+
+	Vector2 operator+(const float value)const;
+	void operator+=(const float value);
+	//--------------------------------------------
+
+	// å∏éZ---------------------------------------
 	Vector2 operator-(const Vector2 value)const;
 	void operator-=(const Vector2 value);
+
+	Vector2 operator-(const float value)const;
+	void operator-=(const float value);
+	//--------------------------------------------
+
+	// èÊéZ---------------------------------------
+	Vector2 operator*(const Vector2 value)const;
+	void operator*=(const Vector2 value);
+
 	Vector2 operator*(const float value)const;
 	void operator*=(const float value);
+	//--------------------------------------------
+
+	// èúéZ---------------------------------------
+	Vector2 operator/(const Vector2 value)const;
+	void operator/=(const Vector2 value);
+
 	Vector2 operator/(const float value)const;
 	void operator/=(const float value);
+	//--------------------------------------------
 };

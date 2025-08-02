@@ -3,6 +3,8 @@
 
 #include"../../Common/Vector2.h"
 
+class Player;
+
 class GameScene : public SceneBase
 {
 public:
@@ -39,7 +41,7 @@ public:
 
 private:
 
-
+	Player* player_;
 
 
 
