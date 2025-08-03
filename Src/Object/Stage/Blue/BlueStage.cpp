@@ -29,6 +29,4 @@ void BlueStage::Load(void)
 	object2Num = SMALL_PLANET_NUM;
 	object2MaxSpeed = SMALL_PLANET_MAX_SPEED;
 	Utility::LoadImg(object2Img_, "Data/Image/Stage/Blue/PlanetSmall.png");
-
 }
-

@@ -125,6 +125,7 @@ void Player::OnCollision(UnitBase* other)
 		GameScene::HitStop(10);
 		state_ = STATE::DEATH;
 	}
+
 }
 
 

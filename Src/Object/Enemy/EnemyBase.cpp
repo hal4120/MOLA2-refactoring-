@@ -49,9 +49,9 @@ void EnemyBase::Update(void)
 void EnemyBase::Draw(void)
 {
 	if (!unit_.isAlive_) { return; }
-	DrawRotaGraph(unit_.pos_.x, unit_.pos_.y, 1, (parry_) ? Utility::Deg2RadF(180.0f) : 0.0f, imgs_[animCounter_], true);
+	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, (parry_) ? Utility::Deg2RadF(180.0f) : 0.0f, imgs_[animCounter_], true);
 	if (arrow_) {
-		DrawRotaGraph(unit_.pos_.x, unit_.pos_.y, 1, arrowAngle_, arrowImg_, true);
+		DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, arrowAngle_, arrowImg_, true);
 	}
 }
 
@@ -91,10 +91,10 @@ void EnemyBase::OnCollision(UnitBase* other)
 		return;
 	}
 
-	if (dynamic_cast<EnemyBase*>(other)) {
-		if (!dynamic_cast<EnemyBase*>(other)->GetParry()) { return; }
-		unit_.isAlive_ = false;
-	}
+	//if (dynamic_cast<EnemyBase*>(other)) {
+	//	if (!dynamic_cast<EnemyBase*>(other)->GetParry()) { return; }
+	//	unit_.isAlive_ = false;
+	//}
 }
 
 void EnemyBase::Move(void)
@@ -110,7 +110,10 @@ void EnemyBase::Respawn(void)
 {
 	if (++respawnCounter_ >= respawnTime) {
 		respawnCounter_ = 0;
-		Init();
+		unit_.pos_ = RES_POS[number_];
+		unit_.isAlive_ = true;
+		moveVec_ = { -1.0f,0.0f };
+		parry_ = false;
 	}
 }
 

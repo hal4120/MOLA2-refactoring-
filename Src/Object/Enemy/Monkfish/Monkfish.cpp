@@ -24,31 +24,16 @@ void Monkfish::Load(void)
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;
 }
 
-void Monkfish::Init(void)
-{
-	EnemyBase::Init();
-	unit_.hp_ = 10;
-}
-
-void Monkfish::Update(void)
-{
-
-	EnemyBase::Update();
-}
-
-void Monkfish::Draw(void)
-{
-
-	EnemyBase::Draw();
-}
-
-void Monkfish::Release(void)
-{
-
-	EnemyBase::Release();
-}
-
 void Monkfish::OnCollision(UnitBase* other)
 {
 	EnemyBase::OnCollision(other);
+}
+
+void Monkfish::Move(void)
+{
+	EnemyBase::Move();
+
+	if (parry_) { return; }
+
+
 }

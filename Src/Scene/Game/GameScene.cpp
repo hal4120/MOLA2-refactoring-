@@ -43,7 +43,7 @@ void GameScene::Load(void)
 	collision_->Add(player_->ParryIns());
 	collision_->Add(player_->LaserIns());
 
-	eMng_ = new EnemyManager(BOSS_KINDS::NON);
+	eMng_ = new EnemyManager(BOSS_KINDS::SHARK);
 	eMng_->Load();
 	for (auto& enemy : eMng_->GetEnemys()) { collision_->Add(enemy); }
 

@@ -6,7 +6,8 @@ class SelectScene :
 {
 public:
 	enum class BOSS_KINDS {
-		NON,
+		NON = -1,
+		SHARK,
 
 		MAX,
 	};

@@ -2,8 +2,6 @@
 
 #include<DxLib.h>
 
-
-
 BOSS_KINDS SelectScene::nowBoss_ = BOSS_KINDS::NON;
 
 SelectScene::SelectScene()

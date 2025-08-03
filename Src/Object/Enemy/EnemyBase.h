@@ -33,39 +33,45 @@ public:
 	virtual ~EnemyBase() {};
 
 	virtual void Load(void)override;
-	virtual void Init(void)override;
-	virtual void Update(void)override;
-	virtual void Draw(void)override;
-	virtual void Release(void)override;
+	void Init(void)override;
+	void Update(void)override;
+	void Draw(void)override;
+	void Release(void)override;
 
 	virtual void OnCollision(UnitBase* other)override;
 
 	bool GetParry(void) { return parry_; }
 
 protected:
-	NUMBER number_;
-
+	// 画像
 	std::vector<int>imgs_;
 
-	int animSpeed;
+	// 番号
+	NUMBER number_;
 
+	// アニメーション関係
+	int animSpeed;
 	int animCounter_;
 	int animInterval_;
+	void Animation(void);
 
+	// リスポーン関係
 	int respawnCounter_;
 	int respawnTime;
+	void Respawn(void);
 
+	// 移動
 	Vector2 moveVec_;
+	virtual void Move(void);
 
+	// パリィ予測矢印関係
 	int arrowImg_;
 	float arrowAngle_;
 	bool arrow_;
 
+	// パリィされているかどうか
 	bool parry_;
 
-	virtual void Move(void);
-	virtual void Respawn(void);
-	virtual void Animation(void);
 };
 
 using NUMBER = EnemyBase::NUMBER;

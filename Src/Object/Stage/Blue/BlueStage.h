@@ -21,5 +21,4 @@ public:
 	~BlueStage();
 
 	void Load(void)override;
-
 };

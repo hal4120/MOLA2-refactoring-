@@ -7,7 +7,7 @@ EnemyManager::EnemyManager(BOSS_KINDS k):
 {
 	switch (k)
 	{
-	case BOSS_KINDS::NON:
+	case BOSS_KINDS::SHARK:
 		for (int i = 0; i < ENEMY_MAX; i++) { enemys_[i] = new Monkfish((NUMBER)i); }
 		break;
 	}
