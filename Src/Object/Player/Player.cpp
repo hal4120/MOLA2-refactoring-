@@ -5,15 +5,16 @@
 #include"../../Application/Application.h"
 #include"../../Manager/Input/InputManager.h"
 
-#include"Parry/Parry.h"
 
 
 Player::Player():
 	img_(),
 	animCounter_(0),
 	animInterval_(0),
-	state_(STATE::MOVE),
-	parry_(nullptr)
+	state_(STATE::DEFAULT),
+	stateFuncPtr_(),
+	parry_(nullptr),
+	laser_(nullptr)
 {
 }
 
@@ -24,15 +25,12 @@ Player::~Player()
 void Player::Load(void)
 {
 	// プレイヤー画像の読み込み
-	int err = 0;
-	err = LoadDivGraph("Data/Image/Player/まぼ.png",
-		ANIM_NUM, LOAD_NUM_X, LOAD_NUM_Y,
+	Utility::LoadArrayImg("Data/Image/Player/まぼ.png",
+		ANIM_NUM, ANIM_NUM_X, ANIM_NUM_Y,
 		LOAD_SIZE_X, LOAD_SIZE_Y, img_);
-	if (err == -1) { printfDx("プレイヤーの画像の読み込みに失敗しました"); }
 
 	// 関数ポインタにそれぞれの関数のポインタを格納
-	stateFuncPtr_[STATE::MOVE] = &Player::Move;
-	stateFuncPtr_[STATE::ATTACK] = &Player::Attack;
+	stateFuncPtr_[STATE::DEFAULT] = &Player::Move;
 	stateFuncPtr_[STATE::SPECIAL] = &Player::Special;
 	stateFuncPtr_[STATE::DEATH] = &Player::Death;
 
@@ -40,9 +38,11 @@ void Player::Load(void)
 
 	unit_.para_.size = { LOAD_SIZE_X,LOAD_SIZE_Y };
 
-	parry_ = new Parry();
+	parry_ = new Parry(unit_.pos_);
 	parry_->Load();
-	parry_->takePlayerPosPtr(unit_.pos_);
+
+	laser_ = new PlayerLaser(unit_.pos_);
+	laser_->Load();
 }
 
 void Player::Init(void)
@@ -58,9 +58,10 @@ void Player::Init(void)
 	animInterval_ = 0;
 
 	parry_->Init();
+	laser_->Init();
 
 	// ステートの初期化
-	state_ = STATE::MOVE;
+	state_ = STATE::DEFAULT;
 }
 
 void Player::Update(void)
@@ -72,6 +73,7 @@ void Player::Update(void)
 	(this->*stateFuncPtr_[state_])();
 
 	parry_->Update();
+	laser_->Update();
 
 	// アニメーションの更新
 	Animation();
@@ -86,12 +88,23 @@ void Player::Draw(void)
 	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, 0, img_[animCounter_], true);
 
 	parry_->Draw();
+	laser_->Draw();
 
 }
 
 void Player::Release(void)
 {
-	parry_->Release();
+	if (parry_) {
+		parry_->Release();
+		delete parry_;
+		parry_ = nullptr;
+	}
+	if (laser_) {
+		laser_->Release();
+		delete laser_;
+		laser_ = nullptr;
+	}
+
 	// 画像解放
 	for (auto& id : img_) { DeleteGraph(id); }
 }
@@ -126,21 +139,14 @@ void Player::Move(void)
 	if (unit_.pos_.y < min.y) { unit_.pos_.y = min.y; }
 	if (unit_.pos_.x > max.x) { unit_.pos_.x = max.x; }
 	if (unit_.pos_.y > max.y) { unit_.pos_.y = max.y; }
-
-	if (attackKey_.downTrg_) { state_ = STATE::ATTACK; }
-	if (specialKey_.downTrg_) { state_ = STATE::SPECIAL; }
-}
-
-void Player::Attack(void)
-{
-	parry_->On();
-
-	state_ = STATE::MOVE;
+	
+	if (attackKey_.downTrg_ && !parry_->GetUnit().isAlive_) { parry_->On(); }
+	if (specialKey_.downTrg_) { laser_->On(); state_ = STATE::SPECIAL; }
 }
 
 void Player::Special(void)
 {
-	state_ = STATE::MOVE;
+	if (laser_->GetState() != PlayerLaser::STATE::CHARGE) { state_ = STATE::DEFAULT; }
 }
 
 void Player::Death(void)

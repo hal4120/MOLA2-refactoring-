@@ -1,27 +1,26 @@
 #pragma once
 #include "../UnitBase.h"
 
-class Parry;
+#include"Parry/Parry.h"
+#include"Special/PlayerLaser.h"
 
-class Player :
-    public UnitBase
+class Player : public UnitBase
 {
 public:
+	// 読み込む画像の枚数
+	static constexpr int ANIM_NUM_X = 7;
+	static constexpr int ANIM_NUM_Y = 1;
+	static constexpr int ANIM_NUM = ANIM_NUM_X * ANIM_NUM_Y;
+
 	// 読み込む画像の大きさ
 	static constexpr int LOAD_SIZE_X = 42;
 	static constexpr int LOAD_SIZE_Y = 66;
 
-	// 読み込む画像の枚数
-	static constexpr int LOAD_NUM_X = 7;
-	static constexpr int LOAD_NUM_Y = 1;
-
-	// アニメーションの数
-	static constexpr int ANIM_NUM = LOAD_NUM_X * LOAD_NUM_Y;
 
 	// アニメーションのスピード(何フレームに１回アニメを動かすか)
 	static constexpr int ANIM_SPEED = 5;
 
-	enum STATE { MOVE, ATTACK, SPECIAL, DEATH, MAX };
+	enum STATE { DEFAULT, SPECIAL, DEATH, MAX };
 
 	// 初期座標
 	const Vector2 START_POS = { 50.0f,50.0f };
@@ -34,6 +33,9 @@ public:
 	void Update(void)override;
 	void Draw(void)override;
 	void Release(void)override;
+
+	Parry& ParryIns(void) { return *parry_; }
+	PlayerLaser& LaserIns(void) { return *laser_; }
 
 private:
 	// 画像ハンドル
@@ -54,7 +56,6 @@ private:
 
 	// ステート別の関数
 	void Move(void);
-	void Attack(void);
 	void Special(void);
 	void Death(void);
 
@@ -74,4 +75,6 @@ private:
 	void Input(void);
 
 	Parry* parry_;
+	PlayerLaser* laser_;
+
 };

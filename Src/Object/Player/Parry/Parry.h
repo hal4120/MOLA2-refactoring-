@@ -2,7 +2,7 @@
 
 #include"../../UnitBase.h"
 
-class Parry : UnitBase
+class Parry : public UnitBase
 {
 public:
 	static constexpr int ANIM_NUM_X = 11;
@@ -14,7 +14,7 @@ public:
 
 	static constexpr int COUNT_SPEED = 0;
 
-	Parry();
+	Parry(const Vector2& playerPos);
 	~Parry();
 
 	void Load(void)override;
@@ -23,8 +23,7 @@ public:
 	void Draw(void)override;
 	void Release(void)override;
 
-	void On(void) { unit_.isAlive_ = true; }
-	void takePlayerPosPtr(const Vector2& playerPos) { player_ = &playerPos; }
+	void On(void) { unit_.isAlive_ = true; counter_ = 0; countInterval_ = 0; }
 
 private:
 	int img_[ANIM_NUM_ALL];
@@ -32,6 +31,6 @@ private:
 	int counter_;
 	int countInterval_;
 
-	const Vector2* player_;
+	const Vector2& player_;
 };
 

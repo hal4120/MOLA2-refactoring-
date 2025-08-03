@@ -2,6 +2,7 @@
 
 #include"../Common/Vector2.h"
 
+#include"../Utility/Utility.h"
 
 struct Base
 {
@@ -11,6 +12,7 @@ struct Base
 		CollisionPara colliType_ = CollisionPara::NON;	//当たり判定の属性
 		Vector2 size = { -1.0f,-1.0f };					//サイズ
 		float radius_ = -1.0f;							//半径
+		Vector2 center = { 0.0f,0.0f };					//中心
 		float speed_ = -1;								//スピード
 	}para_;
 

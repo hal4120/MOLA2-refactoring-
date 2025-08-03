@@ -4,9 +4,11 @@
 
 #include"../Player.h"
 
-Parry::Parry():
+Parry::Parry(const Vector2& playerPos):
 	img_(),
-	player_(nullptr)
+	counter_(0),
+	countInterval_(0),
+	player_(playerPos)
 {
 }
 
@@ -16,14 +18,11 @@ Parry::~Parry()
 
 void Parry::Load(void)
 {
-	int err = 0;
-	err = LoadDivGraph("Data/Image/Player/Parry/Parry.png",
+	Utility::LoadArrayImg("Data/Image/Player/Parry/Parry.png",
 		ANIM_NUM_ALL, ANIM_NUM_X, ANIM_NUM_Y,
 		LOAD_SIZE_X, LOAD_SIZE_Y, img_);
-	if (err == -1) { printfDx("ƒpƒŠƒB‰æ‘œ‚Ì“Ç‚Ýž‚Ý‚ÉŽ¸”s‚µ‚Ü‚µ‚½"); }
 
 	unit_.para_.radius_ = LOAD_SIZE_X / 2;
-
 }
 
 void Parry::Init(void)
@@ -37,7 +36,7 @@ void Parry::Update(void)
 {
 	if (!unit_.isAlive_) { return; }
 
-	unit_.pos_ = *player_;
+	unit_.pos_ = player_;
 	unit_.pos_.x += Player::LOAD_SIZE_X / 2;
 
 	if (++countInterval_ >= COUNT_SPEED) {

@@ -59,5 +59,12 @@ public:
 	static double Magnitude(const Vector2& v);
 	static int SqrMagnitude(const Vector2& v);
 	static double Distance(const Vector2& v1, const Vector2& v2);
+
+	// 画像読み込み（エラーチェック付き）
+	static void LoadImg(int& handle, std::string path);
+	// 画像読み込み（エラーチェック付き）
+	static int LoadImg(std::string path);
+	// スプライト画像読み込み（エラーチェック付き）
+	static void LoadArrayImg(std::string path, int AllNum, int XNum, int YNum, int XSize, int YSize, int* handleArray);
 };
 

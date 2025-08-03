@@ -275,3 +275,35 @@ double Utility::Distance(const Vector2& v1, const Vector2& v2)
 {
     return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
 }
+
+void Utility::LoadImg(int& handle, std::string path)
+{
+    handle = LoadGraph(path.c_str());
+    if (handle == -1) {
+        printfDx("‰æ‘œ“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½");
+    }
+}
+
+int Utility::LoadImg(std::string path)
+{
+    int ret = 0;
+
+    ret = LoadGraph(path.c_str());
+    if (ret == -1) {
+        printfDx("‰æ‘œ“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½");
+    }
+
+    return ret;
+}
+
+void Utility::LoadArrayImg(std::string path, int AllNum, int XNum, int YNum, int XSize, int YSize, int* handleArray)
+{
+    int err = 0;
+
+    err = LoadDivGraph(path.c_str(), AllNum, XNum, YNum, XSize, YSize, handleArray);
+
+    if (err == -1) {
+        printfDx("‰æ‘œ“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½");
+    }
+}
+

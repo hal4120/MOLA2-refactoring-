@@ -3,6 +3,7 @@
 
 #include"../../Common/Vector2.h"
 
+class StageBase;
 class Player;
 
 class GameScene : public SceneBase
@@ -41,8 +42,8 @@ public:
 
 private:
 
+	StageBase* stage_;
 	Player* player_;
-
 
 
 	// ヒットストップカウンター
