@@ -11,7 +11,9 @@
 Score* Score::ins_ = nullptr;
 
 Score::Score():
-	err_(false)
+	err_(false),
+	nowScore_(),
+	ranking_()
 {
 }
 

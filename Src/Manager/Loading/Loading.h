@@ -47,7 +47,9 @@ private:
 	static constexpr int MIN_LOAD_TIME = 60;	// 60fps(1秒) * x
 
 	// 画像ハンドル
-	int handle_;
+	int handle_[7];
+	int animCounter_;
+	int animInterval_;
 
 	// 座標
 	int posX_;	// X座標

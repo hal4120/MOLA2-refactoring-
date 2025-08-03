@@ -3,16 +3,19 @@
 #include <DxLib.h>
 
 #include"../../Application/Application.h"
+#include"../../Utility/Utility.h"
 
 Loading* Loading::instance_ = nullptr;
 
 // コンストラクタ
 Loading::Loading()
-	: handle_(-1)
+	: handle_()
 	, posX_(0)
 	, posY_(0)
 	, isLoading_(false)
 	, loadTimer_(0)
+	, animInterval_()
+	, animCounter_()
 {}
 
 // デストラクタ
@@ -26,12 +29,15 @@ void Loading::Init(void)
 	isLoading_ = false;
 	posX_ = Application::SCREEN_SIZE_X / 2;
 	posY_ = Application::SCREEN_SIZE_Y / 2;
+
+	animCounter_ = 0;
+	animInterval_ = 0;
 }
 
 // 読み込み
 void Loading::Load(void)
 {
-	handle_ = LoadGraph("Data/Image/Axe.png");
+	Utility::LoadArrayImg("Data/Image/Player/まぼ.png", 7, 7, 1, 42, 66, handle_);
 }
 
 // 更新
@@ -49,6 +55,12 @@ void Loading::Update(void)
 	else
 	{
 		// ロード画面を動作させるならここに記述
+		if (++animInterval_ >= 5) {
+			animInterval_ = 0;
+			if (++animCounter_ >= 7) {
+				animCounter_ = 0;
+			}
+		}
 	}
 }
 
@@ -56,18 +68,18 @@ void Loading::Update(void)
 void Loading::Draw(void)
 {
 	DrawRotaGraph(
-		posX_, posY_,	// 座標
-		1.0f,			// 拡大値
-		0.0f,			// 回転値
-		handle_,		// ハンドル
-		true			// 透過フラグ
+		posX_, posY_,				// 座標
+		1.0f,						// 拡大値
+		0.0f,						// 回転値
+		handle_[animCounter_],		// ハンドル
+		true						// 透過フラグ
 	);
 }
 
 // 解放
 void Loading::Release(void)
 {
-	DeleteGraph(handle_);
+	for (auto& id : handle_) { DeleteGraph(id); }
 }
 
 // 非同期読み込みに切り替える

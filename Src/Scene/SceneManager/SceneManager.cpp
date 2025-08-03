@@ -5,6 +5,7 @@
 #include "../../Manager/Loading/Loading.h"
 
 #include"../Title/TitleScene.h"
+#include"../StageSelect/SelectScene.h"
 #include"../Game/GameScene.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
@@ -39,8 +40,7 @@ void SceneManager::Init(void)
 void SceneManager::Update(void)
 {
 	// シーンがなければ終了
-	if (scenes_.empty())
-		return;
+	if (scenes_.empty()) { return; }
 
 	// ロード中
 	if (Loading::GetInstance()->IsLoading())
@@ -126,6 +126,9 @@ void SceneManager::ChangeScene(SCENE_ID scene)
 	case SceneManager::SCENE_ID::TITLE:
 		ChangeScene(std::make_shared<TitleScene>());
 		break;
+	case SCENE_ID::SELECT:
+		ChangeScene(std::make_shared< SelectScene>());
+		break;
 	case SceneManager::SCENE_ID::GAME:
 		ChangeScene(std::make_shared<GameScene>());
 		break;
@@ -146,6 +149,9 @@ void SceneManager::PushScene(SCENE_ID scene)
 	{
 	case SceneManager::SCENE_ID::TITLE:
 		PushScene(std::make_shared<TitleScene>());
+		break;
+	case SCENE_ID::SELECT:
+		PushScene(std::make_shared< SelectScene>());
 		break;
 	case SceneManager::SCENE_ID::GAME:
 		PushScene(std::make_shared<GameScene>());
@@ -179,6 +185,9 @@ void SceneManager::JumpScene(SCENE_ID scene)
 	{
 	case SceneManager::SCENE_ID::TITLE:
 		JumpScene(std::make_shared<TitleScene>());
+		break;
+	case SCENE_ID::SELECT:
+		JumpScene(std::make_shared< SelectScene>());
 		break;
 	case SceneManager::SCENE_ID::GAME:
 		JumpScene(std::make_shared<GameScene>());
