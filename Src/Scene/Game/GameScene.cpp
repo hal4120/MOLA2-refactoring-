@@ -6,6 +6,7 @@
 #include"../../Application/Application.h"
 
 #include"../../Object/Player/Player.h"
+#include"../../Object/Enemy/EnemyManager.h"
 #include"../../Object/Stage/Blue/BlueStage.h"
 
 int GameScene::hitStop_ = 0;
@@ -16,8 +17,10 @@ ShakeSize GameScene::shakeSize_ = ShakeSize::MEDIUM;
 
 GameScene::GameScene():
 	mainScreen_(-1),
+	collision_(nullptr),
 	player_(nullptr),
-	stage_(nullptr)
+	stage_(nullptr),
+	eMng_(nullptr)
 {
 }
 
@@ -29,16 +32,27 @@ void GameScene::Load(void)
 {
 	mainScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
+	collision_ = new Collision();
+
 	stage_ = new BlueStage();
 	stage_->Load();
 
 	player_ = new Player();
 	player_->Load();
+	collision_->Add(player_);
+	collision_->Add(player_->ParryIns());
+	collision_->Add(player_->LaserIns());
+
+	eMng_ = new EnemyManager(BOSS_KINDS::NON);
+	eMng_->Load();
+	for (auto& enemy : eMng_->GetEnemys()) { collision_->Add(enemy); }
+
 }
 void GameScene::Init(void)
 {
 	stage_->Init();
 	player_->Init();
+	eMng_->Init();
 
 	// ヒットストップカウンターの初期化
 	hitStop_ = 0;
@@ -56,6 +70,9 @@ void GameScene::Update(void)
 
 	stage_->Update();
 	player_->Update();
+	eMng_->Update();
+
+	collision_->Check();
 }
 void GameScene::Draw(void)
 {
@@ -69,6 +86,7 @@ void GameScene::Draw(void)
 
 	stage_->Draw();
 	player_->Draw();
+	eMng_->Draw();
 	//-------------------------------------------------
 
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -87,6 +105,17 @@ void GameScene::Release(void)
 		player_->Release();
 		delete player_;
 		player_ = nullptr;
+	}
+	if (eMng_) {
+		eMng_->Release();
+		delete eMng_;
+		eMng_ = nullptr;
+	}
+
+	if (collision_) {
+		collision_->Clear();
+		delete collision_;
+		collision_ = nullptr;
 	}
 
 	DeleteGraph(mainScreen_);

@@ -1,6 +1,8 @@
 #pragma once
 #include "../UnitBase.h"
 
+#include"../../Application/Application.h"
+
 #include"Parry/Parry.h"
 #include"Special/PlayerLaser.h"
 
@@ -23,7 +25,7 @@ public:
 	enum STATE { DEFAULT, SPECIAL, DEATH, MAX };
 
 	// 初期座標
-	const Vector2 START_POS = { 50.0f,50.0f };
+	const Vector2 START_POS = { 50.0f,Application::SCREEN_SIZE_Y / 2 };
 
     Player();
     ~Player();
@@ -34,8 +36,10 @@ public:
 	void Draw(void)override;
 	void Release(void)override;
 
-	Parry& ParryIns(void) { return *parry_; }
-	PlayerLaser& LaserIns(void) { return *laser_; }
+	void OnCollision(UnitBase* other);
+
+	Parry* ParryIns(void) { return parry_; }
+	PlayerLaser* LaserIns(void) { return laser_; }
 
 private:
 	// 画像ハンドル
@@ -44,6 +48,9 @@ private:
 	// アニメーションカウンター
 	int animCounter_;
 	int animInterval_;
+
+	// 回転量
+	float angle_;
 
 	// アニメーション処理
 	void Animation(void);
@@ -55,9 +62,13 @@ private:
 	void (Player::* stateFuncPtr_[STATE::MAX])(void);
 
 	// ステート別の関数
-	void Move(void);
+	void Default(void);
 	void Special(void);
 	void Death(void);
+
+	// ノックバック関係
+	Vector2 knockBackVec_;
+
 
 
 	// 入力情報管理
@@ -76,5 +87,4 @@ private:
 
 	Parry* parry_;
 	PlayerLaser* laser_;
-
 };

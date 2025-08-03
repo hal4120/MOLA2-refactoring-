@@ -134,6 +134,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Boss\BossBase.cpp" />
+    <ClCompile Include="Src\Object\Boss\Shark\Shark.cpp" />
+    <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
+    <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Src\Manager\Collision\Collision.cpp" />
+    <ClCompile Include="Src\Object\Enemy\Monkfish\Monkfish.cpp" />
     <ClCompile Include="Src\Object\Player\Parry\Parry.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
     <ClCompile Include="Src\Manager\Score\Score.cpp" />
@@ -154,6 +160,12 @@
     <ClCompile Include="Src\Object\Stage\StageBase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Boss\BossBase.h" />
+    <ClInclude Include="Src\Object\Boss\Shark\Shark.h" />
+    <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />
+    <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />
+    <ClInclude Include="Src\Manager\Collision\Collision.h" />
+    <ClInclude Include="Src\Object\Enemy\Monkfish\Monkfish.h" />
     <ClInclude Include="Src\Object\Player\Parry\Parry.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />
     <ClInclude Include="Src\Manager\Score\Score.h" />

@@ -37,6 +37,8 @@ public:
 	void Draw(void)override;
 	void Release(void)override;
 
+	void OnCollision(UnitBase* other);
+
 	const STATE GetState(void)const { return state_; }
 
 	void On(void) { if (state_ != STATE::NON) { return; }state_ = STATE::CHARGE; counter_ = 0; countInterval_ = 0; }

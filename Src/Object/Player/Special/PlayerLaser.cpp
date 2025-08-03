@@ -25,6 +25,12 @@ void PlayerLaser::Load(void)
 			img_[i].emplace_back(Utility::LoadImg(path.c_str()));
 		}
 	}
+
+	unit_.para_.colliShape = CollisionShape::RECTANGLE;
+	unit_.para_.size.x = SIZE_X;
+	unit_.para_.size.y = SIZE_Y;
+
+	unit_.para_.center.x = SIZE_X / 2.0f;
 }
 
 void PlayerLaser::Init(void)
@@ -67,4 +73,9 @@ void PlayerLaser::Release(void)
 	for (auto& ids : img_) {
 		for (auto& id : ids) { DeleteGraph(id); }
 	}
+}
+
+void PlayerLaser::OnCollision(UnitBase* other)
+{
+
 }

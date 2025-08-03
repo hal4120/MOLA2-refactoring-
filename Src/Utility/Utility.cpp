@@ -268,7 +268,7 @@ double Utility::Magnitude(const Vector2& v)
 
 int Utility::SqrMagnitude(const Vector2& v)
 {
-    return v.x * v.x + v.y * v.y;
+    return static_cast<int>(v.x * v.x + v.y * v.y);
 }
 
 double Utility::Distance(const Vector2& v1, const Vector2& v2)

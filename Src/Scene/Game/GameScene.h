@@ -3,8 +3,11 @@
 
 #include"../../Common/Vector2.h"
 
+#include"../../Manager/Collision/Collision.h"
+
 class StageBase;
 class Player;
+class EnemyManager;
 
 class GameScene : public SceneBase
 {
@@ -41,10 +44,10 @@ public:
 	static void Shake(ShakeKinds kinds = ShakeKinds::DIAG, ShakeSize size = ShakeSize::MEDIUM, int time = 20);
 
 private:
-
+	Collision* collision_;
 	StageBase* stage_;
 	Player* player_;
-
+	EnemyManager* eMng_;
 
 	// ヒットストップカウンター
 	static int hitStop_;

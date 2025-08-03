@@ -22,7 +22,12 @@ void Parry::Load(void)
 		ANIM_NUM_ALL, ANIM_NUM_X, ANIM_NUM_Y,
 		LOAD_SIZE_X, LOAD_SIZE_Y, img_);
 
-	unit_.para_.radius_ = LOAD_SIZE_X / 2;
+	unit_.para_.radius = LOAD_SIZE_X;
+
+	unit_.para_.colliShape = CollisionShape::CIRCLE;
+
+	unit_.isInvici_ = false;
+	unit_.aliveCollision_ = false;
 }
 
 void Parry::Init(void)
@@ -34,10 +39,10 @@ void Parry::Init(void)
 
 void Parry::Update(void)
 {
-	if (!unit_.isAlive_) { return; }
-
 	unit_.pos_ = player_;
 	unit_.pos_.x += Player::LOAD_SIZE_X / 2;
+
+	if (!unit_.isAlive_) { return; }
 
 	if (++countInterval_ >= COUNT_SPEED) {
 		countInterval_ = 0;
@@ -52,10 +57,14 @@ void Parry::Draw(void)
 {
 	if (!unit_.isAlive_) { return; }
 
-	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, 0.0f, unit_.para_.radius_, 1, 1, 0, img_[counter_], true);
+	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, 0.0f, LOAD_SIZE_Y / 2.0f, 1, 1, 0, img_[counter_], true);
 }
 
 void Parry::Release(void)
 {
 	for (auto& id : img_) { DeleteGraph(id); }
+}
+
+void Parry::OnCollision(UnitBase* other)
+{
 }

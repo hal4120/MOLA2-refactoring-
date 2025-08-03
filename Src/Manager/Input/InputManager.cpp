@@ -134,6 +134,7 @@ void InputManager::Clear(void)
 	keyInfos_.clear();
 }
 
+
 bool InputManager::IsNew(int key) const
 {
 	return Find(key).keyNew;

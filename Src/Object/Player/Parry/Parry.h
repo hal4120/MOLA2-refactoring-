@@ -23,6 +23,8 @@ public:
 	void Draw(void)override;
 	void Release(void)override;
 
+	void OnCollision(UnitBase* other);
+
 	void On(void) { unit_.isAlive_ = true; counter_ = 0; countInterval_ = 0; }
 
 private:

@@ -44,20 +44,20 @@ void StageBase::Init()
 	moveVec_ /= sqrtf(moveVec_.x * moveVec_.x + moveVec_.y * moveVec_.y);
 
 	poss_[CENTER1] = { backSizeX / 2.0f,screen.y - backSizeY / 2.0f };
-	poss_[CENTER2] = poss_[CENTER1] + Vector2(backSizeX, -backSizeY);
-	poss_[LEFT] = poss_[CENTER1] + Vector2(0.0f, -backSizeY);
-	poss_[RIGHT] = poss_[CENTER1] + Vector2(backSizeX, 0.0f);
+	poss_[CENTER2] = poss_[CENTER1] + Vector2((float)backSizeX, (float)-backSizeY);
+	poss_[LEFT] = poss_[CENTER1] + Vector2(0.0f, (float)-backSizeY);
+	poss_[RIGHT] = poss_[CENTER1] + Vector2((float)backSizeX, 0.0f);
 
 	object1Info_.resize(object1Num);
 	for (auto& pInfo : object1Info_) {
 		pInfo.pos = { (float)GetRand(backSizeX),(float)GetRand(backSizeY) };
-		pInfo.move = moveVec_ * (GetRand(object1MaxSpeed) + 1.0f);
+		pInfo.move = moveVec_ * (GetRand((int)object1MaxSpeed) + 1.0f);
 	}
 
 	object2Info_.resize(object2Num);
 	for (auto& pInfo : object2Info_) {
 		pInfo.pos = { (float)GetRand(backSizeX),(float)GetRand(backSizeY) };
-		pInfo.move = moveVec_ * (GetRand(object2MaxSpeed) + 1.0f);
+		pInfo.move = moveVec_ * (GetRand((int)object2MaxSpeed) + 1.0f);
 	}
 
 	for (auto& gimic : gimics_) { gimic->Init(); }
@@ -71,15 +71,15 @@ void StageBase::Update()
 	for (int i = 0; i < CENTER_NUM; i++) {
 		if (poss_[i].x + backSizeX / 2.0f < 0.0f || poss_[i].y - backSizeY / 2.0f > screen.y) {
 			int reverse = (i * -1) + 1;
-			poss_[i] = poss_[reverse] + Vector2(backSizeX, -backSizeY);
+			poss_[i] = poss_[reverse] + Vector2((float)backSizeX, (float)-backSizeY);
 			break;
 		}
 	}
 	if (poss_[LEFT].x + backSizeX / 2.0f < 0.0f) {
-		poss_[LEFT] += Vector2(backSizeX, -backSizeY);
+		poss_[LEFT] += Vector2((float)backSizeX, (float)-backSizeY);
 	}
 	if (poss_[RIGHT].y - backSizeY / 2.0f > screen.y) {
-		poss_[RIGHT] += Vector2(backSizeX, -backSizeY);
+		poss_[RIGHT] += Vector2((float)backSizeX, (float)-backSizeY);
 	}
 
 	for (auto& pInfo : object1Info_) {
@@ -87,7 +87,7 @@ void StageBase::Update()
 		if (pInfo.pos.x + object1SizeX / 2.0f < 0.0f || pInfo.pos.y - object1SizeY / 2.0f > screen.y) {
 			pInfo.pos.x = (screen.x + object1SizeX / 2.0f) + GetRand(backSizeX);
 			pInfo.pos.y = -(screen.y + object1SizeY / 2.0f) + GetRand(backSizeY);
-			pInfo.move = moveVec_ * (GetRand(object1MaxSpeed) + 1.0f);
+			pInfo.move = moveVec_ * (GetRand((int)object1MaxSpeed) + 1.0f);
 		}
 	}
 
@@ -96,7 +96,7 @@ void StageBase::Update()
 		if (pInfo.pos.x + object2SizeX / 2.0f < 0.0f || pInfo.pos.y - object2SizeY / 2.0f > screen.y) {
 			pInfo.pos.x = (screen.x + object2SizeX / 2.0f) + GetRand(backSizeX);
 			pInfo.pos.y = -(screen.y + object2SizeY / 2.0f) + GetRand(backSizeY);
-			pInfo.move = moveVec_ * (GetRand(object2MaxSpeed) + 1.0f);
+			pInfo.move = moveVec_ * (GetRand((int)object2MaxSpeed) + 1.0f);
 		}
 	}
 
@@ -105,14 +105,14 @@ void StageBase::Update()
 void StageBase::Draw()
 {
 	for (auto& pos : poss_) {
-		DrawRotaGraph(pos.x, pos.y, 1, 0, backImg_, true);
-		DrawRotaGraph(pos.x, pos.y, 1, 0, backDecorationImg_, true);
+		DrawRotaGraphF(pos.x, pos.y, 1, 0, backImg_, true);
+		DrawRotaGraphF(pos.x, pos.y, 1, 0, backDecorationImg_, true);
 	}
 	for (auto& pInfo : object1Info_) {
-		DrawRotaGraph(pInfo.pos.x, pInfo.pos.y, 1, 0, object1Img_, true);
+		DrawRotaGraphF(pInfo.pos.x, pInfo.pos.y, 1, 0, object1Img_, true);
 	}
 	for (auto& pInfo : object2Info_) {
-		DrawRotaGraph(pInfo.pos.x, pInfo.pos.y, 1, 0, object2Img_, true);
+		DrawRotaGraphF(pInfo.pos.x, pInfo.pos.y, 1, 0, object2Img_, true);
 	}
 
 	for (auto& gimic : gimics_) { gimic->Draw(); }

@@ -1,32 +1,38 @@
 #pragma once
 
 #include"../Common/Vector2.h"
-
 #include"../Utility/Utility.h"
+
+enum CollisionShape { NON = -1, CIRCLE, RECTANGLE, ELLIPSE, MAX };
 
 struct Base
 {
 	//パラメーター
 	struct {
-		enum CollisionPara { NON = -1, CIRCLE, RECT, ELLIPSE, CAPSULE, MAX };
-		CollisionPara colliType_ = CollisionPara::NON;	//当たり判定の属性
-		Vector2 size = { -1.0f,-1.0f };					//サイズ
-		float radius_ = -1.0f;							//半径
-		Vector2 center = { 0.0f,0.0f };					//中心
-		float speed_ = -1;								//スピード
+		CollisionShape colliShape = CollisionShape::NON;	//当たり判定の形
+
+		Vector2 size = { -1.0f,-1.0f };						//サイズ
+		float radius = -1.0f;								//半径
+		Vector2 center = { 0.0f,0.0f };						//中心
+		float speed = -1;									//スピード
 	}para_;
 
 	// 生存フラグ
 	bool isAlive_ = false;
 
+	// 生存フラグによる当たり判定の早期リターンを行うかどうか
+	bool aliveCollision_ = true;
+
 	// 座標
 	Vector2 pos_ = { -1.0f,-1.0f };
+
 
 	// ヒットポイント
 	int hp_ = -1;
 
+
 	// 無敵判定
-	bool isInvici_ = false;
+	bool isInvici_ = true;
 	int inviciCounter_ = 0;
 };
 
@@ -43,6 +49,8 @@ public:
 	virtual void Release(void) = 0;
 
 	const Base GetUnit(void)const { return unit_; }
+
+	virtual void OnCollision(UnitBase* other) = 0;
 
 protected:
 	Base unit_;

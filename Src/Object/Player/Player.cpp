@@ -2,10 +2,10 @@
 
 #include<DxLib.h>
 
-#include"../../Application/Application.h"
 #include"../../Manager/Input/InputManager.h"
+#include"../../Scene/Game/GameScene.h"
 
-
+#include"../Enemy/Monkfish/Monkfish.h"
 
 Player::Player():
 	img_(),
@@ -13,6 +13,7 @@ Player::Player():
 	animInterval_(0),
 	state_(STATE::DEFAULT),
 	stateFuncPtr_(),
+	knockBackVec_(),
 	parry_(nullptr),
 	laser_(nullptr)
 {
@@ -30,13 +31,15 @@ void Player::Load(void)
 		LOAD_SIZE_X, LOAD_SIZE_Y, img_);
 
 	// 関数ポインタにそれぞれの関数のポインタを格納
-	stateFuncPtr_[STATE::DEFAULT] = &Player::Move;
+	stateFuncPtr_[STATE::DEFAULT] = &Player::Default;
 	stateFuncPtr_[STATE::SPECIAL] = &Player::Special;
 	stateFuncPtr_[STATE::DEATH] = &Player::Death;
 
-	unit_.para_.speed_ = 5.0f;
+	unit_.para_.speed = 5.0f;
 
 	unit_.para_.size = { LOAD_SIZE_X,LOAD_SIZE_Y };
+
+	unit_.para_.colliShape = CollisionShape::ELLIPSE;
 
 	parry_ = new Parry(unit_.pos_);
 	parry_->Load();
@@ -56,6 +59,8 @@ void Player::Init(void)
 	// アニメーション変数の初期化
 	animCounter_ = 0;
 	animInterval_ = 0;
+
+	angle_ = 0.0f;
 
 	parry_->Init();
 	laser_->Init();
@@ -85,7 +90,7 @@ void Player::Draw(void)
 	if (!unit_.isAlive_)return;
 
 	// プレイヤーの描画
-	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, 0, img_[animCounter_], true);
+	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, angle_, img_[animCounter_], true);
 
 	parry_->Draw();
 	laser_->Draw();
@@ -109,6 +114,19 @@ void Player::Release(void)
 	for (auto& id : img_) { DeleteGraph(id); }
 }
 
+void Player::OnCollision(UnitBase* other)
+{
+	if (dynamic_cast<Monkfish*>(other)) {
+		if (state_ != STATE::DEFAULT) { return; }
+
+		knockBackVec_ = unit_.pos_ - other->GetUnit().pos_;
+		knockBackVec_ /= sqrtf(knockBackVec_.x * knockBackVec_.x + knockBackVec_.y * knockBackVec_.y);
+
+		GameScene::HitStop(10);
+		state_ = STATE::DEATH;
+	}
+}
+
 
 void Player::Animation(void)
 {
@@ -120,7 +138,7 @@ void Player::Animation(void)
 	}
 }
 
-void Player::Move(void)
+void Player::Default(void)
 {
 	Vector2 moveVec = {};
 
@@ -129,7 +147,7 @@ void Player::Move(void)
 	if (left_.now_) { moveVec.x--; }
 	if (right_.now_) { moveVec.x++; }
 
-	moveVec *= unit_.para_.speed_;
+	moveVec *= unit_.para_.speed;
 
 	unit_.pos_ += moveVec;
 
@@ -151,6 +169,9 @@ void Player::Special(void)
 
 void Player::Death(void)
 {
+	unit_.pos_ += knockBackVec_;
+	angle_ -= Utility::Deg2RadF(3.0f);
+	if (angle_ < -Utility::Deg2RadF(60.0f)) { Init(); }
 }
 
 void Player::Input(void)
