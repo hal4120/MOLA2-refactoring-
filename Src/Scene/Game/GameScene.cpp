@@ -4,12 +4,18 @@
 #include<cmath>
 
 #include"../../Application/Application.h"
+#include"../../Manager/BlastEffect/BlastEffectManager.h"
 
 #include"../../Object/Player/Player.h"
 #include"../../Object/Enemy/EnemyManager.h"
 #include"../../Object/Stage/Blue/BlueStage.h"
 
+#include"../../Object/Boss/Shark/Shark.h"
+
 int GameScene::hitStop_ = 0;
+
+int GameScene::slow_ = 0;
+int GameScene::slowInter_ = 0;
 
 int GameScene::shake_ = 0;
 ShakeKinds GameScene::shakeKinds_ = ShakeKinds::DIAG;
@@ -18,9 +24,11 @@ ShakeSize GameScene::shakeSize_ = ShakeSize::MEDIUM;
 GameScene::GameScene():
 	mainScreen_(-1),
 	collision_(nullptr),
+	blast_(nullptr),
 	player_(nullptr),
 	stage_(nullptr),
-	eMng_(nullptr)
+	eMng_(nullptr),
+	shark_(nullptr)
 {
 }
 
@@ -33,6 +41,9 @@ void GameScene::Load(void)
 	mainScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	collision_ = new Collision();
+
+	blast_ = new BlastEffectManager();
+	blast_->Load();
 
 	stage_ = new BlueStage();
 	stage_->Load();
@@ -47,6 +58,10 @@ void GameScene::Load(void)
 	eMng_->Load();
 	for (auto& enemy : eMng_->GetEnemys()) { collision_->Add(enemy); }
 
+	shark_ = new Shark();
+	shark_->Load();
+	collision_->Add(shark_);
+
 }
 void GameScene::Init(void)
 {
@@ -54,8 +69,14 @@ void GameScene::Init(void)
 	player_->Init();
 	eMng_->Init();
 
+	shark_->Init();
+
 	// ヒットストップカウンターの初期化
 	hitStop_ = 0;
+
+	// スローカウンターの初期化
+	slow_ = 0;
+	slowInter_ = 5;
 
 	// 画面揺れ関係の初期化-----------------------------------------------------------
 	shake_ = 0;
@@ -67,12 +88,19 @@ void GameScene::Update(void)
 {
 	if (hitStop_ > 0) { hitStop_--; return; }
 	if (shake_ > 0) { shake_--; }
+	if (slow_ > 0) {
+		slow_--;
+		if (slow_ % slowInter_ != 0) { return; }
+	}
 
 	stage_->Update();
 	player_->Update();
 	eMng_->Update();
 
+	shark_->Update();
+
 	collision_->Check();
+	blast_->Update();
 }
 void GameScene::Draw(void)
 {
@@ -87,6 +115,8 @@ void GameScene::Draw(void)
 	stage_->Draw();
 	player_->Draw();
 	eMng_->Draw();
+	shark_->Draw();
+	blast_->Draw();
 	//-------------------------------------------------
 
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -110,6 +140,17 @@ void GameScene::Release(void)
 		eMng_->Release();
 		delete eMng_;
 		eMng_ = nullptr;
+	}
+	if (shark_) {
+		shark_->Release();
+		delete shark_;
+		shark_ = nullptr;
+	}
+
+	if (blast_) {
+		blast_->Release();
+		delete blast_;
+		blast_ = nullptr;
 	}
 
 	if (collision_) {

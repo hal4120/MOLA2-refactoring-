@@ -66,5 +66,6 @@ public:
 	static int LoadImg(std::string path);
 	// スプライト画像読み込み（エラーチェック付き）
 	static void LoadArrayImg(std::string path, int AllNum, int XNum, int YNum, int XSize, int YSize, int* handleArray);
+	static void LoadArrayImg(std::string path, int AllNum, int XNum, int YNum, int XSize, int YSize, std::vector<int>& handleArray);
 };
 

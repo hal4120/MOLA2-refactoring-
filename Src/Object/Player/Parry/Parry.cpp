@@ -4,6 +4,8 @@
 
 #include"../Player.h"
 
+#include"../../Enemy/EnemyBase.h"
+
 Parry::Parry(const Vector2& playerPos):
 	img_(),
 	counter_(0),
@@ -28,6 +30,7 @@ void Parry::Load(void)
 
 	unit_.isInvici_ = false;
 	unit_.aliveCollision_ = false;
+
 }
 
 void Parry::Init(void)
@@ -35,6 +38,7 @@ void Parry::Init(void)
 	counter_ = 0;
 	countInterval_ = 0;
 
+	mag_ = DEFAULT_MAG;
 }
 
 void Parry::Update(void)
@@ -57,7 +61,7 @@ void Parry::Draw(void)
 {
 	if (!unit_.isAlive_) { return; }
 
-	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, 0.0f, LOAD_SIZE_Y / 2.0f, 1, 1, 0, img_[counter_], true);
+	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, 0.0f, LOAD_SIZE_Y / 2.0f, mag_, mag_, 0, img_[counter_], true);
 }
 
 void Parry::Release(void)
@@ -67,4 +71,13 @@ void Parry::Release(void)
 
 void Parry::OnCollision(UnitBase* other)
 {
+	if (!unit_.isAlive_) { return; }
+
+	if (dynamic_cast<EnemyBase*>(other)) {
+		if (!dynamic_cast<EnemyBase*>(other)->GetParry()) {
+			mag_ += MAG_ONE_SIZE_UP;
+			if (mag_ > MAX_MAG) { mag_ = MAX_MAG; }
+			unit_.para_.radius = LOAD_SIZE_X * mag_;
+		}
+	}
 }

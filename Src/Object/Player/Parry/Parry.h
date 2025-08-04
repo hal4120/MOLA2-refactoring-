@@ -14,6 +14,10 @@ public:
 
 	static constexpr int COUNT_SPEED = 0;
 
+	static constexpr float DEFAULT_MAG = 1.0f;
+	static constexpr float MAG_ONE_SIZE_UP = 0.2f;
+	static constexpr float MAX_MAG = 2.0f;
+
 	Parry(const Vector2& playerPos);
 	~Parry();
 
@@ -27,11 +31,15 @@ public:
 
 	void On(void) { unit_.isAlive_ = true; counter_ = 0; countInterval_ = 0; }
 
+	void MagReset(void) { mag_ = DEFAULT_MAG; unit_.para_.radius = LOAD_SIZE_X; }
+
 private:
 	int img_[ANIM_NUM_ALL];
 
 	int counter_;
 	int countInterval_;
+
+	float mag_;
 
 	const Vector2& player_;
 };

@@ -4,6 +4,7 @@
 
 #include"../../Manager/Input/InputManager.h"
 #include"../../Scene/Game/GameScene.h"
+#include"../../Manager/BlastEffect/BlastEffectManager.h"
 
 #include"../Enemy/Monkfish/Monkfish.h"
 
@@ -116,14 +117,17 @@ void Player::Release(void)
 
 void Player::OnCollision(UnitBase* other)
 {
-	if (dynamic_cast<Monkfish*>(other)) {
+	if (dynamic_cast<EnemyBase*>(other)) {
 		if (state_ != STATE::DEFAULT) { return; }
+		GameScene::HitStop(10);
+		BlastEffectManager::On(unit_.pos_);
 
 		knockBackVec_ = unit_.pos_ - other->GetUnit().pos_;
 		knockBackVec_ /= sqrtf(knockBackVec_.x * knockBackVec_.x + knockBackVec_.y * knockBackVec_.y);
 
-		GameScene::HitStop(10);
 		state_ = STATE::DEATH;
+
+		parry_->MagReset();
 	}
 
 }

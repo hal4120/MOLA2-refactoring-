@@ -307,3 +307,15 @@ void Utility::LoadArrayImg(std::string path, int AllNum, int XNum, int YNum, int
     }
 }
 
+void Utility::LoadArrayImg(std::string path, int AllNum, int XNum, int YNum, int XSize, int YSize, std::vector<int>& handleArray)
+{
+    handleArray.resize(AllNum);
+
+    int err = LoadDivGraph(path.c_str(), AllNum, XNum, YNum, XSize, YSize, handleArray.data());
+
+    if (err == -1) {
+        printfDx("‰æ‘œ“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½: %s\n", path.c_str());
+        return;
+    }
+}
+

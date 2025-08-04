@@ -54,5 +54,6 @@ public:
 
 protected:
 	Base unit_;
+	void Invi(void);
 };
 

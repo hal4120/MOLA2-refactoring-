@@ -134,6 +134,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\BlastEffect\BlastEffect.cpp" />
+    <ClCompile Include="Src\Manager\BlastEffect\BlastEffectManager.cpp" />
     <ClCompile Include="Src\Manager\Sound\SoundManager.cpp" />
     <ClCompile Include="Src\Object\Boss\BossBase.cpp" />
     <ClCompile Include="Src\Object\Boss\Shark\Shark.cpp" />
@@ -161,6 +163,8 @@
     <ClCompile Include="Src\Object\Stage\StageBase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\BlastEffect\BlastEffect.h" />
+    <ClInclude Include="Src\Manager\BlastEffect\BlastEffectManager.h" />
     <ClInclude Include="Src\Manager\Sound\SoundManager.h" />
     <ClInclude Include="Src\Object\Boss\BossBase.h" />
     <ClInclude Include="Src\Object\Boss\Shark\Shark.h" />

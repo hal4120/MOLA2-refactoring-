@@ -1,8 +1,10 @@
 #include "EnemyBase.h"
 
 #include"../../Scene/Game/GameScene.h"
+#include"../../Manager/BlastEffect/BlastEffectManager.h"
 
 #include"../Player/Player.h"
+#include"../Boss/Shark/Shark.h"
 
 EnemyBase::EnemyBase(NUMBER num):
 	number_(num),
@@ -88,6 +90,14 @@ void EnemyBase::OnCollision(UnitBase* other)
 
 	if (dynamic_cast<Player*>(other)) {
 		unit_.isAlive_ = false;
+		return;
+	}
+
+	if (dynamic_cast<Shark*>(other)) {
+		if (parry_) {
+			unit_.isAlive_ = false;
+			BlastEffectManager::On(unit_.pos_);
+		}
 		return;
 	}
 

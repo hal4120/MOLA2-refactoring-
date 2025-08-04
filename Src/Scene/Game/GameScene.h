@@ -5,9 +5,13 @@
 
 #include"../../Manager/Collision/Collision.h"
 
+class BlastEffectManager;
+
 class StageBase;
 class Player;
 class EnemyManager;
+
+class Shark;
 
 class GameScene : public SceneBase
 {
@@ -30,6 +34,9 @@ public:
 	// ヒットストップ演出
 	static void HitStop(int time = 20) { hitStop_ = time; }
 
+	// スロー演出
+	static void Slow(int time = 10, int inter = 5) { slow_ = time; slowInter_ = inter; }
+
 	// 画面揺れの種類
 	enum ShakeKinds { WID/*横揺れ*/, HIG/*縦揺れ*/, DIAG/*斜め揺れ*/, ROUND/*くるくる*/ };
 	// 画面揺れの大きさ
@@ -45,12 +52,19 @@ public:
 
 private:
 	Collision* collision_;
+	BlastEffectManager* blast_;
 	StageBase* stage_;
 	Player* player_;
 	EnemyManager* eMng_;
 
+	Shark* shark_;
+
 	// ヒットストップカウンター
 	static int hitStop_;
+
+	// スローカウンター
+	static int slow_;
+	static int slowInter_;
 
 	// 画面揺れ------------------------
 	int mainScreen_;
