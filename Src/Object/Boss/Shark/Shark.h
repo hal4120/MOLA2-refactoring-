@@ -2,6 +2,8 @@
 
 #include"../BossBase.h"
 
+class IkuraShooter;
+
 class Shark : public BossBase
 {
 public:
@@ -14,7 +16,7 @@ public:
 	static constexpr const char* MOTION_PATH[(int)MOTION::MAX] =
 	{
 		"Data/Image/Boss/Shark/Walk.png",
-		"Data/Image/Boss/Shark/Attack1png",
+		"Data/Image/Boss/Shark/Attack1.png",
 		"Data/Image/Boss/Shark/Special.png",
 		"Data/Image/Boss/Shark/Hurt.png",
 		"Data/Image/Boss/Shark/Hurt.png"
@@ -30,6 +32,8 @@ public:
 
 	static constexpr int DEATH_PERFOR_TIME = 180;
 
+	static constexpr int ATTACK_INTERVAL = 300;
+
 	Shark();
 	~Shark();
 
@@ -37,6 +41,8 @@ public:
 	void Init(void)override;
 
 	void OnCollision(UnitBase* other)override;
+
+	std::vector<UnitBase*>AttackIns(void)override;
 
 private:
 	// èÛë‘ï ä÷êî------------------------------------------
@@ -48,7 +54,23 @@ private:
 
 	Vector2 moveVec_;
 
+	int attackInterval_;
+	bool attackInit_;
+	bool attackEnd_;
+
 	int deathCou_;
+
+	enum class ATTACK_KINDS
+	{
+		NON = -1,
+		IKURA,
+
+		MAX
+	};
+	ATTACK_KINDS attackState_;
+	ATTACK_KINDS AttackLottery(void);
+
+	IkuraShooter* ikura_;
 
 	// çUåÇóp-----------------
 	void AttackUpdate(void);

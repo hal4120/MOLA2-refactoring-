@@ -76,6 +76,8 @@ void Player::Update(void)
 	// 入力情報の更新
 	Input();
 
+	Invi();
+
 	// 現在のステートに対応する関数を実行
 	(this->*stateFuncPtr_[state_])();
 
@@ -118,18 +120,15 @@ void Player::Release(void)
 
 void Player::OnCollision(UnitBase* other)
 {
-	if (dynamic_cast<EnemyBase*>(other)) {
-		if (state_ != STATE::DEFAULT) { return; }
-		GameScene::HitStop(10);
+	if (state_ != STATE::DEFAULT) { return; }
+	GameScene::HitStop(10);
 
-		knockBackVec_ = unit_.pos_ - other->GetUnit().pos_;
-		knockBackVec_ /= sqrtf(knockBackVec_.x * knockBackVec_.x + knockBackVec_.y * knockBackVec_.y);
+	knockBackVec_ = unit_.pos_ - other->GetUnit().pos_;
+	knockBackVec_ /= sqrtf(knockBackVec_.x * knockBackVec_.x + knockBackVec_.y * knockBackVec_.y);
 
-		state_ = STATE::DEATH;
+	state_ = STATE::DEATH;
 
-		parry_->MagReset();
-	}
-
+	parry_->MagReset();
 }
 
 
@@ -176,7 +175,13 @@ void Player::Death(void)
 {
 	unit_.pos_ += knockBackVec_;
 	angle_ -= Utility::Deg2RadF(3.0f);
-	if (angle_ < -Utility::Deg2RadF(60.0f)) { Init(); }
+	if (angle_ < -Utility::Deg2RadF(60.0f)) {
+		unit_.inviciCounter_ = 100;
+		unit_.pos_ = START_POS;
+		angle_ = 0.0f;
+		unit_.isAlive_ = true;
+		state_ = STATE::DEFAULT;
+	}
 }
 
 void Player::Input(void)

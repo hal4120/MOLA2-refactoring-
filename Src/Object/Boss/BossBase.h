@@ -15,6 +15,9 @@ public:
 	void Draw(void)override;
 	void Release(void)override;
 
+
+	virtual std::vector<UnitBase*>AttackIns(void) = 0;
+
 protected:
 	int state_;
 	using STATEFUNC = void (BossBase::*)(void);
@@ -32,6 +35,7 @@ protected:
 	void ChangeMotion(int motion, bool loop = true);
 	void Animation(void);
 
+	float angle_;
 
 
 	virtual void AttackUpdate(void) = 0;

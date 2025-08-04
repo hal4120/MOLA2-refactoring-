@@ -56,11 +56,13 @@ void GameScene::Load(void)
 
 	eMng_ = new EnemyManager(BOSS_KINDS::SHARK);
 	eMng_->Load();
-	for (auto& enemy : eMng_->GetEnemys()) { collision_->Add(enemy); }
+	collision_->Add(eMng_->GetEnemys());
+	//for (auto& enemy : eMng_->GetEnemys()) { collision_->Add(enemy); }
 
 	shark_ = new Shark();
 	shark_->Load();
 	collision_->Add(shark_);
+	collision_->Add(shark_->AttackIns());
 
 }
 void GameScene::Init(void)

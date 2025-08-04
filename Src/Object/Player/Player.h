@@ -43,6 +43,8 @@ public:
 	Parry* ParryIns(void) { return parry_; }
 	PlayerLaser* LaserIns(void) { return laser_; }
 
+	const bool CollisionValid(void)const { return state_ != STATE::DEATH; }
+
 private:
 	// ‰æ‘œƒnƒ“ƒhƒ‹
 	int img_[ANIM_NUM];

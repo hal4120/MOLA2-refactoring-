@@ -20,8 +20,8 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	std::vector<EnemyBase*>GetEnemys(void) {
-		std::vector<EnemyBase*>ret;
+	std::vector<UnitBase*>GetEnemys(void) {
+		std::vector<UnitBase*>ret;
 		for (auto& enemy : enemys_) { ret.emplace_back(enemy); }
 		return ret;
 	}

@@ -9,6 +9,7 @@ public:
 	~Collision();
 
 	void Add(UnitBase* obj) { if (obj) objects_.emplace_back(obj); }
+	void Add(std::vector<UnitBase*> obj) { for (auto& o : obj) { Add(o); } }
 	void Clear(){ objects_.clear(); }
 	void Check();
 

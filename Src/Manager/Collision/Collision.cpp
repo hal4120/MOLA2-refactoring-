@@ -3,6 +3,8 @@
 #include <cmath>
 #include <algorithm>
 
+#include"../../Object/Player/Parry/Parry.h"
+
 Collision::Collision():
 	objects_()
 {

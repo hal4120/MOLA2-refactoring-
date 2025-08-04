@@ -139,6 +139,8 @@
     <ClCompile Include="Src\Manager\BlastEffect\BlastEffectManager.cpp" />
     <ClCompile Include="Src\Manager\Sound\SoundManager.cpp" />
     <ClCompile Include="Src\Object\Boss\BossBase.cpp" />
+    <ClCompile Include="Src\Object\Boss\Shark\Attack\Ikura\Ikura.cpp" />
+    <ClCompile Include="Src\Object\Boss\Shark\Attack\Ikura\IkuraShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Shark\Shark.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />
@@ -168,6 +170,8 @@
     <ClInclude Include="Src\Manager\BlastEffect\BlastEffectManager.h" />
     <ClInclude Include="Src\Manager\Sound\SoundManager.h" />
     <ClInclude Include="Src\Object\Boss\BossBase.h" />
+    <ClInclude Include="Src\Object\Boss\Shark\Attack\Ikura\Ikura.h" />
+    <ClInclude Include="Src\Object\Boss\Shark\Attack\Ikura\IkuraShooter.h" />
     <ClInclude Include="Src\Object\Boss\Shark\Shark.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />

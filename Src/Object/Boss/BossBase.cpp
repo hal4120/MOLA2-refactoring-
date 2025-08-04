@@ -10,7 +10,8 @@ BossBase::BossBase() :
 	motion_(),
 	animCounter_(),
 	animInterval_(),
-	animLoop_()
+	animLoop_(),
+	angle_(0.0f)
 {
 	unit_.para_.colliType = CollisionType::ENEMY;
 }
@@ -34,7 +35,7 @@ void BossBase::Draw(void)
 	AttackDraw();
 
 	if (!unit_.isAlive_) { return; }
-	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, SCALE, 0, imgs_.at((int)motion_).at(animCounter_), true, reverse_);
+	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, SCALE, angle_, imgs_.at((int)motion_).at(animCounter_), true, reverse_);
 }
 
 void BossBase::Release(void)
