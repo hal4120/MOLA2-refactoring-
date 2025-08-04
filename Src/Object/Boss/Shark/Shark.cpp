@@ -58,6 +58,8 @@ void Shark::Init(void)
 	ChangeMotion((int)MOTION::MOVE);
 
 	unit_.hp_ = HP_MAX;
+
+	reverse_ = true;
 }
 
 void Shark::OnCollision(UnitBase* other)
