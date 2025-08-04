@@ -3,13 +3,15 @@
 #include"../Common/Vector2.h"
 #include"../Utility/Utility.h"
 
-enum CollisionShape { NON = -1, CIRCLE, RECTANGLE, ELLIPSE, MAX };
+enum class CollisionShape { NON = -1, CIRCLE, RECTANGLE, ELLIPSE, MAX };
+enum class CollisionType { NON = -2, ALLY/*味方*/, ENEMY/*敵*/ };	//←同じだったら当たり判定しない
 
 struct Base
 {
 	//パラメーター
 	struct {
 		CollisionShape colliShape = CollisionShape::NON;	//当たり判定の形
+		CollisionType colliType = CollisionType::NON;
 
 		Vector2 size = { -1.0f,-1.0f };						//サイズ
 		float radius = -1.0f;								//半径
@@ -40,7 +42,7 @@ class UnitBase
 {
 public:
 	UnitBase();
-	virtual ~UnitBase();
+	virtual ~UnitBase() = 0;
 
 	virtual void Load(void) = 0;
 	virtual void Init(void) = 0;

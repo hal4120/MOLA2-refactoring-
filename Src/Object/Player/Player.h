@@ -27,6 +27,8 @@ public:
 	// ‰ŠúÀ•W
 	const Vector2 START_POS = { 50.0f,Application::SCREEN_SIZE_Y / 2 };
 
+	static constexpr float SPEED = 8.0f;
+
     Player();
     ~Player();
 

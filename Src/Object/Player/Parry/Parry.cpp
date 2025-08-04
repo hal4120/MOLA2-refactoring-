@@ -27,6 +27,7 @@ void Parry::Load(void)
 	unit_.para_.radius = LOAD_SIZE_X;
 
 	unit_.para_.colliShape = CollisionShape::CIRCLE;
+	unit_.para_.colliType = CollisionType::ALLY;
 
 	unit_.isInvici_ = false;
 	unit_.aliveCollision_ = false;

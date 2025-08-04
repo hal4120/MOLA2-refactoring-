@@ -2,7 +2,10 @@
 
 #include<DxLib.h>
 
-BlastEffect::BlastEffect()
+BlastEffect::BlastEffect():
+	isAlive_(),
+	animeCounter_(),
+	animeInterval_()
 {
 }
 

@@ -36,11 +36,12 @@ void Player::Load(void)
 	stateFuncPtr_[STATE::SPECIAL] = &Player::Special;
 	stateFuncPtr_[STATE::DEATH] = &Player::Death;
 
-	unit_.para_.speed = 5.0f;
+	unit_.para_.speed = SPEED;
 
 	unit_.para_.size = { LOAD_SIZE_X,LOAD_SIZE_Y };
 
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;
+	unit_.para_.colliType = CollisionType::ALLY;
 
 	parry_ = new Parry(unit_.pos_);
 	parry_->Load();
@@ -120,7 +121,6 @@ void Player::OnCollision(UnitBase* other)
 	if (dynamic_cast<EnemyBase*>(other)) {
 		if (state_ != STATE::DEFAULT) { return; }
 		GameScene::HitStop(10);
-		BlastEffectManager::On(unit_.pos_);
 
 		knockBackVec_ = unit_.pos_ - other->GetUnit().pos_;
 		knockBackVec_ /= sqrtf(knockBackVec_.x * knockBackVec_.x + knockBackVec_.y * knockBackVec_.y);

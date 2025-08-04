@@ -1,8 +1,8 @@
 #pragma once
 
-#include"../../UnitBase.h"
+#include"../BossBase.h"
 
-class Shark : public UnitBase
+class Shark : public BossBase
 {
 public:
 	static constexpr int LOAD_SIZE = 96;
@@ -11,7 +11,7 @@ public:
 	static constexpr float SIZE_Y = (LOAD_SIZE * SCALE) / 2.0f;
 
 	enum class MOTION { MOVE, ATTACK, SPECIAL, DAMAGE, DEATH, MAX };
-	const std::string MOTION_PATH[(int)MOTION::MAX] =
+	static constexpr const char* MOTION_PATH[(int)MOTION::MAX] =
 	{
 		"Data/Image/Boss/Shark/Walk.png",
 		"Data/Image/Boss/Shark/Attack1png",
@@ -21,7 +21,6 @@ public:
 	};
 	static constexpr int MOTION_NUM[(int)MOTION::MAX] = { 6,6,6,2,2 };
 
-	static constexpr int ANIM_INTERVAL = 5;
 
 	static constexpr int HP_MAX = 100;
 
@@ -29,21 +28,18 @@ public:
 
 	static constexpr float MOVE_SPEED = 5.0f;
 
+	static constexpr int DEATH_PERFOR_TIME = 180;
+
 	Shark();
 	~Shark();
 
 	void Load(void)override;
 	void Init(void)override;
-	void Update(void)override;
-	void Draw(void)override;
-	void Release(void)override;
 
-	void OnCollision(UnitBase* other);
+	void OnCollision(UnitBase* other)override;
 
 private:
-	// èÛë‘ä÷åW--------------------------------------------
-	STATE state_;
-	void(Shark::* stateFuncPtr[(int)STATE::MAX])(void);
+	// èÛë‘ï ä÷êî------------------------------------------
 	void Move(void);
 	void Attack(void);
 	void Damage(void);
@@ -52,13 +48,11 @@ private:
 
 	Vector2 moveVec_;
 
-	// ÉÇÅ[ÉVÉáÉìä÷åW-------------------------------------
-	std::vector<int>imgs_[(int)MOTION::MAX];
-	MOTION motion_;
-	int animCounter_;
-	int animInterval_;
-	bool animLoop_;
-	void ChangeMotion(MOTION motion, bool loop = true);
-	void Animation(void);
-	//-----------------------------------------------------
+	int deathCou_;
+
+	// çUåÇóp-----------------
+	void AttackUpdate(void);
+	void AttackDraw(void);
+	void AttackRelease(void);
+	//------------------------
 };

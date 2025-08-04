@@ -27,6 +27,8 @@ void PlayerLaser::Load(void)
 	}
 
 	unit_.para_.colliShape = CollisionShape::RECTANGLE;
+	unit_.para_.colliType = CollisionType::ALLY;
+
 	unit_.para_.size.x = SIZE_X;
 	unit_.para_.size.y = SIZE_Y;
 

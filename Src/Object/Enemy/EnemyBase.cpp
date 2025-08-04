@@ -25,6 +25,7 @@ EnemyBase::EnemyBase(NUMBER num):
 void EnemyBase::Load(void)
 {
 	Utility::LoadImg(arrowImg_, "Data/Image/Enemy/Arrow.png");
+	unit_.para_.colliType = CollisionType::ENEMY;
 }
 
 
@@ -66,45 +67,50 @@ void EnemyBase::Release(void)
 
 void EnemyBase::OnCollision(UnitBase* other)
 {
-	if (dynamic_cast<PlayerLaser*>(other)) {
-		GameScene::Shake();
-		unit_.isAlive_ = false;
-		return;
-	}
+	if (!parry_) {
+		// まだパリィされてないときの処理
 
-	if (dynamic_cast<Parry*>(other)) {
-		if (parry_) { return; }
-		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
-
-		if (other->GetUnit().isAlive_) {
-			parry_ = true;
-			moveVec_ = vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
-			GameScene::HitStop(10);
+		//プレイヤーに当たったときの処理
+		if (dynamic_cast<Player*>(other)) {
+			BlastEffectManager::On(unit_.pos_);
+			unit_.isAlive_ = false;
+			return;
 		}
-		else {
-			arrow_ = true;
-			arrowAngle_ = atan2f(vec.y, vec.x);
+
+		//プレイヤーのレーザーに当たったときの処理
+		if (dynamic_cast<PlayerLaser*>(other)) {
+			GameScene::Shake();
+			unit_.isAlive_ = false;
+			return;
 		}
-		return;
-	}
 
-	if (dynamic_cast<Player*>(other)) {
-		unit_.isAlive_ = false;
-		return;
+		//プレイヤーのパリィに当たったときの処理
+		if (dynamic_cast<Parry*>(other)) {
+			Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
+			if (other->GetUnit().isAlive_) {
+				unit_.para_.colliType = CollisionType::ALLY;
+				parry_ = true;
+				moveVec_ = vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
+				GameScene::HitStop(10);
+			}
+			else {
+				arrow_ = true;
+				arrowAngle_ = atan2f(vec.y, vec.x);
+			}
+			return;
+		}
 	}
+	else {
+		// パリィされてコリジョンのタイプが裏返ったときの処理
 
-	if (dynamic_cast<Shark*>(other)) {
-		if (parry_) {
+		// パリィされたあとにボスにぶつかったときの処理
+		if (dynamic_cast<BossBase*>(other)) {
 			unit_.isAlive_ = false;
 			BlastEffectManager::On(unit_.pos_);
+			return;
 		}
-		return;
-	}
 
-	//if (dynamic_cast<EnemyBase*>(other)) {
-	//	if (!dynamic_cast<EnemyBase*>(other)->GetParry()) { return; }
-	//	unit_.isAlive_ = false;
-	//}
+	}
 }
 
 void EnemyBase::Move(void)
@@ -124,6 +130,7 @@ void EnemyBase::Respawn(void)
 		unit_.isAlive_ = true;
 		moveVec_ = { -1.0f,0.0f };
 		parry_ = false;
+		unit_.para_.colliType = CollisionType::ENEMY;
 	}
 }
 

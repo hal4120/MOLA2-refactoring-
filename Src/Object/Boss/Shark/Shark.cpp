@@ -8,14 +8,8 @@
 #include"../../Enemy/EnemyBase.h"
 
 Shark::Shark():
-	state_(),
-	stateFuncPtr(),
 	moveVec_(),
-	imgs_(),
-	motion_(),
-	animCounter_(0),
-	animInterval_(0),
-	animLoop_(true)
+	deathCou_(0)
 {
 }
 
@@ -23,25 +17,29 @@ Shark::~Shark()
 {
 }
 
+
 void Shark::Load(void)
 {
+	imgs_.resize((int)MOTION::MAX);
 	for (int i = 0; i < (int)MOTION::MAX; i++) {
 		Utility::LoadArrayImg(MOTION_PATH[i], MOTION_NUM[i], MOTION_NUM[i], 1, LOAD_SIZE, LOAD_SIZE, imgs_[i]);
 	}
 
 	unit_.para_.speed = MOVE_SPEED;
 
+	BossBase::SCALE = this->SCALE;
+
 	unit_.para_.size.y = SIZE_Y;
 	unit_.para_.size.x = SIZE_X;
 	unit_.para_.radius = SIZE_Y;
 
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;
-
-	stateFuncPtr[(int)STATE::MOVE] = &Shark::Move;
-	stateFuncPtr[(int)STATE::ATTACK] = &Shark::Attack;
-	stateFuncPtr[(int)STATE::DAMAGE] = &Shark::Damage;
-	stateFuncPtr[(int)STATE::DEATH] = &Shark::Death;
-
+	
+#define SET_STATE(state, func) stateFuncPtr[(int)(state)] = static_cast<STATEFUNC>(func)
+	SET_STATE(STATE::MOVE, &Shark::Move);
+	SET_STATE(STATE::ATTACK, &Shark::Attack);
+	SET_STATE(STATE::DAMAGE, &Shark::Damage);
+	SET_STATE(STATE::DEATH, &Shark::Death);
 }
 
 void Shark::Init(void)
@@ -51,55 +49,36 @@ void Shark::Init(void)
 	unit_.pos_.x = Application::SCREEN_SIZE_X - SIZE_X / 2.0f;
 	unit_.pos_.y = Application::SCREEN_SIZE_Y / 2.0f;
 
-	state_ = STATE::MOVE;
+	state_ = (int)STATE::MOVE;
 
 	moveVec_ = { 0.0f,1.0f };
 
-	ChangeMotion(MOTION::MOVE);
+	deathCou_ = 0;
+
+	ChangeMotion((int)MOTION::MOVE);
 
 	unit_.hp_ = HP_MAX;
 }
 
-void Shark::Update(void)
-{
-	Invi();
-
-	(this->*stateFuncPtr[(int)state_])();
-
-	Animation();
-}
-
-void Shark::Draw(void)
-{
-	if (!unit_.isAlive_) { return; }
-	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, SCALE, 0, imgs_[(int)motion_][animCounter_], true, true);
-}
-
-void Shark::Release(void)
-{
-	for (auto& imgs : imgs_) {
-		for (auto& img : imgs) { DeleteGraph(img); }
-	}
-}
-
 void Shark::OnCollision(UnitBase* other)
 {
-	if (state_ == STATE::DAMAGE || state_ == STATE::DEATH) { return; }
+	if (state_ == (int)STATE::DAMAGE || state_ == (int)STATE::DEATH) { return; }
 
 	if (dynamic_cast<EnemyBase*>(other)) {
 		if (dynamic_cast<EnemyBase*>(other)->GetParry()) {
 			GameScene::Slow(20);
 			GameScene::Shake();
 
-			state_ = STATE::DAMAGE;
+			state_ = (int)STATE::DAMAGE;
 
-			ChangeMotion(MOTION::DAMAGE, false);
+			ChangeMotion((int)MOTION::DAMAGE, false);
 			animCounter_ = 1;
 		
 			unit_.hp_ -= 10;
 			if (unit_.hp_ <= 0) {
-				state_ = STATE::DEATH;
-				ChangeMotion(MOTION::DAMAGE);
+				state_ = (int)STATE::DEATH;
+				ChangeMotion((int)MOTION::DAMAGE);
+				deathCou_ = 0;
 			}
 		}
 		return;
@@ -131,40 +110,28 @@ void Shark::Attack(void)
 void Shark::Damage(void)
 {
 	// ダメージモーションが終わったら状態も戻す
-	if (motion_ != MOTION::DAMAGE) {
-		state_ = STATE::MOVE;
+	if (motion_ != (int)MOTION::DAMAGE) {
+		state_ = (int)STATE::MOVE;
 	}
 }
 
 void Shark::Death(void)
 {
-	static int deathCou = 0;
-	if (++deathCou >= 180) {
+	if (++deathCou_ >= DEATH_PERFOR_TIME) {
+		deathCou_ = 0;
 		unit_.isAlive_ = false;
 	}
 }
 
 
-
-void Shark::ChangeMotion(MOTION motion, bool loop)
+void Shark::AttackUpdate(void)
 {
-	motion_ = motion;
-	animLoop_ = loop;
-	animCounter_ = 0;
-	animInterval_ = 0;
 }
 
-void Shark::Animation(void)
+void Shark::AttackDraw(void)
 {
-	if (++animInterval_ >= ANIM_INTERVAL) {
-		animInterval_ = 0;
-		if (++animCounter_ >= imgs_[(int)motion_].size()) {
-			if (animLoop_) {
-				animCounter_ = 0;
-			}
-			else {
-				ChangeMotion(MOTION::MOVE);
-			}
-		}
-	}
+}
+
+void Shark::AttackRelease(void)
+{
 }
