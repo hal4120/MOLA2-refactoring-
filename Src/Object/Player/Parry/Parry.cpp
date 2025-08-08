@@ -10,6 +10,7 @@ Parry::Parry(const Vector2& playerPos):
 	img_(),
 	counter_(0),
 	countInterval_(0),
+	mag_(1.0f),
 	player_(playerPos)
 {
 }
