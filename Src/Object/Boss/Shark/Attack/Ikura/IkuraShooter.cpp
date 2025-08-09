@@ -38,7 +38,6 @@ void IkuraShooter::Init(void)
 
 void IkuraShooter::Update(void)
 {
-	Shot();
 	for (auto& ikura : ikuras_) { ikura->Update(); }
 }
 

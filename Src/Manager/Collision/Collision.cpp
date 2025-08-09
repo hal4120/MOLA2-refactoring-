@@ -216,7 +216,7 @@ const bool Collision::CircleAndRect(const Base& circle, const Base& rect) const
 
 const bool Collision::CircleAndEllipse(const Base& circle, const Base& ellipse) const
 {
-	// ‘È‰~‚Ì’†S‚ÆƒTƒCƒYi”¼Œaj
+	// ‘È‰~‚Ì’†S‚Æ”¼Œa
 	Vector2 ellipseCenter = ellipse.pos_;
 	Vector2 ellipseRadius = ellipse.para_.size / 2.0f;
 
@@ -224,30 +224,18 @@ const bool Collision::CircleAndEllipse(const Base& circle, const Base& ellipse) 
 	Vector2 circleCenter = circle.pos_;
 	float circleRadius = circle.para_.radius;
 
-	// ‘È‰~‹óŠÔ‚É³‹K‰»i‰~‚ğƒXƒP[ƒŠƒ“ƒO‚µ‚Ä’PˆÊ‰~‚Å”»’èj
-	Vector2 scale = { 1.0f / ellipseRadius.x, 1.0f / ellipseRadius.y };
+	// ‰~‚Ì”¼Œa•ª‚¾‚¯‘È‰~‚ğ–c‚ç‚Ü‚¹‚é
+	float a = ellipseRadius.x + circleRadius;
+	float b = ellipseRadius.y + circleRadius;
 
-	// ‘È‰~‹óŠÔ‚É•ÏŠ·‚³‚ê‚½‰~‚Ì’†S
-	Vector2 scaledCircleCenter = {
-		(circleCenter.x - ellipseCenter.x) * scale.x,
-		(circleCenter.y - ellipseCenter.y) * scale.y
-	};
+	// ’†S‚©‚ç‚Ì‹——£
+	float dx = circleCenter.x - ellipseCenter.x;
+	float dy = circleCenter.y - ellipseCenter.y;
 
-	// ‘È‰~‹óŠÔ‚É•ÏŠ·‚³‚ê‚½‰~‚Ì”¼ŒaiXEY•ûŒü‚É”ñ“™•ûƒXƒP[ƒŠƒ“ƒOj
-	Vector2 scaledCircleRadius = {
-		circleRadius * scale.x,
-		circleRadius * scale.y
-	};
+	// ‘È‰~‚Ì®‚Å”»’è
+	float eq = (dx * dx) / (a * a) + (dy * dy) / (b * b);
 
-	// ‘È‰~‹óŠÔ‚Å‚Ì‹——£
-	float dx = scaledCircleCenter.x;
-	float dy = scaledCircleCenter.y;
-	float distSq = dx * dx + dy * dy;
-
-	// ‘È‰~‹óŠÔ‚Å‚Ì”¼Œa‚Ì•½‹Ï’l‚ğg‚Á‚Ä”äŠri‹ß—j
-	float avgRadius = (scaledCircleRadius.x + scaledCircleRadius.y) / 2.0f;
-
-	return distSq <= avgRadius * avgRadius;
+	return eq <= 1.0f;
 }
 
 const bool Collision::CircleAndPixel(const CircleInfo& circle, const Vector2& pixel) const

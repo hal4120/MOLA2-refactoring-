@@ -5,19 +5,20 @@
 #include"../../../Application/Application.h"
 #include"../../../Scene/Game/GameScene.h"
 
-#include"Attack/Ikura/IkuraShooter.h"
-
 #include"../../Enemy/EnemyBase.h"
 #include"../../Player/Player.h"
 
-Shark::Shark():
+Shark::Shark(const Vector2& playerPos):
+	BossBase(playerPos),
 	moveVec_(),
 	attackInterval_(),
 	attackInit_(false),
 	attackEnd_(false),
 	deathCou_(0),
 	attackState_(),
-	ikura_(nullptr)
+	ikura_(nullptr),
+	uni_(nullptr),
+	mizu_(nullptr)
 {
 }
 
@@ -51,6 +52,10 @@ void Shark::Load(void)
 
 	ikura_ = new IkuraShooter(unit_.pos_);
 	ikura_->Load();
+	uni_ = new UniShooter();
+	uni_->Load();
+	mizu_ = new Mizu(unit_.pos_, playerPos_);
+	mizu_->Load();
 }
 
 void Shark::Init(void)
@@ -80,6 +85,8 @@ void Shark::Init(void)
 	attackState_ = ATTACK_KINDS::NON;
 
 	ikura_->Init();
+	uni_->Init();
+	mizu_->Init();
 }
 
 void Shark::OnCollision(UnitBase* other)
@@ -90,16 +97,22 @@ void Shark::OnCollision(UnitBase* other)
 		GameScene::Slow(20);
 		GameScene::Shake();
 
-		state_ = (int)STATE::DAMAGE;
-		ChangeMotion((int)MOTION::DAMAGE, false);
-		animCounter_ = 1;
+		HpDecrease(10);
+		return;
+	}
 
-		unit_.hp_ -= 10;
-		if (unit_.hp_ <= 0) {
-			state_ = (int)STATE::DEATH;
-			ChangeMotion((int)MOTION::DAMAGE);
-			deathCou_ = 0;
-		}
+	if (dynamic_cast<Uni*>(other)) {
+		GameScene::Slow(20);
+		GameScene::Shake();
+
+		HpDecrease(10);
+		return;
+	}
+	if (dynamic_cast<Mizu*>(other)) {
+		GameScene::Slow(20);
+		GameScene::Shake();
+
+		HpDecrease(5);
 		return;
 	}
 
@@ -107,18 +120,7 @@ void Shark::OnCollision(UnitBase* other)
 		GameScene::Slow(20);
 		GameScene::Shake();
 
-		state_ = (int)STATE::DAMAGE;
-		ChangeMotion((int)MOTION::DAMAGE, false);
-		animCounter_ = 1;
-
-		unit_.inviciCounter_ = 10;
-		unit_.hp_ -= 5;
-		
-		if (unit_.hp_ <= 0) {
-			state_ = (int)STATE::DEATH;
-			ChangeMotion((int)MOTION::DAMAGE);
-			deathCou_ = 0;
-		}
+		HpDecrease(5);
 		return;
 	}
 
@@ -129,6 +131,8 @@ std::vector<UnitBase*> Shark::AttackIns(void)
 	std::vector<UnitBase*> ret;
 
 	for (auto& ikura : ikura_->Ikuras()) { ret.emplace_back(ikura); }
+	for (auto& uni : uni_->Unis()) { ret.emplace_back(uni); }
+	ret.emplace_back(mizu_);
 
 	return ret;
 }
@@ -155,6 +159,7 @@ void Shark::Move(void)
 	}
 	else
 	{
+		attackInterval_ = ATTACK_INTERVAL;
 		attackInit_ = false;
 		state_ = (int)STATE::ATTACK;
 		ChangeMotion((int)MOTION::ATTACK);
@@ -172,6 +177,12 @@ void Shark::Attack(void)
 		case Shark::ATTACK_KINDS::IKURA:
 			ikura_->On();
 			break;
+		case Shark::ATTACK_KINDS::UNI:
+  			uni_->Shot(playerPos_);
+			break;
+		case Shark::ATTACK_KINDS::MIZU:
+			mizu_->On();
+			break;
 		}
 
 		attackInit_ = true;
@@ -183,7 +194,14 @@ void Shark::Attack(void)
 	case Shark::ATTACK_KINDS::NON:
 		break;
 	case Shark::ATTACK_KINDS::IKURA:
+		ikura_->Shot();
 		if (ikura_->End()) { attackEnd_ = true; }
+		break;
+	case Shark::ATTACK_KINDS::UNI:
+		if (uni_->End()) { attackEnd_ = true; }
+		break;
+	case Shark::ATTACK_KINDS::MIZU:
+		if (mizu_->End()) { attackEnd_ = true; }
 		break;
 	}
 
@@ -215,6 +233,21 @@ void Shark::Death(void)
 }
 
 
+void Shark::HpDecrease(int damage)
+{
+	state_ = (int)STATE::DAMAGE;
+	ChangeMotion((int)MOTION::DAMAGE, false);
+	animCounter_ = 1;
+
+	unit_.hp_ -= damage;
+	if (unit_.hp_ <= 0) {
+		state_ = (int)STATE::DEATH;
+		ChangeMotion((int)MOTION::DAMAGE);
+		deathCou_ = 0;
+	}
+}
+
+
 Shark::ATTACK_KINDS Shark::AttackLottery(void)
 {
 	ATTACK_KINDS ret = ATTACK_KINDS::NON;
@@ -225,10 +258,10 @@ Shark::ATTACK_KINDS Shark::AttackLottery(void)
 		ret = ATTACK_KINDS::IKURA;
 	}
 	else if (rand <= 4000) {
-		ret = ATTACK_KINDS::IKURA;
+		ret = ATTACK_KINDS::UNI;
 	}
 	else if (rand <= 6000) {
-		ret = ATTACK_KINDS::IKURA;
+		ret = ATTACK_KINDS::MIZU;
 	}
 	else if (rand <= 8000) {
 		ret = ATTACK_KINDS::IKURA;
@@ -236,21 +269,27 @@ Shark::ATTACK_KINDS Shark::AttackLottery(void)
 	else if (rand <= 10000) {
 		ret = ATTACK_KINDS::IKURA;
 	}
-
+	ret = ATTACK_KINDS::MIZU;
 	return ret;
 }
 
 void Shark::AttackUpdate(void)
 {
 	ikura_->Update();
+	uni_->Update();
+	mizu_->Update();
 }
 
 void Shark::AttackDraw(void)
 {
 	ikura_->Draw();
+	uni_->Draw();
+	mizu_->Draw();
 }
 
 void Shark::AttackRelease(void)
 {
 	ikura_->Release();
+	uni_->Release();
+	mizu_->Release();
 }

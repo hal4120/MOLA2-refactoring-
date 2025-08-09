@@ -22,6 +22,8 @@ void Monkfish::Load(void)
 	unit_.para_.speed = MOVE_SPEED;
 
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;
+
+	respawnTime = RESPAWN_TIME;
 }
 
 void Monkfish::OnCollision(UnitBase* other)

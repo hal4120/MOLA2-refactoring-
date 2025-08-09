@@ -6,7 +6,7 @@ class BossBase : public UnitBase
 public:
 	static constexpr int ANIM_INTERVAL = 5;
 
-	BossBase();
+	BossBase(const Vector2& playerPos);
 	virtual ~BossBase();
 
 	virtual void Load(void)override = 0;
@@ -23,6 +23,7 @@ protected:
 	using STATEFUNC = void (BossBase::*)(void);
 	std::map<int,STATEFUNC>stateFuncPtr;
 
+	const Vector2& playerPos_;
 
 	std::vector<std::vector<int>>imgs_;
 	float SCALE;

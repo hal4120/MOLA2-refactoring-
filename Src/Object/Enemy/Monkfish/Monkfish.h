@@ -10,6 +10,8 @@ public:
 
 	static constexpr float MOVE_SPEED = 5.0f;
 
+	static constexpr int RESPAWN_TIME = 100;
+
 	Monkfish(NUMBER num);
 	~Monkfish();
 

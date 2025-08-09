@@ -38,6 +38,8 @@ GameScene::~GameScene()
 
 void GameScene::Load(void)
 {
+	this->Release();
+
 	mainScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y);
 
 	collision_ = new Collision();
@@ -57,13 +59,11 @@ void GameScene::Load(void)
 	eMng_ = new EnemyManager(BOSS_KINDS::SHARK);
 	eMng_->Load();
 	collision_->Add(eMng_->GetEnemys());
-	//for (auto& enemy : eMng_->GetEnemys()) { collision_->Add(enemy); }
 
-	shark_ = new Shark();
+	shark_ = new Shark(player_->GetUnit().pos_);
 	shark_->Load();
 	collision_->Add(shark_);
 	collision_->Add(shark_->AttackIns());
-
 }
 void GameScene::Init(void)
 {

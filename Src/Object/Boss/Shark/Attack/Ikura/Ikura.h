@@ -23,7 +23,7 @@ public:
 		moveVec_ = vec;
 	}
 
-	void OnCollision(UnitBase* other);
+	void OnCollision(UnitBase* other)override;
 
 private:
 	int img_;

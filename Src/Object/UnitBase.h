@@ -50,7 +50,7 @@ public:
 	virtual void Draw(void) = 0;
 	virtual void Release(void) = 0;
 
-	const Base GetUnit(void)const { return unit_; }
+	const Base& GetUnit(void)const { return unit_; }
 
 	virtual void OnCollision(UnitBase* other) = 0;
 

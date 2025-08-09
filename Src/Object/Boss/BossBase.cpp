@@ -2,7 +2,8 @@
 
 #include<DxLib.h>
 
-BossBase::BossBase() :
+BossBase::BossBase(const Vector2& playerPos) :
+	playerPos_(playerPos),
 	state_(0),
 	stateFuncPtr(),
 	SCALE(1.0f),

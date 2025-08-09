@@ -2,7 +2,9 @@
 
 #include"../BossBase.h"
 
-class IkuraShooter;
+#include"Attack/Ikura/IkuraShooter.h"
+#include"Attack/Uni/UniShooter.h"
+#include"Attack/Mizu/Mizu.h"
 
 class Shark : public BossBase
 {
@@ -34,7 +36,7 @@ public:
 
 	static constexpr int ATTACK_INTERVAL = 300;
 
-	Shark();
+	Shark(const Vector2& playerPos);
 	~Shark();
 
 	void Load(void)override;
@@ -52,6 +54,8 @@ private:
 	void Death(void);
 	//-----------------------------------------------------
 
+	void HpDecrease(int damage);
+
 	Vector2 moveVec_;
 
 	int attackInterval_;
@@ -64,6 +68,8 @@ private:
 	{
 		NON = -1,
 		IKURA,
+		UNI,
+		MIZU,
 
 		MAX
 	};
@@ -71,6 +77,8 @@ private:
 	ATTACK_KINDS AttackLottery(void);
 
 	IkuraShooter* ikura_;
+	UniShooter* uni_;
+	Mizu* mizu_;
 
 	// çUåÇóp-----------------
 	void AttackUpdate(void);

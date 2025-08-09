@@ -41,6 +41,7 @@ void EnemyManager::Draw(void)
 void EnemyManager::Release(void)
 {
 	for (auto& enemy : enemys_) {
+		if (!enemy) { continue; }
 		enemy->Release();
 		delete enemy;
 		enemy = nullptr;

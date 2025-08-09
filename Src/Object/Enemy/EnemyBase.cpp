@@ -24,7 +24,7 @@ EnemyBase::EnemyBase(NUMBER num):
 
 void EnemyBase::Load(void)
 {
-	Utility::LoadImg(arrowImg_, "Data/Image/Enemy/Arrow.png");
+	Utility::LoadImg(arrowImg_, "Data/Image/Effect/Arrow.png");
 	unit_.para_.colliType = CollisionType::ENEMY;
 }
 
@@ -67,49 +67,53 @@ void EnemyBase::Release(void)
 
 void EnemyBase::OnCollision(UnitBase* other)
 {
-	if (!parry_) {
-		// まだパリィされてないときの処理
-
-		//プレイヤーに当たったときの処理
-		if (dynamic_cast<Player*>(other)) {
-			BlastEffectManager::On(unit_.pos_);
-			unit_.isAlive_ = false;
-			return;
-		}
-
-		//プレイヤーのレーザーに当たったときの処理
-		if (dynamic_cast<PlayerLaser*>(other)) {
-			GameScene::Shake();
-			unit_.isAlive_ = false;
-			return;
-		}
-
-		//プレイヤーのパリィに当たったときの処理
-		if (dynamic_cast<Parry*>(other)) {
-			Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
-			if (other->GetUnit().isAlive_) {
-				unit_.para_.colliType = CollisionType::ALLY;
-				parry_ = true;
-				moveVec_ = vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
-				GameScene::HitStop(10);
-			}
-			else {
-				arrow_ = true;
-				arrowAngle_ = atan2f(vec.y, vec.x);
-			}
-			return;
-		}
+	//プレイヤーに当たったときの処理
+	if (dynamic_cast<Player*>(other)) {
+		BlastEffectManager::On(unit_.pos_);
+		unit_.isAlive_ = false;
+		return;
 	}
-	else {
-		// パリィされてコリジョンのタイプが裏返ったときの処理
 
-		// パリィされたあとにボスにぶつかったときの処理
-		if (dynamic_cast<BossBase*>(other)) {
-			unit_.isAlive_ = false;
-			BlastEffectManager::On(unit_.pos_);
-			return;
+	//プレイヤーのレーザーに当たったときの処理
+	if (dynamic_cast<PlayerLaser*>(other)) {
+		GameScene::Shake();
+		BlastEffectManager::On(unit_.pos_);
+		unit_.isAlive_ = false;
+		return;
+	}
+
+	//プレイヤーのパリィに当たったときの処理
+	if (dynamic_cast<Parry*>(other)) {
+		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
+		if (other->GetUnit().isAlive_) {
+			unit_.para_.colliType = CollisionType::ALLY;
+			parry_ = true;
+			moveVec_ = vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
+			GameScene::HitStop(10);
 		}
+		else {
+			arrow_ = true;
+			arrowAngle_ = atan2f(vec.y, vec.x);
+		}
+		return;
+	}
 
+	if ((dynamic_cast<Uni*>(other) ||
+		dynamic_cast<Mizu*>(other) ||
+		dynamic_cast<EnemyBase*>(other))
+		&& unit_.para_.colliType == CollisionType::ENEMY) {
+		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
+		unit_.para_.colliType = CollisionType::ALLY;
+		parry_ = true;
+		moveVec_ = vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
+		GameScene::HitStop(10);
+		return;
+	}
+	// パリィされたあとにボスにぶつかったときの処理
+	if (dynamic_cast<BossBase*>(other)) {
+		unit_.isAlive_ = false;
+		BlastEffectManager::On(unit_.pos_);
+		return;
 	}
 }
 

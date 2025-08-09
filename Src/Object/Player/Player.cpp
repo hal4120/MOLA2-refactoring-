@@ -15,6 +15,7 @@ Player::Player():
 	state_(STATE::DEFAULT),
 	stateFuncPtr_(),
 	knockBackVec_(),
+	angle_(0.0f),
 	parry_(nullptr),
 	laser_(nullptr)
 {
@@ -98,7 +99,6 @@ void Player::Draw(void)
 
 	parry_->Draw();
 	laser_->Draw();
-
 }
 
 void Player::Release(void)
@@ -120,8 +120,9 @@ void Player::Release(void)
 
 void Player::OnCollision(UnitBase* other)
 {
-	if (state_ != STATE::DEFAULT) { return; }
-	GameScene::HitStop(10);
+	if (state_ == STATE::DEATH) { return; }
+	GameScene::Shake(ShakeKinds::ROUND, ShakeSize::MEDIUM);
+	GameScene::Slow(20);
 
 	knockBackVec_ = unit_.pos_ - other->GetUnit().pos_;
 	knockBackVec_ /= sqrtf(knockBackVec_.x * knockBackVec_.x + knockBackVec_.y * knockBackVec_.y);

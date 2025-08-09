@@ -5,6 +5,7 @@
 #include"../Player.h"
 
 #include"../../Enemy/EnemyBase.h"
+#include"../../Boss/Shark/Attack/Uni/Uni.h"
 
 Parry::Parry(const Vector2& playerPos):
 	img_(),
@@ -75,11 +76,10 @@ void Parry::OnCollision(UnitBase* other)
 {
 	if (!unit_.isAlive_) { return; }
 
-	if (dynamic_cast<EnemyBase*>(other)) {
-		if (!dynamic_cast<EnemyBase*>(other)->GetParry()) {
-			mag_ += MAG_ONE_SIZE_UP;
-			if (mag_ > MAX_MAG) { mag_ = MAX_MAG; }
-			unit_.para_.radius = LOAD_SIZE_X * mag_;
-		}
+	if (dynamic_cast<EnemyBase*>(other)||
+		dynamic_cast<Uni*>(other)) {
+		mag_ += MAG_ONE_SIZE_UP;
+		if (mag_ > MAX_MAG) { mag_ = MAX_MAG; }
+		unit_.para_.radius = LOAD_SIZE_X * mag_;
 	}
 }

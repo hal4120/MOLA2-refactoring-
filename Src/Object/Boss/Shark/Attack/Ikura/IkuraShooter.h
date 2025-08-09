@@ -28,6 +28,7 @@ public:
 
 	std::vector<Ikura*>Ikuras(void) { return ikuras_; }
 
+	void Shot(void);
 private:
 	int img_;
 	std::vector<Ikura*>ikuras_;
@@ -38,6 +39,5 @@ private:
 	int shotCount_;
 	int interval_;
 	int searchCount_;
-	void Shot(void);
 };
 
