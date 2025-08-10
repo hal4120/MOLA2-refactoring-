@@ -244,7 +244,6 @@ void Shark::Death(void)
 	if (++deathCou_ >= DEATH_PERFOR_TIME) {
 		deathCou_ = 0;
 		unit_.isAlive_ = false;
-		SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE);
 	}
 	else {
 		angle_ += Utility::Deg2RadF(1.0f);
