@@ -297,6 +297,7 @@ Shark::ATTACK_KINDS Shark::AttackLottery(void)
 	else if (rand <= 10000) {
 		ret = ATTACK_KINDS::UNI;
 	}
+	ret = ATTACK_KINDS::LASER;
 	return ret;
 }
 

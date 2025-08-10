@@ -30,9 +30,9 @@ void SharkLaser::Load(void)
 	unit_.para_.colliType = CollisionType::ENEMY;
 
 	unit_.para_.size.x = SIZE_X;
-	unit_.para_.size.y = SIZE_Y;
+	unit_.para_.size.y = SIZE_Y * 1.5f;
 
-	unit_.para_.center.x = -SIZE_X / 2.0f;
+	unit_.para_.center.x = -(SIZE_X / 2.0f);
 }
 
 void SharkLaser::Init(void)
@@ -70,7 +70,7 @@ void SharkLaser::Draw(void)
 {
 	if (state_ == STATE::NON) { return; }
 
-	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y,SIZE_X, SIZE_Y / 2.0f, 1, 1, 0, img_[state_][counter_ % img_[state_].size()], true);
+	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, SIZE_X, SIZE_Y / 2.0f, 1, 2, 0, img_[state_][counter_ % img_[state_].size()], true);
 }
 
 void SharkLaser::Release(void)
