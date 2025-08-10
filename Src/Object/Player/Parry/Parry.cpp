@@ -82,7 +82,7 @@ void Parry::Release(void)
 
 void Parry::On(void)
 {
-	if (coolTime_ > 0) { return; }
+	if (coolTime_ > 0 || unit_.isAlive_) { return; }
 	coolTime_ = COOL_TIME;
 	counter_ = 0;
 	countInterval_ = 0;

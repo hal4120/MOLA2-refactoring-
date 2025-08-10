@@ -42,6 +42,7 @@ public:
 	const STATE GetState(void)const { return state_; }
 
 	void On(void) { if (state_ != STATE::NON) { return; }state_ = STATE::CHARGE; counter_ = 0; countInterval_ = 0; }
+	void Off(void) { state_ = STATE::NON; }
 
 private:
 	// ‰æ‘œ

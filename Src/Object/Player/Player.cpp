@@ -130,6 +130,7 @@ void Player::OnCollision(UnitBase* other)
 	state_ = STATE::DEATH;
 
 	parry_->MagReset();
+	laser_->Off();
 }
 
 
@@ -162,8 +163,8 @@ void Player::Default(void)
 	if (unit_.pos_.y < min.y) { unit_.pos_.y = min.y; }
 	if (unit_.pos_.x > max.x) { unit_.pos_.x = max.x; }
 	if (unit_.pos_.y > max.y) { unit_.pos_.y = max.y; }
-	
-	if (attackKey_.downTrg_ && !parry_->GetUnit().isAlive_) { parry_->On(); }
+
+	if (attackKey_.downTrg_) { parry_->On(); }
 	if (specialKey_.downTrg_) { laser_->On(); state_ = STATE::SPECIAL; }
 }
 

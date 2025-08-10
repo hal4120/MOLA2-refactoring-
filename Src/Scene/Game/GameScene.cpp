@@ -29,7 +29,7 @@ GameScene::GameScene():
 	player_(nullptr),
 	stage_(nullptr),
 	eMng_(nullptr),
-	shark_(nullptr)
+	boss_(nullptr)
 {
 }
 
@@ -61,10 +61,10 @@ void GameScene::Load(void)
 	eMng_->Load();
 	collision_->Add(eMng_->GetEnemys());
 
-	shark_ = new Shark(player_->GetUnit().pos_);
-	shark_->Load();
-	collision_->Add(shark_);
-	collision_->Add(shark_->AttackIns());
+	boss_ = new Shark(player_->GetUnit().pos_);
+	boss_->Load();
+	collision_->Add(boss_);
+	collision_->Add(boss_->AttackIns());
 }
 
 void GameScene::Init(void)
@@ -73,7 +73,7 @@ void GameScene::Init(void)
 	player_->Init();
 	eMng_->Init();
 
-	shark_->Init();
+	boss_->Init();
 
 	// ヒットストップカウンターの初期化
 	hitStop_ = 0;
@@ -102,12 +102,12 @@ void GameScene::Update(void)
 	player_->Update();
 	eMng_->Update();
 
-	shark_->Update();
+	boss_->Update();
 
 	collision_->Check();
 	blast_->Update();
 
-	if (shark_->End()) { SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE); }
+	if (boss_->End()) { SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE); }
 }
 
 void GameScene::Draw(void)
@@ -123,7 +123,7 @@ void GameScene::Draw(void)
 	stage_->Draw();
 	player_->Draw();
 	eMng_->Draw();
-	shark_->Draw();
+	boss_->Draw();
 	blast_->Draw();
 	//-------------------------------------------------
 
@@ -150,10 +150,10 @@ void GameScene::Release(void)
 		delete eMng_;
 		eMng_ = nullptr;
 	}
-	if (shark_) {
-		shark_->Release();
-		delete shark_;
-		shark_ = nullptr;
+	if (boss_) {
+		boss_->Release();
+		delete boss_;
+		boss_ = nullptr;
 	}
 
 	if (blast_) {

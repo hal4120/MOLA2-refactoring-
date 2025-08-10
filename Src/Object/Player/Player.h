@@ -18,15 +18,16 @@ public:
 	static constexpr int LOAD_SIZE_X = 42;
 	static constexpr int LOAD_SIZE_Y = 66;
 
-
 	// アニメーションのスピード(何フレームに１回アニメを動かすか)
 	static constexpr int ANIM_SPEED = 5;
 
+	// 状態
 	enum STATE { DEFAULT, SPECIAL, DEATH, MAX };
 
 	// 初期座標
 	const Vector2 START_POS = { 50.0f,Application::SCREEN_SIZE_Y / 2 };
 
+	// 移動速度
 	static constexpr float SPEED = 8.0f;
 
     Player();

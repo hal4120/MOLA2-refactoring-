@@ -45,7 +45,10 @@ void PlayerLaser::Init(void)
 
 void PlayerLaser::Update(void)
 {
-	if (state_ == STATE::NON) { return; }
+	if (state_ == STATE::NON) {
+		unit_.isAlive_ = false;
+		return;
+	}
 
 	unit_.pos_ = player_;
 	unit_.pos_.x += Player::LOAD_SIZE_X / 2;

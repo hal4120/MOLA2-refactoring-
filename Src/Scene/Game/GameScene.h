@@ -10,8 +10,8 @@ class BlastEffectManager;
 class StageBase;
 class Player;
 class EnemyManager;
+class BossBase;
 
-class Shark;
 
 class GameScene : public SceneBase
 {
@@ -57,7 +57,7 @@ private:
 	Player* player_;
 	EnemyManager* eMng_;
 
-	Shark* shark_;
+	BossBase* boss_;
 
 	// ヒットストップカウンター
 	static int hitStop_;
