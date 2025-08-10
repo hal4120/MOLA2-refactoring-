@@ -2,7 +2,9 @@
 
 #include<DxLib.h>
 
+#include"../../../Manager/BlastEffect/BlastEffectManager.h"
 #include"../../../Application/Application.h"
+#include"../../../Scene/SceneManager/SceneManager.h"
 #include"../../../Scene/Game/GameScene.h"
 
 #include"../../Enemy/EnemyBase.h"
@@ -18,7 +20,8 @@ Shark::Shark(const Vector2& playerPos):
 	attackState_(),
 	ikura_(nullptr),
 	uni_(nullptr),
-	mizu_(nullptr)
+	mizu_(nullptr),
+	laser_(nullptr)
 {
 }
 
@@ -172,11 +175,17 @@ void Shark::Move(void)
 
 void Shark::Attack(void)
 {
+	// UŒ‚ó‘Ô‚Ö‘JˆÚŒãA‚P‰ñ–Ú‚Ìˆ—```````
 	if (!attackInit_) {
+
+		attackInit_ = true;
+		attackEnd_ = false;
+
 		attackState_ = AttackLottery();
 		switch (attackState_)
 		{
 		case Shark::ATTACK_KINDS::NON:
+			attackEnd_ = true;
 			break;
 		case Shark::ATTACK_KINDS::IKURA:
 			ikura_->On();
@@ -191,14 +200,12 @@ void Shark::Attack(void)
 			laser_->On();
 			break;
 		}
-		attackInit_ = true;
-		attackEnd_ = false;
 	}
+	//```````````````````````
 
+	// UŒ‚ó‘Ô’†‚Ì‚Ýs‚¤XVˆ—A‚Ü‚½UŒ‚I—¹”»’f
 	switch (attackState_)
 	{
-	case Shark::ATTACK_KINDS::NON:
-		break;
 	case Shark::ATTACK_KINDS::IKURA:
 		ikura_->Shot();
 		if (ikura_->End()) { attackEnd_ = true; }
@@ -213,13 +220,15 @@ void Shark::Attack(void)
 		if (laser_->End()) { attackEnd_ = true; }
 		break;
 	}
+	//```````````````````````
 
-
+	// UŒ‚I—¹A’Êíó‘Ô‚Ö‘JˆÚ````````
 	if (attackEnd_) {
 		attackInterval_ = ATTACK_INTERVAL;
 		state_ = (int)STATE::MOVE;
 		ChangeMotion((int)MOTION::MOVE);
 	}
+	//`````````````````````
 }
 
 void Shark::Damage(void)
@@ -235,9 +244,18 @@ void Shark::Death(void)
 	if (++deathCou_ >= DEATH_PERFOR_TIME) {
 		deathCou_ = 0;
 		unit_.isAlive_ = false;
+		SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE);
 	}
 	else {
 		angle_ += Utility::Deg2RadF(1.0f);
+		if (deathCou_ % 10 == 0) {
+			Vector2 point = unit_.pos_;
+			point += Vector2(
+				(float)(GetRand((int)(unit_.para_.size.x)) - unit_.para_.size.x / 2.0f),
+				(float)(GetRand((int)(unit_.para_.size.y)) - unit_.para_.size.y / 2.0f)
+			);
+			BlastEffectManager::On(point);
+		}
 	}
 }
 

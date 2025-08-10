@@ -32,7 +32,7 @@ void SceneManager::Init(void)
 
 
 	// Å‰‚Íƒ^ƒCƒgƒ‹‰æ–Ê‚©‚ç
-	ChangeScene(std::make_shared<TitleScene>(TitleScene()));
+	ChangeScene(SCENE_ID::TITLE);
 }
 
 

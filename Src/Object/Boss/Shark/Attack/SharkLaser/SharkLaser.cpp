@@ -45,7 +45,10 @@ void SharkLaser::Init(void)
 
 void SharkLaser::Update(void)
 {
-	if (state_ == STATE::NON) { return; }
+	if (state_ == STATE::NON) {
+		unit_.isAlive_ = false; 
+		return; 
+	}
 
 	unit_.pos_ = boss_;
 	unit_.pos_.x -= Shark::SIZE_X / 2;
