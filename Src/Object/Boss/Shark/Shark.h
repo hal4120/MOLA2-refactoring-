@@ -5,6 +5,7 @@
 #include"Attack/Ikura/IkuraShooter.h"
 #include"Attack/Uni/UniShooter.h"
 #include"Attack/Mizu/Mizu.h"
+#include"Attack/SharkLaser/SharkLaser.h"
 
 class Shark : public BossBase
 {
@@ -70,6 +71,7 @@ private:
 		IKURA,
 		UNI,
 		MIZU,
+		LASER,
 
 		MAX
 	};
@@ -79,6 +81,7 @@ private:
 	IkuraShooter* ikura_;
 	UniShooter* uni_;
 	Mizu* mizu_;
+	SharkLaser* laser_;
 
 	// çUåÇóp-----------------
 	void AttackUpdate(void);

@@ -18,6 +18,9 @@ public:
 	static constexpr float MAG_ONE_SIZE_UP = 0.2f;
 	static constexpr float MAX_MAG = 2.0f;
 
+	static constexpr int COOL_TIME = 60;
+	static constexpr float COOL_TIME_DRAW_SIZE_Y = 5.0f;
+
 	Parry(const Vector2& playerPos);
 	~Parry();
 
@@ -29,7 +32,7 @@ public:
 
 	void OnCollision(UnitBase* other);
 
-	void On(void) { unit_.isAlive_ = true; counter_ = 0; countInterval_ = 0; }
+	void On(void);
 
 	void MagReset(void) { mag_ = DEFAULT_MAG; unit_.para_.radius = LOAD_SIZE_X; }
 
@@ -38,6 +41,8 @@ private:
 
 	int counter_;
 	int countInterval_;
+
+	int coolTime_;
 
 	float mag_;
 

@@ -142,6 +142,7 @@
     <ClCompile Include="Src\Object\Boss\Shark\Attack\Ikura\Ikura.cpp" />
     <ClCompile Include="Src\Object\Boss\Shark\Attack\Ikura\IkuraShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Shark\Attack\Mizu\Mizu.cpp" />
+    <ClCompile Include="Src\Object\Boss\Shark\Attack\SharkLaser\SharkLaser.cpp" />
     <ClCompile Include="Src\Object\Boss\Shark\Attack\Uni\Uni.cpp" />
     <ClCompile Include="Src\Object\Boss\Shark\Attack\Uni\UniShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Shark\Shark.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Src\Object\Boss\Shark\Attack\Ikura\Ikura.h" />
     <ClInclude Include="Src\Object\Boss\Shark\Attack\Ikura\IkuraShooter.h" />
     <ClInclude Include="Src\Object\Boss\Shark\Attack\Mizu\Mizu.h" />
+    <ClInclude Include="Src\Object\Boss\Shark\Attack\SharkLaser\SharkLaser.h" />
     <ClInclude Include="Src\Object\Boss\Shark\Attack\Uni\Uni.h" />
     <ClInclude Include="Src\Object\Boss\Shark\Attack\Uni\UniShooter.h" />
     <ClInclude Include="Src\Object\Boss\Shark\Shark.h" />

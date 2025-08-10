@@ -56,6 +56,8 @@ void Shark::Load(void)
 	uni_->Load();
 	mizu_ = new Mizu(unit_.pos_, playerPos_);
 	mizu_->Load();
+	laser_ = new SharkLaser(unit_.pos_);
+	laser_->Load();
 }
 
 void Shark::Init(void)
@@ -87,6 +89,7 @@ void Shark::Init(void)
 	ikura_->Init();
 	uni_->Init();
 	mizu_->Init();
+	laser_->Init();
 }
 
 void Shark::OnCollision(UnitBase* other)
@@ -133,6 +136,7 @@ std::vector<UnitBase*> Shark::AttackIns(void)
 	for (auto& ikura : ikura_->Ikuras()) { ret.emplace_back(ikura); }
 	for (auto& uni : uni_->Unis()) { ret.emplace_back(uni); }
 	ret.emplace_back(mizu_);
+	ret.emplace_back(laser_);
 
 	return ret;
 }
@@ -183,8 +187,10 @@ void Shark::Attack(void)
 		case Shark::ATTACK_KINDS::MIZU:
 			mizu_->On();
 			break;
+		case Shark::ATTACK_KINDS::LASER:
+			laser_->On();
+			break;
 		}
-
 		attackInit_ = true;
 		attackEnd_ = false;
 	}
@@ -202,6 +208,9 @@ void Shark::Attack(void)
 		break;
 	case Shark::ATTACK_KINDS::MIZU:
 		if (mizu_->End()) { attackEnd_ = true; }
+		break;
+	case Shark::ATTACK_KINDS::LASER:
+		if (laser_->End()) { attackEnd_ = true; }
 		break;
 	}
 
@@ -239,6 +248,8 @@ void Shark::HpDecrease(int damage)
 	ChangeMotion((int)MOTION::DAMAGE, false);
 	animCounter_ = 1;
 
+	laser_->Off();
+
 	unit_.hp_ -= damage;
 	if (unit_.hp_ <= 0) {
 		state_ = (int)STATE::DEATH;
@@ -264,12 +275,11 @@ Shark::ATTACK_KINDS Shark::AttackLottery(void)
 		ret = ATTACK_KINDS::MIZU;
 	}
 	else if (rand <= 8000) {
-		ret = ATTACK_KINDS::IKURA;
+		ret = ATTACK_KINDS::LASER;
 	}
 	else if (rand <= 10000) {
-		ret = ATTACK_KINDS::IKURA;
+		ret = ATTACK_KINDS::UNI;
 	}
-	ret = ATTACK_KINDS::MIZU;
 	return ret;
 }
 
@@ -278,6 +288,7 @@ void Shark::AttackUpdate(void)
 	ikura_->Update();
 	uni_->Update();
 	mizu_->Update();
+	laser_->Update();
 }
 
 void Shark::AttackDraw(void)
@@ -285,11 +296,29 @@ void Shark::AttackDraw(void)
 	ikura_->Draw();
 	uni_->Draw();
 	mizu_->Draw();
+	laser_->Draw();
 }
 
 void Shark::AttackRelease(void)
 {
-	ikura_->Release();
-	uni_->Release();
-	mizu_->Release();
+	if (ikura_) {
+		ikura_->Release();
+		delete ikura_;
+		ikura_ = nullptr;
+	}
+	if (uni_) {
+		uni_->Release();
+		delete uni_;
+		uni_ = nullptr;
+	}
+	if (mizu_) {
+		mizu_->Release();
+		delete mizu_;
+		mizu_ = nullptr;
+	}
+	if (laser_) {
+		laser_->Release();
+		delete laser_;
+		laser_ = nullptr;
+	}
 }
