@@ -102,6 +102,7 @@ void EnemyBase::OnCollision(UnitBase* other)
 		dynamic_cast<Mizu*>(other) ||
 		dynamic_cast<EnemyBase*>(other))
 		&& unit_.para_.colliType == CollisionType::ENEMY) {
+
 		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
 		unit_.para_.colliType = CollisionType::ALLY;
 		parry_ = true;
@@ -109,8 +110,10 @@ void EnemyBase::OnCollision(UnitBase* other)
 		GameScene::HitStop(10);
 		return;
 	}
+
 	// パリィされたあとにボスにぶつかったときの処理
-	if (dynamic_cast<BossBase*>(other)) {
+	if (dynamic_cast<BossBase*>(other) ||
+		dynamic_cast<SharkLaser*>(other)) {
 		unit_.isAlive_ = false;
 		BlastEffectManager::On(unit_.pos_);
 		return;

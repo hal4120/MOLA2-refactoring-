@@ -15,6 +15,7 @@ public:
 	void Draw(void)override;
 	void Release(void)override;
 
+	bool End(void) { return end_; }
 
 	virtual std::vector<UnitBase*>AttackIns(void) = 0;
 
@@ -38,6 +39,7 @@ protected:
 
 	float angle_;
 
+	bool end_;
 
 	virtual void AttackUpdate(void) = 0;
 	virtual void AttackDraw(void) = 0;

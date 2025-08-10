@@ -12,7 +12,8 @@ BossBase::BossBase(const Vector2& playerPos) :
 	animCounter_(),
 	animInterval_(),
 	animLoop_(),
-	angle_(0.0f)
+	angle_(0.0f),
+	end_(false)
 {
 	unit_.para_.colliType = CollisionType::ENEMY;
 }

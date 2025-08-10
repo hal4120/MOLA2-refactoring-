@@ -5,6 +5,7 @@
 
 #include"../../Application/Application.h"
 #include"../../Manager/BlastEffect/BlastEffectManager.h"
+#include"../../scene/SceneManager/SceneManager.h"
 
 #include"../../Object/Player/Player.h"
 #include"../../Object/Enemy/EnemyManager.h"
@@ -65,6 +66,7 @@ void GameScene::Load(void)
 	collision_->Add(shark_);
 	collision_->Add(shark_->AttackIns());
 }
+
 void GameScene::Init(void)
 {
 	stage_->Init();
@@ -83,9 +85,10 @@ void GameScene::Init(void)
 	// ‰æ–Ê—h‚êŠÖŒW‚Ì‰Šú‰»-----------------------------------------------------------
 	shake_ = 0;
 	shakeKinds_ = ShakeKinds::DIAG;
-	shakeSize_ = ShakeSize::MEDIUM;;
+	shakeSize_ = ShakeSize::MEDIUM;
 	//--------------------------------------------------------------------------------
 }
+
 void GameScene::Update(void)
 {
 	if (hitStop_ > 0) { hitStop_--; return; }
@@ -103,7 +106,10 @@ void GameScene::Update(void)
 
 	collision_->Check();
 	blast_->Update();
+
+	if (shark_->End()) { SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE); }
 }
+
 void GameScene::Draw(void)
 {
 	SetDrawScreen(mainScreen_);
@@ -126,6 +132,7 @@ void GameScene::Draw(void)
 	Vector2I s = ShakePoint();
 	DrawGraph(s.x, s.y, mainScreen_, true);
 }
+
 void GameScene::Release(void)
 {
 	if (stage_) {

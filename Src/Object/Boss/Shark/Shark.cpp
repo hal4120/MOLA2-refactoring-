@@ -89,6 +89,8 @@ void Shark::Init(void)
 
 	attackState_ = ATTACK_KINDS::NON;
 
+	end_ = false;
+
 	ikura_->Init();
 	uni_->Init();
 	mizu_->Init();
@@ -244,6 +246,7 @@ void Shark::Death(void)
 	if (++deathCou_ >= DEATH_PERFOR_TIME) {
 		deathCou_ = 0;
 		unit_.isAlive_ = false;
+		end_ = true;
 	}
 	else {
 		angle_ += Utility::Deg2RadF(1.0f);
@@ -297,7 +300,6 @@ Shark::ATTACK_KINDS Shark::AttackLottery(void)
 	else if (rand <= 10000) {
 		ret = ATTACK_KINDS::UNI;
 	}
-	ret = ATTACK_KINDS::LASER;
 	return ret;
 }
 
