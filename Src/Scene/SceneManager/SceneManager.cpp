@@ -7,6 +7,7 @@
 #include"../Title/TitleScene.h"
 #include"../StageSelect/SelectScene.h"
 #include"../Game/GameScene.h"
+#include"../Clear/ClearScene.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
 
@@ -32,7 +33,7 @@ void SceneManager::Init(void)
 
 
 	// ç≈èâÇÕÉ^ÉCÉgÉãâÊñ Ç©ÇÁ
-	ChangeScene(SCENE_ID::TITLE);
+	ChangeScene(SCENE_ID::CLEAR);
 }
 
 
@@ -133,6 +134,7 @@ void SceneManager::ChangeScene(SCENE_ID scene)
 		ChangeScene(std::make_shared<GameScene>());
 		break;
 	case SCENE_ID::CLEAR:
+		ChangeScene(std::make_shared<ClearScene>());
 		break;
 	case SCENE_ID::OVER:
 		break;
@@ -163,6 +165,7 @@ void SceneManager::PushScene(SCENE_ID scene)
 		PushScene(std::make_shared<GameScene>());
 		break;
 	case SCENE_ID::CLEAR:
+		ChangeScene(std::make_shared<ClearScene>());
 		break;
 	case SCENE_ID::OVER:
 		break;
@@ -203,6 +206,7 @@ void SceneManager::JumpScene(SCENE_ID scene)
 		JumpScene(std::make_shared<GameScene>());
 		break;
 	case SCENE_ID::CLEAR:
+		ChangeScene(std::make_shared<ClearScene>());
 		break;
 	case SCENE_ID::OVER:
 		break;

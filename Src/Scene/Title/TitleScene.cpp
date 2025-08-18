@@ -81,7 +81,7 @@ void TitleScene::Update(void)
 		switch (nowSelect_)
 		{
 		case TitleScene::SELECT::START:
-			SceneManager::GetInstance().ChangeScene(SCENE_ID::GAME);
+			SceneManager::GetInstance().ChangeScene(SCENE_ID::SELECT);
 			break;
 		case TitleScene::SELECT::END:
 			SceneManager::GetInstance().PushScene(std::make_shared< GameEndScene>());

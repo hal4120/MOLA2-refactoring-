@@ -59,6 +59,9 @@ private:
 
 	BossBase* boss_;
 
+	// 時間
+	float time_;
+
 	// ヒットストップカウンター
 	static int hitStop_;
 

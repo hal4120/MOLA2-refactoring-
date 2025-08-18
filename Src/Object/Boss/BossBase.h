@@ -21,6 +21,10 @@ public:
 
 	void DrawHp(unsigned int mainColor, unsigned int backColor, unsigned int frameColor);
 
+	const int GetState(void)const { return state_; }
+
+	virtual bool Timer(void) = 0;
+
 protected:
 	int state_;
 	using STATEFUNC = void (BossBase::*)(void);

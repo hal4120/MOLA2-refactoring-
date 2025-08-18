@@ -148,6 +148,12 @@ std::vector<UnitBase*> Shark::AttackIns(void)
 	return ret;
 }
 
+bool Shark::Timer(void)
+{
+	if (state_ == (int)STATE::DEATH) { return false; }
+	return true;
+}
+
 
 void Shark::Move(void)
 {
@@ -274,6 +280,7 @@ void Shark::HpDecrease(int damage)
 
 	unit_.hp_ -= damage;
 	if (unit_.hp_ <= 0) {
+		unit_.hp_ = 0;
 		state_ = (int)STATE::DEATH;
 		ChangeMotion((int)MOTION::DAMAGE);
 		deathCou_ = 0;

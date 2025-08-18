@@ -68,6 +68,9 @@ public:
 	// 攻撃のインスタンスを個別に分けて配列に格納したものを返す関数
 	std::vector<UnitBase*>AttackIns(void)override;
 
+	// タイムを進めるかどうか
+	bool Timer(void)override;
+
 private:
 
 	// 状態の列挙型定義

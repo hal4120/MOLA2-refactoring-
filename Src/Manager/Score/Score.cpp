@@ -60,7 +60,7 @@ void Score::SetScore(const float score)
 
 		if (r == -1) {
 			r = nowScore_.score_;
-			nowScore_.rank_ = i;
+			nowScore_.rank_ = i + 1;
 			nowScore_.newRecord_ = true;
 			break;
 		}
@@ -74,7 +74,7 @@ void Score::SetScore(const float score)
 			}
 			if (i < RANKING_NUM - 1) { ranking_[(int)SelectScene::GetNowBoss()][i + 1] = work; }
 
-			nowScore_.rank_ = i;
+			nowScore_.rank_ = i + 1;
 			nowScore_.newRecord_ = true;
 			break;
 		}

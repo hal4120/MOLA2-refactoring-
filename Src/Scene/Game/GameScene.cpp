@@ -4,8 +4,9 @@
 #include<cmath>
 
 #include"../../Application/Application.h"
-#include"../../Manager/BlastEffect/BlastEffectManager.h"
 #include"../../scene/SceneManager/SceneManager.h"
+#include"../../Manager/BlastEffect/BlastEffectManager.h"
+#include"../../Manager/Score/Score.h"
 
 #include"../../Object/Player/Player.h"
 #include"../../Object/Enemy/EnemyManager.h"
@@ -29,7 +30,8 @@ GameScene::GameScene():
 	player_(nullptr),
 	stage_(nullptr),
 	eMng_(nullptr),
-	boss_(nullptr)
+	boss_(nullptr),
+	time_(0.0f)
 {
 }
 
@@ -75,6 +77,8 @@ void GameScene::Init(void)
 
 	boss_->Init();
 
+	time_ = 0.0f;
+
 	// ヒットストップカウンターの初期化
 	hitStop_ = 0;
 
@@ -107,7 +111,13 @@ void GameScene::Update(void)
 	collision_->Check();
 	blast_->Update();
 
-	if (boss_->End()) { SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE); }
+
+	if (boss_->Timer()) { time_ += 1 / 60.0f; }
+
+	if (boss_->End()) {
+		Score::GetIns().SetScore(time_);
+		SceneManager::GetInstance().ChangeScene(SCENE_ID::CLEAR); 
+	}
 }
 
 void GameScene::Draw(void)
@@ -117,8 +127,10 @@ void GameScene::Draw(void)
 
 	//描画処理-----------------------------------------
 	using app = Application;
-	int x = app::SCREEN_SIZE_X / 2;
-	int y = app::SCREEN_SIZE_Y / 2;
+	int xx = app::SCREEN_SIZE_X;
+	int yy = app::SCREEN_SIZE_Y;
+	int x = xx / 2;
+	int y = yy / 2;
 
 	stage_->Draw();
 	player_->Draw();
@@ -127,6 +139,11 @@ void GameScene::Draw(void)
 	blast_->Draw();
 
 	boss_->DrawHp(0x00ff00, 0x000000, 0xffffff);
+
+	int fontSize = 50;
+	SetFontSize(fontSize);
+	DrawFormatString(0, yy - fontSize, 0xffffff, "TIME:%.2fs", time_);
+	SetFontSize(16);
 	//-------------------------------------------------
 
 	SetDrawScreen(DX_SCREEN_BACK);
