@@ -33,7 +33,7 @@ void SceneManager::Init(void)
 
 
 	// Å‰‚Íƒ^ƒCƒgƒ‹‰æ–Ê‚©‚ç
-	ChangeScene(SCENE_ID::CLEAR);
+	ChangeScene(SCENE_ID::TITLE);
 }
 
 
