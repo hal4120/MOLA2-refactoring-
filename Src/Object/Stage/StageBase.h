@@ -3,6 +3,7 @@
 #include"../UnitBase.h"
 
 #include<vector>
+#include<string>
 
 class StageBase
 {
@@ -27,40 +28,56 @@ protected:
 	int backSizeX; 
 	int backSizeY;
 	float backScrollSpeed;
+	float backDecorationScrollSpeed;
 	// 変数
 	int backImg_;
 	int backDecorationImg_;
 	Vector2 poss_[ARRANGEMENT::MAX];
+	Vector2 backDecorationPoss_[ARRANGEMENT::MAX];
 	//---------------------
 
-	// 装飾オブジェクト情報の構造体
-	struct OBJECT
+	/// <summary>
+	/// 背景スクロール
+	/// </summary>
+	/// <param name="poss">座標配列</param>
+	/// <param name="scrollSpeed">スクロールスピード</param>
+	void BackScroll(Vector2 *poss,float scrollSpeed);
+
+	// 装飾オブジェクト情報の構造体------
+	struct OBJECT_INFO
 	{
 		Vector2 pos;
 		Vector2 move;
 	};
 
-	// 装飾オブジェクト１つ目--
-	// 定数
-	int object1SizeX;
-	int object1SizeY;
-	int object1Num;
-	float object1MaxSpeed;
-	// 変数
-	int object1Img_;
-	std::vector<OBJECT> object1Info_;
-	//--------------------------
+	struct OBJECT
+	{
+		// 定数(派生先で指定)
+		int objectSizeX;
+		int objectSizeY;
+		int objectNum;
+		float objectMaxSpeed;
+		int objectImg;
+		
+		// 変数
+		std::vector<OBJECT_INFO>info;
+	};
+	//------------------------------------
 
-	// 装飾オブジェクト２つ目--
-	// 定数
-	int object2SizeX;
-	int object2SizeY;
-	int object2Num;
-	float object2MaxSpeed;
-	// 変数
-	int object2Img_;
-	std::vector<OBJECT> object2Info_;
-	//-------------------------
+	std::vector<OBJECT> objects_;
+	/// <summary>
+	/// 装飾オブジェクトの新規作成(派生先で使用)
+	/// </summary>
+	/// <param name="path">画像パス</param>
+	/// <param name="sizeX">横サイズ</param>
+	/// <param name="sizeY">縦サイズ</param>
+	/// <param name="num">同時出現個数</param>
+	/// <param name="maxSpeed">最大速度</param>
+	void NewObject(std::string path,int sizeX, int sizeY, int num, float maxSpeed);
+
+	/// オブジェクトのスクロール
+	void ObjectScroll(void);
+
 
 	Vector2 moveVec_;
 

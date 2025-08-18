@@ -145,6 +145,8 @@ void SceneManager::PushScene(std::shared_ptr<SceneBase> scene)
 {
 	//V‚µ‚­Ï‚Þ‚Ì‚Å‚à‚Æ‚à‚Æ“ü‚Á‚Ä‚¢‚é“z‚Í‚Ü‚¾íœ‚³‚ê‚È‚¢
 	scenes_.push_back(scene);
+	scenes_.back()->Load();
+	scenes_.back()->Init();
 }
 
 void SceneManager::PushScene(SCENE_ID scene)

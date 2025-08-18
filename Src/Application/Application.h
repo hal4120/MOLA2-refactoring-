@@ -22,6 +22,9 @@ public:
 	void Run(void);		// ゲームループの開始
 	void Release(void);	// 解放
 
+	// ゲーム終了
+	void GameEnd(void) { gameEnd_ = true; }
+
 	// 初期化成功／失敗の判定
 	bool IsInitFail(void) const { return isInitFail_; };
 
@@ -50,6 +53,9 @@ private:
 
 	// 静的インスタンス
 	static Application* instance_;
+
+	// 終了フラグ
+	bool gameEnd_;
 
 	// 初期化失敗
 	bool isInitFail_;

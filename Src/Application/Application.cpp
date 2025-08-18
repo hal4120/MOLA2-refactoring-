@@ -12,6 +12,7 @@ Application* Application::instance_ = nullptr;
 // コンストラクタ
 Application::Application(void)
 {
+	gameEnd_ = false;
 	isInitFail_ = false;
 	isReleaseFail_ = false;
 	fps_ = nullptr;
@@ -66,7 +67,7 @@ void Application::Init(void)
 void Application::Run(void)
 {
 	// ゲームループ
-	while (ProcessMessage() == 0)
+	while (ProcessMessage() == 0 && !gameEnd_)
 	{
 		// フレームレート更新
 		// 1/60秒経過していないなら再ループさせる
