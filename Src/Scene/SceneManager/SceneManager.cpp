@@ -123,14 +123,18 @@ void SceneManager::ChangeScene(SCENE_ID scene)
 {
 	switch (scene)
 	{
-	case SceneManager::SCENE_ID::TITLE:
+	case SCENE_ID::TITLE:
 		ChangeScene(std::make_shared<TitleScene>());
 		break;
 	case SCENE_ID::SELECT:
-		ChangeScene(std::make_shared< SelectScene>());
+		ChangeScene(std::make_shared<SelectScene>());
 		break;
-	case SceneManager::SCENE_ID::GAME:
+	case SCENE_ID::GAME:
 		ChangeScene(std::make_shared<GameScene>());
+		break;
+	case SCENE_ID::CLEAR:
+		break;
+	case SCENE_ID::OVER:
 		break;
 	default:
 		break;
@@ -147,14 +151,18 @@ void SceneManager::PushScene(SCENE_ID scene)
 {
 	switch (scene)
 	{
-	case SceneManager::SCENE_ID::TITLE:
+	case SCENE_ID::TITLE:
 		PushScene(std::make_shared<TitleScene>());
 		break;
 	case SCENE_ID::SELECT:
 		PushScene(std::make_shared< SelectScene>());
 		break;
-	case SceneManager::SCENE_ID::GAME:
+	case SCENE_ID::GAME:
 		PushScene(std::make_shared<GameScene>());
+		break;
+	case SCENE_ID::CLEAR:
+		break;
+	case SCENE_ID::OVER:
 		break;
 	default:
 		break;
@@ -183,14 +191,18 @@ void SceneManager::JumpScene(SCENE_ID scene)
 {
 	switch (scene)
 	{
-	case SceneManager::SCENE_ID::TITLE:
+	case SCENE_ID::TITLE:
 		JumpScene(std::make_shared<TitleScene>());
 		break;
 	case SCENE_ID::SELECT:
 		JumpScene(std::make_shared< SelectScene>());
 		break;
-	case SceneManager::SCENE_ID::GAME:
+	case SCENE_ID::GAME:
 		JumpScene(std::make_shared<GameScene>());
+		break;
+	case SCENE_ID::CLEAR:
+		break;
+	case SCENE_ID::OVER:
 		break;
 	default:
 		break;

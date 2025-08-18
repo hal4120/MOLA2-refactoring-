@@ -125,6 +125,8 @@ void GameScene::Draw(void)
 	eMng_->Draw();
 	boss_->Draw();
 	blast_->Draw();
+
+	boss_->DrawHp(0x00ff00, 0x000000, 0xffffff);
 	//-------------------------------------------------
 
 	SetDrawScreen(DX_SCREEN_BACK);

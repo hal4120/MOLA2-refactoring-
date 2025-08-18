@@ -19,6 +19,8 @@ public:
 
 	virtual std::vector<UnitBase*>AttackIns(void) = 0;
 
+	void DrawHp(unsigned int mainColor, unsigned int backColor, unsigned int frameColor);
+
 protected:
 	int state_;
 	using STATEFUNC = void (BossBase::*)(void);
@@ -36,6 +38,8 @@ protected:
 	bool animLoop_;
 	void ChangeMotion(int motion, bool loop = true);
 	void Animation(void);
+
+	int maxHP;
 
 	float angle_;
 

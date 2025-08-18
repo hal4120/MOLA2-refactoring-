@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\DxLib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DXLIB_DIR)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -131,7 +131,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\DxLib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DXLIB_DIR)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -155,6 +155,7 @@
     <ClCompile Include="Src\Manager\Score\Score.cpp" />
     <ClCompile Include="Src\Object\Player\Special\PlayerLaser.cpp" />
     <ClCompile Include="Src\Object\Stage\Blue\BlueStage.cpp" />
+    <ClCompile Include="Src\Scene\Clear\ClearScene.cpp" />
     <ClCompile Include="Src\Scene\StageSelect\SelectScene.cpp" />
     <ClCompile Include="Src\Application\Application.cpp" />
     <ClCompile Include="Src\Common\Vector2.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Src\Manager\Score\Score.h" />
     <ClInclude Include="Src\Object\Player\Special\PlayerLaser.h" />
     <ClInclude Include="Src\Object\Stage\Blue\BlueStage.h" />
+    <ClInclude Include="Src\Scene\Clear\ClearScene.h" />
     <ClInclude Include="Src\Scene\StageSelect\SelectScene.h" />
     <ClInclude Include="Src\Application\Application.h" />
     <ClInclude Include="Src\Common\Vector2.h" />

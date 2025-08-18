@@ -45,6 +45,8 @@ void Shark::Load(void)
 	unit_.para_.size.x = SIZE_X;
 	unit_.para_.radius = SIZE_Y;
 
+	maxHP = HP_MAX;
+
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;
 	
 #define SET_STATE(state, func) stateFuncPtr[(int)(state)] = static_cast<STATEFUNC>(func)

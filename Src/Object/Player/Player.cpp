@@ -6,8 +6,6 @@
 #include"../../Scene/Game/GameScene.h"
 #include"../../Manager/BlastEffect/BlastEffectManager.h"
 
-#include"../Enemy/Monkfish/Monkfish.h"
-
 Player::Player():
 	img_(),
 	animCounter_(0),
@@ -132,7 +130,6 @@ void Player::OnCollision(UnitBase* other)
 	parry_->MagReset();
 	laser_->Off();
 }
-
 
 void Player::Animation(void)
 {

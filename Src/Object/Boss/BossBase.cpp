@@ -2,6 +2,8 @@
 
 #include<DxLib.h>
 
+#include"../../Application/Application.h"
+
 BossBase::BossBase(const Vector2& playerPos) :
 	playerPos_(playerPos),
 	state_(0),
@@ -13,6 +15,7 @@ BossBase::BossBase(const Vector2& playerPos) :
 	animInterval_(),
 	animLoop_(),
 	angle_(0.0f),
+	maxHP(-1),
 	end_(false)
 {
 	unit_.para_.colliType = CollisionType::ENEMY;
@@ -70,4 +73,23 @@ void BossBase::Animation(void)
 			}
 		}
 	}
+}
+
+void BossBase::DrawHp(unsigned int mainColor, unsigned int backColor, unsigned int frameColor)
+{
+	const Vector2I screen = { Application::SCREEN_SIZE_X,Application::SCREEN_SIZE_Y };
+	Vector2 size = { 800.0f,50.0f };
+	Vector2 sPos = { screen.x - (size.x + 5.0f),5.0f };
+
+	DrawBoxAA(sPos.x, sPos.y, sPos.x + size.x, sPos.y + size.y, frameColor, true);
+
+	float frameSize = 3.0f;
+
+	size -= frameSize * 2.0f;
+	sPos += frameSize;
+
+	float oneSize = size.x / maxHP;
+
+	DrawBoxAA(sPos.x, sPos.y, sPos.x + size.x, sPos.y + size.y, backColor, true);
+	DrawBoxAA(sPos.x, sPos.y, sPos.x + (oneSize * unit_.hp_), sPos.y + size.y, mainColor, true);
 }

@@ -93,10 +93,11 @@ void Parry::OnCollision(UnitBase* other)
 {
 	if (!unit_.isAlive_) { return; }
 
-	if (dynamic_cast<EnemyBase*>(other)||
-		dynamic_cast<Uni*>(other)||
+	coolTime_ = 0;
+
+	if (dynamic_cast<EnemyBase*>(other) ||
+		dynamic_cast<Uni*>(other) ||
 		dynamic_cast<Mizu*>(other)) {
-		coolTime_ = 0;
 		mag_ += MAG_ONE_SIZE_UP;
 		if (mag_ > MAX_MAG) { mag_ = MAX_MAG; }
 		unit_.para_.radius = LOAD_SIZE_X * mag_;

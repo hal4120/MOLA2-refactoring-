@@ -65,12 +65,12 @@ private:
 
 	struct Sinfo
 	{
-		SOUND type_;
+		SOUND type_ = SOUND::NON;
 		std::string path_;
-		int id_;
-		bool loop_;
-		bool paused_;
-		int volume_;
+		int id_ = -1;
+		bool loop_ = false;
+		bool paused_ = false;
+		int volume_ = 255;
 	};
 
 	Sinfo sounds_[SOUND::MAX];

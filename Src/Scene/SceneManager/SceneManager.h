@@ -16,6 +16,8 @@ public:
 		TITLE,
 		SELECT,
 		GAME,
+		CLEAR,
+		OVER,
 
 		MAX
 	};
