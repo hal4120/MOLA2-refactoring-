@@ -29,7 +29,7 @@ void Collision::Check()
 
 			if (ua.para_.colliType == ub.para_.colliType)continue;
 
-			if ((ua.aliveCollision_ && !ua.isAlive_) || (ua.aliveCollision_ && !ub.isAlive_)) continue;
+			if ((ua.aliveCollision_ && !ua.isAlive_) || (ub.aliveCollision_ && !ub.isAlive_)) continue;
 
 			if (ua.isInvici_ && ua.inviciCounter_ > 0)continue;
 			if (ub.isInvici_ && ub.inviciCounter_ > 0)continue;

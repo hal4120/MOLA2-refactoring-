@@ -17,7 +17,37 @@ public:
 	{
 		NON=-1,
 
-		BGM1,
+		//BGM----------------
+		BGM_RARARA,
+		BGM_BOSS,
+		BGM_TITLE,
+
+		//-------------------
+
+		//SE-----------------
+		PLAYER_ATTACK,
+		PARRY,
+
+		PLAYER_LASER,
+		PLAYER_LASER_CHARGE,
+
+		BOSS_LASER,
+		BOSS_LASER_CHARGE,
+
+		IKURA,
+
+		SELECT,	//プッって感じ
+		BUTTON,	//ピッって感じ
+		
+		WARNING,
+
+		BLAST,
+
+		GAME_END,
+		CLEAR,
+
+		//-------------------
+
 
 		MAX,
 	};
@@ -79,3 +109,7 @@ private:
 	void Init(void);
 	void Release(void);
 };
+
+using Smng = SoundManager;
+
+using SOUND = Smng::SOUND;

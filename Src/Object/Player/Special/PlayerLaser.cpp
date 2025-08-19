@@ -2,6 +2,8 @@
 
 #include<DxLib.h>
 
+#include"../../../Manager/Sound/SoundManager.h"
+
 #include"../Player.h"
 
 PlayerLaser::PlayerLaser(const Vector2& playerPos):
@@ -33,6 +35,9 @@ void PlayerLaser::Load(void)
 	unit_.para_.size.y = SIZE_Y;
 
 	unit_.para_.center.x = SIZE_X / 2.0f;
+
+	Smng::GetIns().Load(SOUND::PLAYER_LASER);
+	Smng::GetIns().Load(SOUND::PLAYER_LASER_CHARGE);
 }
 
 void PlayerLaser::Init(void)
@@ -62,8 +67,17 @@ void PlayerLaser::Update(void)
 		}
 	}
 
-	if (state_ == STATE::ACTIVE) { unit_.isAlive_ = true; }
-	else { unit_.isAlive_ = false; }
+	if (state_ == STATE::CHARGE) { Smng::GetIns().Play(SOUND::PLAYER_LASER_CHARGE, false, 255, true); }
+	else { Smng::GetIns().Stop(SOUND::PLAYER_LASER_CHARGE); }
+
+	if (state_ == STATE::ACTIVE) {
+		unit_.isAlive_ = true;
+		Smng::GetIns().Play(SOUND::PLAYER_LASER, false, 255, true);
+	}
+	else {
+		unit_.isAlive_ = false; 
+		Smng::GetIns().Stop(SOUND::PLAYER_LASER);
+	}
 }
 
 void PlayerLaser::Draw(void)
@@ -75,6 +89,9 @@ void PlayerLaser::Draw(void)
 
 void PlayerLaser::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::PLAYER_LASER);
+	Smng::GetIns().Delete(SOUND::PLAYER_LASER_CHARGE);
+
 	for (auto& ids : img_) {
 		for (auto& id : ids) { DeleteGraph(id); }
 	}

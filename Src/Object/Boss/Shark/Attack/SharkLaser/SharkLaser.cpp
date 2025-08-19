@@ -1,6 +1,7 @@
 #include "SharkLaser.h"
 
 #include"../../../../../Manager/BlastEffect/BlastEffectManager.h"
+#include"../../../../../Manager/Sound/SoundManager.h"
 
 #include"../../Shark.h"
 
@@ -33,6 +34,9 @@ void SharkLaser::Load(void)
 	unit_.para_.size.y = SIZE_Y * 1.5f;
 
 	unit_.para_.center.x = -(SIZE_X / 2.0f);
+
+	Smng::GetIns().Load(SOUND::BOSS_LASER);
+	Smng::GetIns().Load(SOUND::BOSS_LASER_CHARGE);
 }
 
 void SharkLaser::Init(void)
@@ -62,8 +66,16 @@ void SharkLaser::Update(void)
 		}
 	}
 
-	if (state_ == STATE::ACTIVE) { unit_.isAlive_ = true; }
-	else { unit_.isAlive_ = false; }
+	if (state_ == STATE::CHARGE) { Smng::GetIns().Play(SOUND::BOSS_LASER_CHARGE, false, 255, true); }
+	else { Smng::GetIns().Stop(SOUND::BOSS_LASER_CHARGE); }
+
+	if (state_ == STATE::ACTIVE) {
+		unit_.isAlive_ = true;
+		Smng::GetIns().Play(SOUND::BOSS_LASER, false, 255, true);
+	} else {
+		unit_.isAlive_ = false;
+		Smng::GetIns().Stop(SOUND::BOSS_LASER);
+	}
 }
 
 void SharkLaser::Draw(void)
@@ -75,6 +87,9 @@ void SharkLaser::Draw(void)
 
 void SharkLaser::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::BOSS_LASER);
+	Smng::GetIns().Delete(SOUND::BOSS_LASER_CHARGE);
+
 	for (auto& ids : img_) {
 		for (auto& id : ids) { DeleteGraph(id); }
 	}

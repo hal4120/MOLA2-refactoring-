@@ -5,6 +5,7 @@
 
 #include"../../Application/Application.h"
 #include"../../scene/SceneManager/SceneManager.h"
+#include"../../Manager/Sound/SoundManager.h"
 #include"../../Manager/BlastEffect/BlastEffectManager.h"
 #include"../../Manager/Score/Score.h"
 
@@ -67,6 +68,11 @@ void GameScene::Load(void)
 	boss_->Load();
 	collision_->Add(boss_);
 	collision_->Add(boss_->AttackIns());
+
+
+	Smng::GetIns().Load(SOUND::BGM_BOSS);
+	Smng::GetIns().Load(SOUND::BLAST);
+	Smng::GetIns().Load(SOUND::GAME_END);
 }
 
 void GameScene::Init(void)
@@ -78,6 +84,8 @@ void GameScene::Init(void)
 	boss_->Init();
 
 	time_ = 0.0f;
+
+	Smng::GetIns().Play(SOUND::BGM_BOSS, true, 150, true, true);
 
 	// ヒットストップカウンターの初期化
 	hitStop_ = 0;
@@ -114,9 +122,15 @@ void GameScene::Update(void)
 
 	if (boss_->Timer()) { time_ += 1 / 60.0f; }
 
+	if (player_->GameOver()) {
+		SceneManager::GetInstance().ChangeScene(SCENE_ID::OVER);
+		return;
+	}
+
 	if (boss_->End()) {
 		Score::GetIns().SetScore(time_);
-		SceneManager::GetInstance().ChangeScene(SCENE_ID::CLEAR); 
+		SceneManager::GetInstance().ChangeScene(SCENE_ID::CLEAR);
+		return;
 	}
 }
 
@@ -138,11 +152,12 @@ void GameScene::Draw(void)
 	boss_->Draw();
 	blast_->Draw();
 
+	player_->UIDraw();
 	boss_->DrawHp(0x00ff00, 0x000000, 0xffffff);
 
 	int fontSize = 50;
 	SetFontSize(fontSize);
-	DrawFormatString(0, yy - fontSize, 0xffffff, "TIME:%.2fs", time_);
+	DrawFormatString(0, 0, 0xffffff, "TIME:%.2fs", time_);
 	SetFontSize(16);
 	//-------------------------------------------------
 
@@ -154,6 +169,10 @@ void GameScene::Draw(void)
 
 void GameScene::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::BGM_BOSS);
+	Smng::GetIns().Delete(SOUND::BLAST);
+	Smng::GetIns().Delete(SOUND::GAME_END);
+
 	if (stage_) {
 		stage_->Release();
 		delete stage_;

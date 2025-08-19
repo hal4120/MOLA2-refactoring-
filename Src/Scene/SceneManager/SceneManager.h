@@ -74,7 +74,7 @@ public:
 	void GameEnd(void) { isGameEnd_ = true; }
 
 	// ゲーム終了取得
-	bool GetGameEnd(void) { return isGameEnd_; }
+	const bool GetGameEnd(void)const { return isGameEnd_; }
 
 private:
 	// 静的インスタンス

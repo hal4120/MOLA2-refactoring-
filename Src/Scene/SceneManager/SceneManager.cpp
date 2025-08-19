@@ -8,6 +8,7 @@
 #include"../StageSelect/SelectScene.h"
 #include"../Game/GameScene.h"
 #include"../Clear/ClearScene.h"
+#include"../Over/OverScene.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
 
@@ -111,6 +112,7 @@ void SceneManager::ChangeScene(std::shared_ptr<SceneBase>scene)
 	else 
 	{
 		//末尾のものを新しい物に入れ替える
+		scenes_.back()->Release();
 		scenes_.back() = scene;
 	}
 
@@ -137,6 +139,7 @@ void SceneManager::ChangeScene(SCENE_ID scene)
 		ChangeScene(std::make_shared<ClearScene>());
 		break;
 	case SCENE_ID::OVER:
+		ChangeScene(std::make_shared<OverScene>());
 		break;
 	default:
 		break;
@@ -165,9 +168,10 @@ void SceneManager::PushScene(SCENE_ID scene)
 		PushScene(std::make_shared<GameScene>());
 		break;
 	case SCENE_ID::CLEAR:
-		ChangeScene(std::make_shared<ClearScene>());
+		PushScene(std::make_shared<ClearScene>());
 		break;
 	case SCENE_ID::OVER:
+		PushScene(std::make_shared<OverScene>());
 		break;
 	default:
 		break;
@@ -179,6 +183,7 @@ void SceneManager::PopScene(void)
 	//積んであるものを消して、もともとあったものを末尾にする
 	if (scenes_.size() > 1) 
 	{
+		scenes_.back()->Release();
 		scenes_.pop_back();
 	}
 }
@@ -186,6 +191,7 @@ void SceneManager::PopScene(void)
 void SceneManager::JumpScene(std::shared_ptr<SceneBase> scene)
 {
 	// 全て解放
+	for (auto& scene : scenes_) { scene->Release(); }
 	scenes_.clear();
 
 	// 新しく積む
@@ -206,9 +212,10 @@ void SceneManager::JumpScene(SCENE_ID scene)
 		JumpScene(std::make_shared<GameScene>());
 		break;
 	case SCENE_ID::CLEAR:
-		ChangeScene(std::make_shared<ClearScene>());
+		JumpScene(std::make_shared<ClearScene>());
 		break;
 	case SCENE_ID::OVER:
+		JumpScene(std::make_shared<OverScene>());
 		break;
 	default:
 		break;

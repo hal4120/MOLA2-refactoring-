@@ -6,6 +6,7 @@
 #include"../../Manager/Score/Score.h"
 #include"../../Application/Application.h"
 #include"../SceneManager/SceneManager.h"
+#include"../../Manager/Sound/SoundManager.h"
 
 #include"Object/ClearPlayer.h"
 #include"../../Object/Stage/Old/OldStage.h"
@@ -39,12 +40,16 @@ void ClearScene::Load(void)
 
 	player_ = new ClearPlayer();
 	player_->Load();
+
+	Smng::GetIns().Load(SOUND::CLEAR);
 }
 
 void ClearScene::Init(void)
 {
 	stage_->Init();
 	player_->Init();
+
+	Smng::GetIns().Play(SOUND::CLEAR);
 }
 
 void ClearScene::Update(void)
@@ -89,6 +94,8 @@ void ClearScene::Draw(void)
 
 void ClearScene::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::CLEAR);
+
 	if (player_) {
 		player_->Release();
 		delete player_;

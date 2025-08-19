@@ -5,6 +5,7 @@
 #include"../../../Manager/BlastEffect/BlastEffectManager.h"
 #include"../../../Application/Application.h"
 #include"../../../Scene/SceneManager/SceneManager.h"
+#include"../../../Manager/Sound/SoundManager.h"
 #include"../../../Scene/Game/GameScene.h"
 
 #include"../../Enemy/EnemyBase.h"
@@ -266,6 +267,7 @@ void Shark::Death(void)
 			);
 			BlastEffectManager::On(point);
 		}
+		Smng::GetIns().Play(SOUND::GAME_END);
 	}
 }
 
@@ -275,6 +277,8 @@ void Shark::HpDecrease(int damage)
 	state_ = (int)STATE::DAMAGE;
 	ChangeMotion((int)MOTION::DAMAGE, false);
 	animCounter_ = 1;
+
+	Smng::GetIns().Play(SOUND::BLAST, true);
 
 	laser_->Off();
 
@@ -309,6 +313,7 @@ Shark::ATTACK_KINDS Shark::AttackLottery(void)
 	else if (rand <= 10000) {
 		ret = ATTACK_KINDS::UNI;
 	}
+	ret = ATTACK_KINDS::LASER;
 	return ret;
 }
 

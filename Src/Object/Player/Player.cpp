@@ -5,6 +5,7 @@
 #include"../../Manager/Input/InputManager.h"
 #include"../../Scene/Game/GameScene.h"
 #include"../../Manager/BlastEffect/BlastEffectManager.h"
+#include"../../Manager/Sound/SoundManager.h"
 
 Player::Player():
 	img_(),
@@ -15,7 +16,12 @@ Player::Player():
 	knockBackVec_(),
 	angle_(0.0f),
 	parry_(nullptr),
-	laser_(nullptr)
+	laser_(nullptr),
+	gameEnd_(false),
+	specialCharge_(0),
+	specialChargeImg_(),
+	uiImg_(-1),
+	lifeImg_()
 {
 }
 
@@ -29,11 +35,19 @@ void Player::Load(void)
 	Utility::LoadArrayImg("Data/Image/Player/まぼ.png",
 		ANIM_NUM, ANIM_NUM_X, ANIM_NUM_Y,
 		LOAD_SIZE_X, LOAD_SIZE_Y, img_);
+	
+	// UI
+	Utility::LoadImg(uiImg_, "Data/Image/Player/UI/まぼUI.png");
+	for (int i = 0; i <= LIFE_MAX; i++) {
+		Utility::LoadImg(lifeImg_[i], "Data/Image/Player/UI/Life/" + std::to_string(i) + ".png");
+	}
+	Utility::LoadArrayImg("Data/Image/Player/UI/SpecialCharge.png", SPECIAL_CHARGE_MAX + 1, 1, SPECIAL_CHARGE_MAX + 1, 1600, 103, specialChargeImg_);
 
 	// 関数ポインタにそれぞれの関数のポインタを格納
 	stateFuncPtr_[STATE::DEFAULT] = &Player::Default;
 	stateFuncPtr_[STATE::SPECIAL] = &Player::Special;
 	stateFuncPtr_[STATE::DEATH] = &Player::Death;
+	stateFuncPtr_[STATE::OVER] = &Player::Over;
 
 	unit_.para_.speed = SPEED;
 
@@ -44,9 +58,11 @@ void Player::Load(void)
 
 	parry_ = new Parry(unit_.pos_);
 	parry_->Load();
+	parry_->SetSpChargeFun([this](void) { this->SpecialCharge(); });
 
 	laser_ = new PlayerLaser(unit_.pos_);
 	laser_->Load();
+
 }
 
 void Player::Init(void)
@@ -56,6 +72,9 @@ void Player::Init(void)
 
 	// 座標の初期化
 	unit_.pos_ = START_POS;
+
+	// ライフ
+	unit_.hp_ = LIFE_MAX;
 
 	// アニメーション変数の初期化
 	animCounter_ = 0;
@@ -68,6 +87,10 @@ void Player::Init(void)
 
 	// ステートの初期化
 	state_ = STATE::DEFAULT;
+
+	gameEnd_ = false;
+
+	specialCharge_ = 0;
 }
 
 void Player::Update(void)
@@ -85,6 +108,8 @@ void Player::Update(void)
 
 	// アニメーションの更新
 	Animation();
+	
+	if (CheckHitKey(KEY_INPUT_P) == 1) { SpecialCharge(); }
 }
 
 void Player::Draw(void)
@@ -97,6 +122,19 @@ void Player::Draw(void)
 
 	parry_->Draw();
 	laser_->Draw();
+}
+
+void Player::UIDraw(void)
+{
+	using app = Application;
+	int xx = app::SCREEN_SIZE_X;
+	int yy = app::SCREEN_SIZE_Y;
+	int x = xx / 2;
+	int y = yy / 2;
+
+	DrawRotaGraph3(0, yy, 0, 500, 0.3, 0.3, 0, uiImg_, true);
+	DrawRotaGraph3(160, (yy - (150 / 2))+30, 0, 150, 0.3, 0.3, 0, lifeImg_[unit_.hp_], true);
+	DrawRotaGraph3(150, (yy - (150 / 2) - 30), 0, 51, 0.3, 0.3, 0, specialChargeImg_[specialCharge_], true);
 }
 
 void Player::Release(void)
@@ -112,6 +150,9 @@ void Player::Release(void)
 		laser_ = nullptr;
 	}
 
+	for (auto& id : lifeImg_) { DeleteGraph(id); }
+	DeleteGraph(uiImg_);
+
 	// 画像解放
 	for (auto& id : img_) { DeleteGraph(id); }
 }
@@ -122,10 +163,18 @@ void Player::OnCollision(UnitBase* other)
 	GameScene::Shake(ShakeKinds::ROUND, ShakeSize::MEDIUM);
 	GameScene::Slow(20);
 
+	Smng::GetIns().Play(SOUND::BLAST, true);
+
 	knockBackVec_ = unit_.pos_ - other->GetUnit().pos_;
 	knockBackVec_ /= sqrtf(knockBackVec_.x * knockBackVec_.x + knockBackVec_.y * knockBackVec_.y);
 
 	state_ = STATE::DEATH;
+
+	unit_.hp_--;
+	if (unit_.hp_ <= 0) {
+		unit_.hp_ = 0;
+		state_ = STATE::OVER;
+	}
 
 	parry_->MagReset();
 	laser_->Off();
@@ -161,8 +210,14 @@ void Player::Default(void)
 	if (unit_.pos_.x > max.x) { unit_.pos_.x = max.x; }
 	if (unit_.pos_.y > max.y) { unit_.pos_.y = max.y; }
 
+
 	if (attackKey_.downTrg_) { parry_->On(); }
-	if (specialKey_.downTrg_) { laser_->On(); state_ = STATE::SPECIAL; }
+
+	if (specialKey_.downTrg_ && specialCharge_ >= SPECIAL_CHARGE_MAX) {
+		specialCharge_ = 0;
+		laser_->On();
+		state_ = STATE::SPECIAL;
+	}
 }
 
 void Player::Special(void)
@@ -181,6 +236,19 @@ void Player::Death(void)
 		unit_.isAlive_ = true;
 		state_ = STATE::DEFAULT;
 	}
+}
+
+void Player::Over(void)
+{
+	GameScene::Slow();
+	GameScene::Shake(ShakeKinds::ROUND, ShakeSize::BIG, 20);
+	BlastEffectManager::On(unit_.pos_);
+	Smng::GetIns().Play(SOUND::GAME_END);
+
+	unit_.pos_ += knockBackVec_;
+
+	angle_ -= Utility::Deg2RadF(3.0f);
+	if (angle_ < -Utility::Deg2RadF(120.0f)) { gameEnd_ = true; }
 }
 
 void Player::Input(void)

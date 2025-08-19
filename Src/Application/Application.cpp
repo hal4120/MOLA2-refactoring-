@@ -6,6 +6,7 @@
 #include"../Manager/Input/InputManager.h"
 #include"../Scene/SceneManager/SceneManager.h"
 #include"../Manager/Score/Score.h"
+#include"../Manager/Sound/SoundManager.h"
 
 Application* Application::instance_ = nullptr;
 
@@ -53,6 +54,11 @@ void Application::Init(void)
 	// スコア管理クラスの生成とロード
 	Score::CreateInstance();
 
+	// 音声管理クラスの生成とロード
+	Smng::CreateIns();
+	// いろんな場所で使う音をロード
+	Smng::GetIns().Load(SOUND::SELECT);
+	Smng::GetIns().Load(SOUND::BUTTON);
 
 	// シーン管理初期化
 	SceneManager::CreateInstance();
@@ -94,6 +100,9 @@ void Application::Release(void)
 
 	// スコア管理クラスのセーブと削除
 	Score::DeleteIns();
+
+	// 音声管理クラスの削除
+	Smng::DeleteIns();
 							   
 	// シーン管理解放・削除	
 	SceneManager::GetInstance().Release();

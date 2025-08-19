@@ -22,13 +22,19 @@ public:
 	static constexpr int ANIM_SPEED = 5;
 
 	// 状態
-	enum STATE { DEFAULT, SPECIAL, DEATH, MAX };
+	enum STATE { DEFAULT, SPECIAL, DEATH, OVER, MAX };
 
 	// 初期座標
 	const Vector2 START_POS = { 50.0f,Application::SCREEN_SIZE_Y / 2 };
 
 	// 移動速度
 	static constexpr float SPEED = 8.0f;
+
+	// ライフ
+	static constexpr int LIFE_MAX = 5;
+
+	// スペシャル攻撃のチャージ必要量
+	static constexpr int SPECIAL_CHARGE_MAX = 20;
 
     Player();
     ~Player();
@@ -37,6 +43,7 @@ public:
 	void Init(void)override;
 	void Update(void)override;
 	void Draw(void)override;
+	void UIDraw(void);
 	void Release(void)override;
 
 	void OnCollision(UnitBase* other);
@@ -44,8 +51,11 @@ public:
 	Parry* ParryIns(void) { return parry_; }
 	PlayerLaser* LaserIns(void) { return laser_; }
 
+	void SpecialCharge(void) { if (++specialCharge_ > SPECIAL_CHARGE_MAX) { specialCharge_ = SPECIAL_CHARGE_MAX; } }
+
 	const bool CollisionValid(void)const { return state_ != STATE::DEATH; }
 
+	const bool GameOver(void)const { return gameEnd_; }
 private:
 	// 画像ハンドル
 	int img_[ANIM_NUM];
@@ -70,6 +80,7 @@ private:
 	void Default(void);
 	void Special(void);
 	void Death(void);
+	void Over(void);
 
 	// ノックバック関係
 	Vector2 knockBackVec_;
@@ -92,4 +103,12 @@ private:
 
 	Parry* parry_;
 	PlayerLaser* laser_;
+
+	int specialCharge_;
+	int specialChargeImg_[SPECIAL_CHARGE_MAX + 1];
+
+	bool gameEnd_;
+
+	int uiImg_;
+	int	lifeImg_[LIFE_MAX + 1];
 };

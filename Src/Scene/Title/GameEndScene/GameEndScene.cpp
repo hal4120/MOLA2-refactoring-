@@ -5,6 +5,7 @@
 #include"../../../Utility/Utility.h"
 #include"../../../Application/Application.h"
 #include"../../SceneManager/SceneManager.h"
+#include"../../../Manager/Sound/SoundManager.h"
 
 GameEndScene::GameEndScene():
 	windowImg_(),
@@ -39,17 +40,21 @@ void GameEndScene::Update(void)
 {
 	Input();
 
+	bool push = false;
+
 	switch (nowSelect_)
 	{
 	case GameEndScene::SELECT::YES:
-		if (downKey_.down) { nowSelect_ = SELECT::NO; }
+		if (downKey_.down) { nowSelect_ = SELECT::NO; push = true; }
 		break;
 	case GameEndScene::SELECT::NO:
-		if (upKey_.down) { nowSelect_ = SELECT::YES; }
+		if (upKey_.down) { nowSelect_ = SELECT::YES; push = true; }
 		break;
 	}
+	if(push){ Smng::GetIns().Play(SOUND::SELECT, true, 200); }
 
 	if (deciKey_.down) {
+		Smng::GetIns().Play(SOUND::BUTTON, true, 200);
 		switch (nowSelect_)
 		{
 		case GameEndScene::SELECT::YES:

@@ -2,6 +2,9 @@
 
 #include"../../UnitBase.h"
 
+#include <functional>
+
+
 class Parry : public UnitBase
 {
 public:
@@ -36,6 +39,7 @@ public:
 
 	void MagReset(void) { mag_ = DEFAULT_MAG; unit_.para_.radius = LOAD_SIZE_X; }
 
+	void SetSpChargeFun(std::function<void(void)>ptr) { spChargeFunPtr_ = std::move(ptr); }
 private:
 	int img_[ANIM_NUM_ALL];
 
@@ -47,5 +51,6 @@ private:
 	float mag_;
 
 	const Vector2& player_;
+	std::function<void(void)>spChargeFunPtr_;
 };
 

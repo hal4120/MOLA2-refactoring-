@@ -99,7 +99,32 @@ void SoundManager::Init(void)
 	}
 
 	// 使用するデータのパスを入れておく("Data/Sound/～～"←ここから先のパス)
-	sounds_[SOUND::BGM1].path_ = "4m.rarara.mp3";
+	sounds_[SOUND::BGM_RARARA].path_ = "BGM/Rarara.mp3";
+	sounds_[SOUND::BGM_BOSS].path_ = "BGM/BossBgm.mp3";
+	sounds_[SOUND::BGM_TITLE].path_ = "BGM/カートゥーン・キリィズショップ.mp3";
+
+
+	sounds_[SOUND::PLAYER_ATTACK].path_ = "SE/Parry.mp3";
+	sounds_[SOUND::PARRY].path_ = "SE/Ko.mp3";
+
+	sounds_[SOUND::PLAYER_LASER].path_ = "SE/Laser.mp3";
+	sounds_[SOUND::PLAYER_LASER_CHARGE].path_ = "SE/LaserCharge.mp3";
+
+	sounds_[SOUND::BOSS_LASER].path_ = "SE/Laser.mp3";
+	sounds_[SOUND::BOSS_LASER_CHARGE].path_ = "SE/LaserCharge.mp3";
+
+	sounds_[SOUND::IKURA].path_ = "SE/ぷちぷち.mp3";
+
+	sounds_[SOUND::SELECT].path_ = "SE/Select.mp3";
+	sounds_[SOUND::BUTTON].path_ = "SE/Button.mp3";
+
+	sounds_[SOUND::WARNING].path_ = "SE/Warning.mp3";
+
+	sounds_[SOUND::BLAST].path_ = "SE/Blast.mp3";
+
+	sounds_[SOUND::GAME_END].path_ = "SE/GameEnd.mp3";
+	sounds_[SOUND::CLEAR].path_ = "SE/Clear.mp3";
+
 }
 
 void SoundManager:: Release(void)

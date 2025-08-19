@@ -2,6 +2,8 @@
 
 #include<DxLib.h>
 
+#include"../../../Manager/Sound/SoundManager.h"
+
 #include"../Player.h"
 
 #include"../../Enemy/EnemyBase.h"
@@ -35,6 +37,8 @@ void Parry::Load(void)
 	unit_.isInvici_ = false;
 	unit_.aliveCollision_ = false;
 
+	Smng::GetIns().Load(SOUND::PLAYER_ATTACK);
+	Smng::GetIns().Load(SOUND::PARRY);
 }
 
 void Parry::Init(void)
@@ -77,6 +81,7 @@ void Parry::Draw(void)
 
 void Parry::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::PLAYER_ATTACK);
 	for (auto& id : img_) { DeleteGraph(id); }
 }
 
@@ -87,6 +92,7 @@ void Parry::On(void)
 	counter_ = 0;
 	countInterval_ = 0;
 	unit_.isAlive_ = true;
+	Smng::GetIns().Play(SOUND::PLAYER_ATTACK,true);
 }
 
 void Parry::OnCollision(UnitBase* other)
@@ -98,8 +104,13 @@ void Parry::OnCollision(UnitBase* other)
 	if (dynamic_cast<EnemyBase*>(other) ||
 		dynamic_cast<Uni*>(other) ||
 		dynamic_cast<Mizu*>(other)) {
+
 		mag_ += MAG_ONE_SIZE_UP;
 		if (mag_ > MAX_MAG) { mag_ = MAX_MAG; }
 		unit_.para_.radius = LOAD_SIZE_X * mag_;
+
+		spChargeFunPtr_();
+
+		Smng::GetIns().Play(SOUND::PARRY, true);
 	}
 }

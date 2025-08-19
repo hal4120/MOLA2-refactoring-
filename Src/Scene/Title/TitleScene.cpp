@@ -4,6 +4,7 @@
 
 #include"../../Application/Application.h"
 #include"../SceneManager/SceneManager.h"
+#include"../../Manager/Sound/SoundManager.h"
 #include"../../Utility/Utility.h"
 
 #include"GameEndScene/GameEndScene.h"
@@ -56,6 +57,8 @@ void TitleScene::Load(void)
 	Utility::LoadImg(selectImg_[(int)SELECT::START], "Data/Image/Title/PushToStart.png");
 	Utility::LoadImg(selectImg_[(int)SELECT::END], "Data/Image/Title/PushToEnd.png");
 	Utility::LoadImg(arrowImg_, "Data/Image/Effect/Arrow.png");
+
+	Smng::GetIns().Load(SOUND::BGM_TITLE);
 }
 void TitleScene::Init(void)
 {
@@ -65,6 +68,8 @@ void TitleScene::Init(void)
 	player_->Init();
 
 	nowSelect_ = SELECT::START;
+
+	Smng::GetIns().Play(SOUND::BGM_TITLE, true, 150, true);
 }
 void TitleScene::Update(void)
 {
@@ -75,9 +80,10 @@ void TitleScene::Update(void)
 	shark_->Update();
 	player_->Update();
 
-	if (downSelectKey_) { nowSelect_ = (SELECT)(1 - (int)nowSelect_); }
+	if (downSelectKey_) { nowSelect_ = (SELECT)(1 - (int)nowSelect_); Smng::GetIns().Play(SOUND::SELECT, true,200); }
 
 	if (downDeciKey_) {
+		Smng::GetIns().Play(SOUND::BUTTON, true, 200);
 		switch (nowSelect_)
 		{
 		case TitleScene::SELECT::START:
@@ -113,6 +119,8 @@ void TitleScene::Draw(void)
 
 void TitleScene::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::BGM_TITLE);
+
 	DeleteGraph(arrowImg_);
 	for (auto& id : selectImg_) { DeleteGraph(id); }
 
