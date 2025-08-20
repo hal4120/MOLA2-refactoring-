@@ -4,6 +4,8 @@
 
 #include"../../Application/Application.h"
 
+#include"../../Manager/Sound/SoundManager.h"
+
 BossBase::BossBase(const Vector2& playerPos) :
 	playerPos_(playerPos),
 	state_(0),
@@ -14,6 +16,7 @@ BossBase::BossBase(const Vector2& playerPos) :
 	animCounter_(),
 	animInterval_(),
 	animLoop_(),
+	enCount_(true),
 	angle_(0.0f),
 	maxHP(-1),
 	end_(false)
@@ -31,7 +34,8 @@ void BossBase::Update(void)
 	AttackUpdate();
 
 	Invi();
-	(this->*stateFuncPtr[state_])();
+	if (enCount_) { EnCount(); }
+	else { (this->*stateFuncPtr[state_])(); }
 	Animation();
 }
 
@@ -71,6 +75,29 @@ void BossBase::Animation(void)
 			else {
 				ChangeMotion(0);
 			}
+		}
+	}
+}
+
+void BossBase::EnCount(void)
+{
+	unit_.pos_.x -= 2.0f;
+
+	Smng::GetIns().Play(SOUND::WARNING, false, 200, true);
+
+	if (unit_.para_.radius != -1) {
+		if (unit_.pos_.x + unit_.para_.radius <= Application::SCREEN_SIZE_X) {
+			enCount_ = false; 
+			Smng::GetIns().Stop(SOUND::WARNING);
+			Smng::GetIns().Play(SOUND::BGM_BOSS, true, 150, true);
+		}
+	}
+
+	if (unit_.para_.size.x != -1) {
+		if (unit_.pos_.x + unit_.para_.size.x / 2 <= Application::SCREEN_SIZE_X) {
+			enCount_ = false; 
+			Smng::GetIns().Stop(SOUND::WARNING);
+			Smng::GetIns().Play(SOUND::BGM_BOSS, true, 150, true);
 		}
 	}
 }

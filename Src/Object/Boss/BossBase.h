@@ -25,6 +25,8 @@ public:
 
 	virtual bool Timer(void) = 0;
 
+	const bool GetEnCount(void)const { return enCount_; }
+
 protected:
 	int state_;
 	using STATEFUNC = void (BossBase::*)(void);
@@ -42,6 +44,10 @@ protected:
 	bool animLoop_;
 	void ChangeMotion(int motion, bool loop = true);
 	void Animation(void);
+
+
+	bool enCount_;
+	void EnCount(void);
 
 	int maxHP;
 

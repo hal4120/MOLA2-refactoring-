@@ -73,6 +73,7 @@ void GameScene::Load(void)
 	Smng::GetIns().Load(SOUND::BGM_BOSS);
 	Smng::GetIns().Load(SOUND::BLAST);
 	Smng::GetIns().Load(SOUND::GAME_END);
+	Smng::GetIns().Load(SOUND::WARNING);
 }
 
 void GameScene::Init(void)
@@ -84,8 +85,6 @@ void GameScene::Init(void)
 	boss_->Init();
 
 	time_ = 0.0f;
-
-	Smng::GetIns().Play(SOUND::BGM_BOSS, true, 150, true, true);
 
 	// ヒットストップカウンターの初期化
 	hitStop_ = 0;
@@ -159,6 +158,20 @@ void GameScene::Draw(void)
 	SetFontSize(fontSize);
 	DrawFormatString(0, 0, 0xffffff, "TIME:%.2fs", time_);
 	SetFontSize(16);
+
+
+	if (boss_->GetEnCount()) {
+		static float enCounter = 0;
+
+		enCounter += 0.07f;
+		if (enCounter >= 1000.0f) { enCounter = 0.0f; }
+
+		int al = abs(sinf(enCounter) * 100) + 100;
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, al);
+		DrawBox(0, 0, xx, yy, 0xff0000, true); 
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 	//-------------------------------------------------
 
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -172,6 +185,7 @@ void GameScene::Release(void)
 	Smng::GetIns().Delete(SOUND::BGM_BOSS);
 	Smng::GetIns().Delete(SOUND::BLAST);
 	Smng::GetIns().Delete(SOUND::GAME_END);
+	Smng::GetIns().Delete(SOUND::WARNING);
 
 	if (stage_) {
 		stage_->Release();

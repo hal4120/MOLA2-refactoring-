@@ -70,7 +70,7 @@ void Shark::Init(void)
 {
 	unit_.isAlive_ = true;
 
-	unit_.pos_.x = Application::SCREEN_SIZE_X - SIZE_X / 2.0f;
+	unit_.pos_.x = Application::SCREEN_SIZE_X + SIZE_X;
 	unit_.pos_.y = Application::SCREEN_SIZE_Y / 2.0f;
 
 	state_ = (int)STATE::MOVE;
