@@ -6,8 +6,6 @@
 #include"../../Application/Application.h"
 #include"../SceneManager/SceneManager.h"
 
-#include"../../Manager/Input/InputManager.h"
-
 OverScene::OverScene():
 	img_(-1)
 {
@@ -29,7 +27,13 @@ void OverScene::Init(void)
 
 void OverScene::Update(void)
 {
-	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE)) {
+	if (
+
+		(CheckHitKeyAll()) ||
+		((GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B) != 0) ||
+		((GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A) != 0)
+
+		) {
 		SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE);
 	}
 }

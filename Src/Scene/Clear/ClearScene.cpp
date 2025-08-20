@@ -59,7 +59,13 @@ void ClearScene::Update(void)
 
 
 
-	if (CheckHitKeyAll()) { SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE); }
+	if (
+
+		(CheckHitKeyAll()) ||
+		((GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B) != 0) ||
+		((GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A) != 0)
+
+		) { SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE); }
 }
 
 void ClearScene::Draw(void)

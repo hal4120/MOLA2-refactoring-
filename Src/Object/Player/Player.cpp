@@ -253,39 +253,62 @@ void Player::Over(void)
 
 void Player::Input(void)
 {
+	int input = GetJoypadInputState(DX_INPUT_PAD1);
+
 	up_.prev_ = up_.now_;
-	up_.now_ = ((CheckHitKey(KEY_INPUT_UP) == 0) &&
-		(CheckHitKey(KEY_INPUT_W) == 0)) ? false : true;
+	up_.now_ = (
+		(CheckHitKey(KEY_INPUT_UP) == 0) &&
+		(CheckHitKey(KEY_INPUT_W) == 0) &&
+		((input & PAD_INPUT_UP) == 0)
+		) ? false : true;
 	up_.downTrg_ = (!up_.prev_ && up_.now_);
 	up_.upTrg_ = (up_.prev_ && !up_.now_);
 
 	down_.prev_ = down_.now_;
-	down_.now_ = ((CheckHitKey(KEY_INPUT_DOWN) == 0) &&
-		(CheckHitKey(KEY_INPUT_S) == 0)) ? false : true;
+	down_.now_ = (
+		(CheckHitKey(KEY_INPUT_DOWN) == 0) &&
+		(CheckHitKey(KEY_INPUT_S) == 0) &&
+		((input & PAD_INPUT_DOWN) == 0)
+		) ? false : true;
 	down_.downTrg_ = (!down_.prev_ && down_.now_);
 	down_.upTrg_ = (down_.prev_ && !down_.now_);
 
 	left_.prev_ = left_.now_;
-	left_.now_ = ((CheckHitKey(KEY_INPUT_LEFT) == 0) &&
-		(CheckHitKey(KEY_INPUT_A) == 0)) ? false : true;
+	left_.now_ = (
+		(CheckHitKey(KEY_INPUT_LEFT) == 0) &&
+		(CheckHitKey(KEY_INPUT_A) == 0)&&
+		((input & PAD_INPUT_LEFT) == 0)
+		) ? false : true;
 	left_.downTrg_ = (!left_.prev_ && left_.now_);
 	left_.upTrg_ = (left_.prev_ && !left_.now_);
 
 	right_.prev_ = right_.now_;
-	right_.now_ = ((CheckHitKey(KEY_INPUT_RIGHT) == 0) &&
-		(CheckHitKey(KEY_INPUT_D) == 0)) ? false : true;
+	right_.now_ = (
+		(CheckHitKey(KEY_INPUT_RIGHT) == 0) &&
+		(CheckHitKey(KEY_INPUT_D) == 0)&&
+		((input & PAD_INPUT_RIGHT) == 0)
+		) ? false : true;
 	right_.downTrg_ = (!right_.prev_ && right_.now_);
 	right_.upTrg_ = (right_.prev_ && !right_.now_);
 
 	attackKey_.prev_ = attackKey_.now_;
-	attackKey_.now_ = ((CheckHitKey(KEY_INPUT_SPACE) == 0) &&
-		(CheckHitKey(KEY_INPUT_J) == 0)) ? false : true;
+	attackKey_.now_ = (
+		(CheckHitKey(KEY_INPUT_SPACE) == 0) &&
+		(CheckHitKey(KEY_INPUT_J) == 0) &&
+		((input & PAD_INPUT_B) == 0) &&
+		((input & PAD_INPUT_A) == 0)
+		) ? false : true;
 	attackKey_.downTrg_ = (!attackKey_.prev_ && attackKey_.now_);
 	attackKey_.upTrg_ = (attackKey_.prev_ && !attackKey_.now_);
 
 	specialKey_.prev_ = specialKey_.now_;
-	specialKey_.now_ = ((CheckHitKey(KEY_INPUT_V) == 0) &&
-		(CheckHitKey(KEY_INPUT_B) == 0)) ? false : true;
+	specialKey_.now_ = (
+		(CheckHitKey(KEY_INPUT_V) == 0) &&
+		(CheckHitKey(KEY_INPUT_B) == 0) &&
+		((input & 0x40) == 0) &&
+		((input & PAD_INPUT_Y) == 0) &&
+		((input & PAD_INPUT_X) == 0)
+		) ? false : true;
 	specialKey_.downTrg_ = (!specialKey_.prev_ && specialKey_.now_);
 	specialKey_.upTrg_ = (specialKey_.prev_ && !specialKey_.now_);
 }

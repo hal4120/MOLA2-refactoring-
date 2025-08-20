@@ -31,6 +31,14 @@ public:
 private:
 	static BOSS_KINDS nowBoss_;
 
+	int rankingFrameImg_;
+
+
+	struct KeyInfo { bool prev = false, now = false, down = false, up = false; };
+	KeyInfo upKey_;
+	KeyInfo downKey_;
+	KeyInfo deciKey_;
+	void Input(void);
 };
 
 using BOSS_KINDS = SelectScene::BOSS_KINDS;

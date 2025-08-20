@@ -39,7 +39,8 @@ private:
 	int selectImg_[(int)SELECT::MAX];
 	int arrowImg_;
 
-	bool prevSelectKey_, nowSelectKey_, downSelectKey_, upSelectKey_;
-	bool prevDeciKey_, nowDeciKey_, downDeciKey_, upDeciKey_;
+	struct KeyInfo { bool prev = false, now = false, down = false, up = false; };
+	KeyInfo selectKey_;
+	KeyInfo deciKey_;
 	void Input(void);
 };

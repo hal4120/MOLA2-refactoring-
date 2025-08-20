@@ -23,14 +23,8 @@ TitleScene::TitleScene():
 	arrowImg_(-1),
 	selectImg_(),
 	nowSelect_(SELECT::START),
-	prevSelectKey_(false),
-	nowSelectKey_(false),
-	downSelectKey_(false),
-	upSelectKey_(false),
-	prevDeciKey_(false),
-	nowDeciKey_(false),
-	downDeciKey_(false),
-	upDeciKey_(false)
+	selectKey_(),
+	deciKey_()
 {
 }
 
@@ -80,19 +74,21 @@ void TitleScene::Update(void)
 	shark_->Update();
 	player_->Update();
 
-	if (downSelectKey_) { nowSelect_ = (SELECT)(1 - (int)nowSelect_); Smng::GetIns().Play(SOUND::SELECT, true,200); }
+	if (selectKey_.down) { nowSelect_ = (SELECT)(1 - (int)nowSelect_); Smng::GetIns().Play(SOUND::SELECT, true, 200); }
 
-	if (downDeciKey_) {
-		Smng::GetIns().Play(SOUND::BUTTON, true, 200);
+	if (deciKey_.down) {
 		switch (nowSelect_)
 		{
 		case TitleScene::SELECT::START:
 			SceneManager::GetInstance().ChangeScene(SCENE_ID::SELECT);
 			break;
 		case TitleScene::SELECT::END:
+			Smng::GetIns().AllStop();
 			SceneManager::GetInstance().PushScene(std::make_shared< GameEndScene>());
 			break;
 		}
+		Smng::GetIns().Play(SOUND::BUTTON, true, 200);
+		return;
 	}
 }
 void TitleScene::Draw(void)
@@ -149,20 +145,31 @@ void TitleScene::Release(void)
 
 void TitleScene::Input(void)
 {
-	prevSelectKey_ = nowSelectKey_;
-	nowSelectKey_ = (
+	int input = GetJoypadInputState(DX_INPUT_PAD1);
+
+	selectKey_.prev = selectKey_.now;
+	selectKey_.now = (
+
 		(CheckHitKey(KEY_INPUT_LEFT) == 0) &&
-		(CheckHitKey(KEY_INPUT_RIGHT) == 0))
-		? false : true;
-	downSelectKey_ = (!prevSelectKey_ && nowSelectKey_);
-	upSelectKey_ = (prevSelectKey_ && !nowSelectKey_);
+		(CheckHitKey(KEY_INPUT_A) == 0) &&
+		((input & PAD_INPUT_LEFT) == 0) &&
 
+		(CheckHitKey(KEY_INPUT_RIGHT) == 0) &&
+		(CheckHitKey(KEY_INPUT_D) == 0 &&
+		((input & PAD_INPUT_RIGHT) == 0))
 
-	prevDeciKey_ = nowDeciKey_;
-	nowDeciKey_ = (
-		(CheckHitKey(KEY_INPUT_SPACE) == 0) &&
-		(CheckHitKey(KEY_INPUT_RETURN) == 0)
 		) ? false : true;
-	downDeciKey_ = (!prevDeciKey_ && nowDeciKey_);
-	upDeciKey_ = (prevDeciKey_ && !nowDeciKey_);
+	selectKey_.down = (!selectKey_.prev && selectKey_.now);
+	selectKey_.up = (selectKey_.prev && !selectKey_.now);
+
+
+	deciKey_.prev = deciKey_.now;
+	deciKey_.now = (
+		(CheckHitKey(KEY_INPUT_SPACE) == 0) &&
+		(CheckHitKey(KEY_INPUT_RETURN) == 0) &&
+		((input & PAD_INPUT_B) == 0) &&
+		((input & PAD_INPUT_A) == 0)
+		) ? false : true;
+	deciKey_.down = (!deciKey_.prev && deciKey_.now);
+	deciKey_.up = (deciKey_.prev && !deciKey_.now);
 }

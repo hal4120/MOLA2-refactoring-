@@ -50,7 +50,9 @@ void SharkLaser::Init(void)
 void SharkLaser::Update(void)
 {
 	if (state_ == STATE::NON) {
-		unit_.isAlive_ = false; 
+		unit_.isAlive_ = false;
+		Smng::GetIns().Stop(SOUND::BOSS_LASER_CHARGE);
+		Smng::GetIns().Stop(SOUND::BOSS_LASER);
 		return; 
 	}
 
@@ -98,4 +100,3 @@ void SharkLaser::Release(void)
 void SharkLaser::OnCollision(UnitBase* other)
 {
 }
-
