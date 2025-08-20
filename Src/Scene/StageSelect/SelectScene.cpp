@@ -23,12 +23,14 @@ SelectScene::SelectScene():
 	upKey_(),
 	downKey_(),
 	rankingFrameImg_(-1),
-	selectImgs_(),
+	selectObjImgs_(),
 	selectAnimeCounter_(0),
 	selectAnimeInterval_(0),
 	selectObjPos_(),
 	selectObjAngle_(0.0f),
-	selectObjParry_(false)
+	selectObjParry_(false),
+	arrowImg_(-1),
+	selectImg_(-1)
 {
 }
 
@@ -44,10 +46,14 @@ void SelectScene::Load(void)
 	player_ = new SelectPlayer();
 	player_->Load();
 
+	Utility::LoadImg(selectImg_, "Data/Image/Select/Select.png");
+
 	Utility::LoadImg(rankingFrameImg_, "Data/Image/Select/Ranking.png");
 
-	Utility::LoadArrayImg("Data/Image/Select/NormalShark.png", 6, 6, 1, 480, 480, selectImgs_[(int)BOSS_KINDS::SHARK]);
-	Utility::LoadArrayImg("Data/Image/Select/HardShark.png", 6, 6, 1, 480, 480, selectImgs_[(int)BOSS_KINDS::SHARK_HARD]);
+	Utility::LoadArrayImg("Data/Image/Select/NormalShark.png", 6, 6, 1, 480, 480, selectObjImgs_[(int)BOSS_KINDS::SHARK]);
+	Utility::LoadArrayImg("Data/Image/Select/HardShark.png", 6, 6, 1, 480, 480, selectObjImgs_[(int)BOSS_KINDS::SHARK_HARD]);
+
+	Utility::LoadImg(arrowImg_, "Data/Image/Effect/Arrow.png");
 
 	Smng::GetIns().Load(SOUND::BGM_RARARA);
 	Smng::GetIns().Load(SOUND::PARRY);
@@ -93,7 +99,7 @@ void SelectScene::Update(void)
 
 		if (upKey_.down) {
 
-			Smng::GetIns().Play(SOUND::BUTTON, true);
+			Smng::GetIns().Play(SOUND::SELECT, true);
 
 			nowBoss_ = (BOSS_KINDS)( ((int)nowBoss_) - 1 );
 			if (((int)nowBoss_) <= (int)BOSS_KINDS::NON) { nowBoss_ = (BOSS_KINDS)(((int)BOSS_KINDS::MAX) - 1); }
@@ -102,7 +108,7 @@ void SelectScene::Update(void)
 
 		if (downKey_.down) {
 
-			Smng::GetIns().Play(SOUND::BUTTON, true);
+			Smng::GetIns().Play(SOUND::SELECT, true);
 
 			nowBoss_ = (BOSS_KINDS)(((int)nowBoss_) + 1);
 			if (((int)nowBoss_) >= (int)BOSS_KINDS::MAX) { nowBoss_ = (BOSS_KINDS)(((int)BOSS_KINDS::NON) + 1); }
@@ -114,7 +120,7 @@ void SelectScene::Update(void)
 
 	if (++selectAnimeInterval_ >= 10) {
 		selectAnimeInterval_ = 0;
-		if (++selectAnimeCounter_ >= selectImgs_[(int)nowBoss_].size()) {
+		if (++selectAnimeCounter_ >= selectObjImgs_[(int)nowBoss_].size()) {
 			selectAnimeCounter_ = 0;
 		}
 	}
@@ -129,19 +135,39 @@ void SelectScene::Draw(void)
 	int x = xx / 2;
 	int y = yy / 2;
 
+	// îwåi
 	stage_->Draw();
+
+	// Ç‹Ç⁄
 	player_->Draw();
 	
+	// ÉâÉìÉLÉìÉOÉtÉåÅ[ÉÄï\é¶
 	DrawExtendGraph(x, 0, xx, yy, rankingFrameImg_, true);
 
+	// ÉâÉìÉLÉìÉOï\é¶Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`
 	auto ranking = Score::GetIns().GetRanking(nowBoss_);
 	SetFontSize(55);
 	for (int i = 0; i < ranking.size(); i++) {
 		DrawFormatString(RANKING_POS.x, RANKING_POS.y + (i * RANKING_POS_Y_SPACE), 0x0000ff, (ranking[i] == -1.0f) ? "----" : "%.2fs", ranking[i]);
 	}
 	SetFontSize(16);
+	//Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`
 
-	DrawRotaGraph(selectObjPos_.x, selectObjPos_.y, 1, selectObjAngle_, selectImgs_[(int)nowBoss_][selectAnimeCounter_], true);
+	// ëIëíÜÇÃÉ{ÉXÇÃÉvÉåÉrÉÖÅ[Çï\é¶
+	DrawRotaGraph(selectObjPos_.x, selectObjPos_.y, 1, selectObjAngle_, selectObjImgs_[(int)nowBoss_][selectAnimeCounter_], true);
+
+	// ñÓàÛÇï\é¶Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`
+	for (int i = 0; i < 2; i++) {
+		DrawRotaGraph(
+			SELECT_OBJ_POS_DEFAULT.x,
+			SELECT_OBJ_POS_DEFAULT.y + ((SELECT_OBJ_SIZE_Y / 4) * (i * 2 - 1)),
+			3, Utility::Deg2RadF(90.0f) * (i * 2 - 1),
+			arrowImg_, true);
+	}
+	// Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`
+
+	// ÅuSELECTÅvï\é¶
+	DrawRotaGraph(x / 2, 150, 1, 0, selectImg_, true);
 }
 
 void SelectScene::Release(void)
@@ -149,12 +175,16 @@ void SelectScene::Release(void)
 	Smng::GetIns().Delete(SOUND::BGM_RARARA);
 	Smng::GetIns().Delete(SOUND::PARRY);
 
+	DeleteGraph(selectImg_);
+
 	DeleteGraph(rankingFrameImg_);
 
-	for (auto& imgs : selectImgs_) {
+	for (auto& imgs : selectObjImgs_) {
 		for (auto& img : imgs) { DeleteGraph(img); }
 		imgs.clear();
 	}
+
+	DeleteGraph(arrowImg_);
 
 	if (stage_) {
 		stage_->Release();

@@ -42,7 +42,7 @@ private:
 	SelectPlayer* player_;
 	StageBase* stage_;
 
-	std::vector<int>selectImgs_[(int)BOSS_KINDS::MAX];
+	std::vector<int>selectObjImgs_[(int)BOSS_KINDS::MAX];
 	int selectAnimeCounter_;
 	int selectAnimeInterval_;
 	Vector2I selectObjPos_;
@@ -50,6 +50,12 @@ private:
 	bool selectObjParry_;
 
 	const Vector2I SELECT_OBJ_POS_DEFAULT = { 550,600 };
+
+	static constexpr int SELECT_OBJ_SIZE_Y = 480;
+
+	int arrowImg_;
+
+	int selectImg_;
 
 	int rankingFrameImg_;
 

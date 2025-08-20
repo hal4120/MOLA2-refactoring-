@@ -99,4 +99,7 @@ void SharkLaser::Release(void)
 
 void SharkLaser::OnCollision(UnitBase* other)
 {
+	if (!other->GetUnit().isAlive_ || other->GetUnit().inviciCounter_ > 0) { return; }
+
+	BlastEffectManager::On(other->GetUnit().pos_);
 }

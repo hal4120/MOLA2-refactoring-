@@ -66,7 +66,7 @@ public:
 	/// <param name="volume">音量</param>
 	/// <param name="loop">ループ再生</param>
 	/// <param name="topPlay">最初から再生するか</param>
-	void Play(SOUND s, bool over = false, int volume = 255, bool loop = false, bool topPlay = true);
+	void Play(SOUND s, bool over = false, int volume = 200, bool loop = false, bool topPlay = true);
 
 	/// <summary>
 	/// 指定したサウンドを停止
