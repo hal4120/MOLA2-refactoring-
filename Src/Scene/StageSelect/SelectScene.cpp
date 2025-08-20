@@ -46,8 +46,8 @@ void SelectScene::Load(void)
 
 	Utility::LoadImg(rankingFrameImg_, "Data/Image/Select/Ranking.png");
 
-	Utility::LoadArrayImg("Data/Image/Select/NormalShark.png", 6, 6, 1, 96, 96, selectImgs_[(int)BOSS_KINDS::SHARK]);
-	Utility::LoadArrayImg("Data/Image/Select/HardShark.png", 6, 6, 1, 96, 96, selectImgs_[(int)BOSS_KINDS::SHARK_HARD]);
+	Utility::LoadArrayImg("Data/Image/Select/NormalShark.png", 6, 6, 1, 480, 480, selectImgs_[(int)BOSS_KINDS::SHARK]);
+	Utility::LoadArrayImg("Data/Image/Select/HardShark.png", 6, 6, 1, 480, 480, selectImgs_[(int)BOSS_KINDS::SHARK_HARD]);
 
 	Smng::GetIns().Load(SOUND::BGM_RARARA);
 	Smng::GetIns().Load(SOUND::PARRY);
@@ -141,7 +141,7 @@ void SelectScene::Draw(void)
 	}
 	SetFontSize(16);
 
-	DrawRotaGraph(selectObjPos_.x, selectObjPos_.y, 5, selectObjAngle_, selectImgs_[(int)nowBoss_][selectAnimeCounter_], true);
+	DrawRotaGraph(selectObjPos_.x, selectObjPos_.y, 1, selectObjAngle_, selectImgs_[(int)nowBoss_][selectAnimeCounter_], true);
 }
 
 void SelectScene::Release(void)
