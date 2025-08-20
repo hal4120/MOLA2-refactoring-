@@ -9,11 +9,14 @@
 #include"../../Manager/BlastEffect/BlastEffectManager.h"
 #include"../../Manager/Score/Score.h"
 
+#include"../StageSelect/SelectScene.h"
+
 #include"../../Object/Player/Player.h"
 #include"../../Object/Enemy/EnemyManager.h"
 #include"../../Object/Stage/Blue/BlueStage.h"
 
 #include"../../Object/Boss/Shark/Shark.h"
+#include"../../Object/Boss/SharkHard/SharkHard.h"
 
 int GameScene::hitStop_ = 0;
 
@@ -51,23 +54,43 @@ void GameScene::Load(void)
 	blast_ = new BlastEffectManager();
 	blast_->Load();
 
-	stage_ = new BlueStage();
-	stage_->Load();
-
+	auto kinds = SelectScene::GetNowBoss();
+	
+	
 	player_ = new Player();
 	player_->Load();
 	collision_->Add(player_);
 	collision_->Add(player_->ParryIns());
 	collision_->Add(player_->LaserIns());
 
-	eMng_ = new EnemyManager(BOSS_KINDS::SHARK);
-	eMng_->Load();
-	collision_->Add(eMng_->GetEnemys());
 
-	boss_ = new Shark(player_->GetUnit().pos_);
+	switch (kinds)
+	{
+	case SelectScene::BOSS_KINDS::SHARK:
+
+		stage_ = new BlueStage();
+
+		boss_ = new Shark(player_->GetUnit().pos_);
+
+		break;
+	case SelectScene::BOSS_KINDS::SHARK_HARD:
+
+		stage_ = new BlueStage();
+
+		boss_ = new SharkHard(player_->GetUnit().pos_);
+
+		break;
+	}
+
+	stage_->Load();
+
 	boss_->Load();
 	collision_->Add(boss_);
 	collision_->Add(boss_->AttackIns());
+
+	eMng_ = new EnemyManager(kinds);
+	eMng_->Load();
+	collision_->Add(eMng_->GetEnemys());
 
 
 	Smng::GetIns().Load(SOUND::BGM_BOSS);
@@ -163,7 +186,7 @@ void GameScene::Draw(void)
 	if (boss_->GetEnCount()) {
 		static float enCounter = 0;
 
-		enCounter += 0.07f;
+		enCounter += 0.06f;
 		if (enCounter >= 1000.0f) { enCounter = 0.0f; }
 
 		int al = abs(sinf(enCounter) * 100) + 100;

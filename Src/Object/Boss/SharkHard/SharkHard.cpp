@@ -1,4 +1,4 @@
-#include "Shark.h"
+#include "SharkHard.h"
 
 #include<DxLib.h>
 
@@ -11,7 +11,7 @@
 #include"../../Enemy/EnemyBase.h"
 #include"../../Player/Player.h"
 
-Shark::Shark(const Vector2& playerPos):
+SharkHard::SharkHard(const Vector2& playerPos) :
 	BossBase(playerPos),
 	moveVec_(),
 	attackInterval_(),
@@ -26,12 +26,12 @@ Shark::Shark(const Vector2& playerPos):
 {
 }
 
-Shark::~Shark()
+SharkHard::~SharkHard()
 {
 }
 
 
-void Shark::Load(void)
+void SharkHard::Load(void)
 {
 	imgs_.resize((int)MOTION::MAX);
 	for (int i = 0; i < (int)MOTION::MAX; i++) {
@@ -49,24 +49,24 @@ void Shark::Load(void)
 	maxHP = HP_MAX;
 
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;
-	
-#define SET_STATE(state, func) stateFuncPtr[(int)(state)] = static_cast<STATEFUNC>(func)
-	SET_STATE(STATE::MOVE, &Shark::Move);
-	SET_STATE(STATE::ATTACK, &Shark::Attack);
-	SET_STATE(STATE::DAMAGE, &Shark::Damage);
-	SET_STATE(STATE::DEATH, &Shark::Death);
 
-	ikura_ = new IkuraShooter(unit_.pos_);
+#define SET_STATE(state, func) stateFuncPtr[(int)(state)] = static_cast<STATEFUNC>(func)
+	SET_STATE(STATE::MOVE, &SharkHard::Move);
+	SET_STATE(STATE::ATTACK, &SharkHard::Attack);
+	SET_STATE(STATE::DAMAGE, &SharkHard::Damage);
+	SET_STATE(STATE::DEATH, &SharkHard::Death);
+
+	ikura_ = new HardIkuraShooter(unit_.pos_);
 	ikura_->Load();
-	uni_ = new UniShooter();
+	uni_ = new HardUniShooter();
 	uni_->Load();
-	mizu_ = new Mizu(unit_.pos_, playerPos_);
+	mizu_ = new HardMizu(unit_.pos_, playerPos_);
 	mizu_->Load();
-	laser_ = new SharkLaser(unit_.pos_);
+	laser_ = new HardSharkLaser(unit_.pos_);
 	laser_->Load();
 }
 
-void Shark::Init(void)
+void SharkHard::Init(void)
 {
 	unit_.isAlive_ = true;
 
@@ -100,7 +100,7 @@ void Shark::Init(void)
 	laser_->Init();
 }
 
-void Shark::OnCollision(UnitBase* other)
+void SharkHard::OnCollision(UnitBase* other)
 {
 	if (state_ == (int)STATE::DAMAGE || state_ == (int)STATE::DEATH) { return; }
 
@@ -112,14 +112,14 @@ void Shark::OnCollision(UnitBase* other)
 		return;
 	}
 
-	if (dynamic_cast<Uni*>(other)) {
+	if (dynamic_cast<HardUni*>(other)) {
 		GameScene::Slow(20);
 		GameScene::Shake();
 
 		HpDecrease(10);
 		return;
 	}
-	if (dynamic_cast<Mizu*>(other)) {
+	if (dynamic_cast<HardMizu*>(other)) {
 		GameScene::Slow(20);
 		GameScene::Shake();
 
@@ -137,7 +137,7 @@ void Shark::OnCollision(UnitBase* other)
 
 }
 
-std::vector<UnitBase*> Shark::AttackIns(void)
+std::vector<UnitBase*> SharkHard::AttackIns(void)
 {
 	std::vector<UnitBase*> ret;
 
@@ -149,14 +149,14 @@ std::vector<UnitBase*> Shark::AttackIns(void)
 	return ret;
 }
 
-bool Shark::Timer(void)
+bool SharkHard::Timer(void)
 {
 	if (state_ == (int)STATE::DEATH) { return false; }
 	return true;
 }
 
 
-void Shark::Move(void)
+void SharkHard::Move(void)
 {
 	unit_.pos_ += moveVec_ * unit_.para_.speed;
 
@@ -168,7 +168,8 @@ void Shark::Move(void)
 
 	if (unit_.pos_.x < Application::SCREEN_SIZE_X - unit_.para_.size.x / 2.0f) {
 		moveVec_.x = 1.0f;
-	} else {
+	}
+	else {
 		moveVec_.x = 0.0f;
 	}
 
@@ -184,7 +185,7 @@ void Shark::Move(void)
 	}
 }
 
-void Shark::Attack(void)
+void SharkHard::Attack(void)
 {
 	// UŒ‚ó‘Ô‚Ö‘JˆÚŒãA‚P‰ñ–Ú‚Ìˆ—```````
 	if (!attackInit_) {
@@ -195,19 +196,19 @@ void Shark::Attack(void)
 		attackState_ = AttackLottery();
 		switch (attackState_)
 		{
-		case Shark::ATTACK_KINDS::NON:
+		case SharkHard::ATTACK_KINDS::NON:
 			attackEnd_ = true;
 			break;
-		case Shark::ATTACK_KINDS::IKURA:
+		case SharkHard::ATTACK_KINDS::IKURA:
 			ikura_->On();
 			break;
-		case Shark::ATTACK_KINDS::UNI:
-  			uni_->Shot(playerPos_);
+		case SharkHard::ATTACK_KINDS::UNI:
+			uni_->Shot(playerPos_);
 			break;
-		case Shark::ATTACK_KINDS::MIZU:
+		case SharkHard::ATTACK_KINDS::MIZU:
 			mizu_->On();
 			break;
-		case Shark::ATTACK_KINDS::LASER:
+		case SharkHard::ATTACK_KINDS::LASER:
 			laser_->On();
 			break;
 		}
@@ -217,17 +218,17 @@ void Shark::Attack(void)
 	// UŒ‚ó‘Ô’†‚Ì‚Ýs‚¤XVˆ—A‚Ü‚½UŒ‚I—¹”»’f
 	switch (attackState_)
 	{
-	case Shark::ATTACK_KINDS::IKURA:
+	case SharkHard::ATTACK_KINDS::IKURA:
 		ikura_->Shot();
 		if (ikura_->End()) { attackEnd_ = true; }
 		break;
-	case Shark::ATTACK_KINDS::UNI:
+	case SharkHard::ATTACK_KINDS::UNI:
 		if (uni_->End()) { attackEnd_ = true; }
 		break;
-	case Shark::ATTACK_KINDS::MIZU:
+	case SharkHard::ATTACK_KINDS::MIZU:
 		if (mizu_->End()) { attackEnd_ = true; }
 		break;
-	case Shark::ATTACK_KINDS::LASER:
+	case SharkHard::ATTACK_KINDS::LASER:
 		if (laser_->End()) { attackEnd_ = true; }
 		break;
 	}
@@ -242,7 +243,7 @@ void Shark::Attack(void)
 	//`````````````````````
 }
 
-void Shark::Damage(void)
+void SharkHard::Damage(void)
 {
 	// ƒ_ƒ[ƒWƒ‚[ƒVƒ‡ƒ“‚ªI‚í‚Á‚½‚çó‘Ô‚à–ß‚·
 	if (motion_ != (int)MOTION::DAMAGE) {
@@ -250,7 +251,7 @@ void Shark::Damage(void)
 	}
 }
 
-void Shark::Death(void)
+void SharkHard::Death(void)
 {
 	if (++deathCou_ >= DEATH_PERFOR_TIME) {
 		deathCou_ = 0;
@@ -272,9 +273,9 @@ void Shark::Death(void)
 }
 
 
-void Shark::HpDecrease(int damage)
+void SharkHard::HpDecrease(int damage)
 {
-	state_ = (int)STATE::DAMAGE;
+	unit_.inviciCounter_ = 10;
 	ChangeMotion((int)MOTION::DAMAGE, false);
 	animCounter_ = 1;
 
@@ -290,11 +291,11 @@ void Shark::HpDecrease(int damage)
 		deathCou_ = 0;
 	}
 
-	if (enCount_) { state_ = (int)STATE::MOVE; unit_.inviciCounter_ = 10; }
+	if (enCount_) { state_ = (int)STATE::MOVE; }
 }
 
 
-Shark::ATTACK_KINDS Shark::AttackLottery(void)
+SharkHard::ATTACK_KINDS SharkHard::AttackLottery(void)
 {
 	ATTACK_KINDS ret = ATTACK_KINDS::NON;
 
@@ -315,10 +316,11 @@ Shark::ATTACK_KINDS Shark::AttackLottery(void)
 	else if (rand <= 10000) {
 		ret = ATTACK_KINDS::UNI;
 	}
+	ret = ATTACK_KINDS::MIZU;
 	return ret;
 }
 
-void Shark::AttackUpdate(void)
+void SharkHard::AttackUpdate(void)
 {
 	ikura_->Update();
 	uni_->Update();
@@ -326,7 +328,7 @@ void Shark::AttackUpdate(void)
 	laser_->Update();
 }
 
-void Shark::AttackDraw(void)
+void SharkHard::AttackDraw(void)
 {
 	ikura_->Draw();
 	uni_->Draw();
@@ -334,7 +336,7 @@ void Shark::AttackDraw(void)
 	laser_->Draw();
 }
 
-void Shark::AttackRelease(void)
+void SharkHard::AttackRelease(void)
 {
 	if (ikura_) {
 		ikura_->Release();

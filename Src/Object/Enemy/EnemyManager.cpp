@@ -10,6 +10,9 @@ EnemyManager::EnemyManager(BOSS_KINDS k):
 	case BOSS_KINDS::SHARK:
 		for (int i = 0; i < ENEMY_MAX; i++) { enemys_[i] = new Monkfish((NUMBER)i); }
 		break;
+	case BOSS_KINDS::SHARK_HARD:
+		for (int i = 0; i < ENEMY_MAX; i++) { enemys_[i] = new Monkfish((NUMBER)i); }
+		break;
 	}
 }
 

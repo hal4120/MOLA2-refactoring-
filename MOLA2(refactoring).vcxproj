@@ -135,6 +135,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkura.cpp" />
+    <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkuraShooter.cpp" />
+    <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Mizu\HardMizu.cpp" />
+    <ClCompile Include="Src\Object\Boss\SharkHard\Attack\SharkLaser\HardSharkLaser.cpp" />
+    <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Uni\HardUni.cpp" />
+    <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Uni\HardUniShooter.cpp" />
+    <ClCompile Include="Src\Object\Boss\SharkHard\SharkHard.cpp" />
     <ClCompile Include="Src\Scene\StageSelect\Object\SelectPlayer.cpp" />
     <ClCompile Include="Src\Scene\Over\OverScene.cpp" />
     <ClCompile Include="Src\Object\Stage\Old\OldStage.cpp" />
@@ -180,6 +187,13 @@
     <ClCompile Include="Src\Scene\Title\Object\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkura.h" />
+    <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkuraShooter.h" />
+    <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Mizu\HardMizu.h" />
+    <ClInclude Include="Src\Object\Boss\SharkHard\Attack\SharkLaser\HardSharkLaser.h" />
+    <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Uni\HardUni.h" />
+    <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Uni\HardUniShooter.h" />
+    <ClInclude Include="Src\Object\Boss\SharkHard\SharkHard.h" />
     <ClInclude Include="Src\Scene\StageSelect\Object\SelectPlayer.h" />
     <ClInclude Include="Src\Scene\Over\OverScene.h" />
     <ClInclude Include="Src\Object\Stage\Old\OldStage.h" />
