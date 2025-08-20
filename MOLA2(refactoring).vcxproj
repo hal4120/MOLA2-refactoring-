@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\StageSelect\Object\SelectPlayer.cpp" />
     <ClCompile Include="Src\Scene\Over\OverScene.cpp" />
     <ClCompile Include="Src\Object\Stage\Old\OldStage.cpp" />
     <ClCompile Include="Src\Scene\Clear\Object\ClearPlayer.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Src\Scene\Title\Object\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\StageSelect\Object\SelectPlayer.h" />
     <ClInclude Include="Src\Scene\Over\OverScene.h" />
     <ClInclude Include="Src\Object\Stage\Old\OldStage.h" />
     <ClInclude Include="Src\Scene\Clear\Object\ClearPlayer.h" />

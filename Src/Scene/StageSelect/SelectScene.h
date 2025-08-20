@@ -1,6 +1,13 @@
 #pragma once
 #include "../SceneBase.h"
 
+#include"../../Common/Vector2.h"
+
+#include<vector>
+
+class SelectPlayer;
+class StageBase;
+
 class SelectScene :
     public SceneBase
 {
@@ -8,6 +15,7 @@ public:
 	enum class BOSS_KINDS {
 		NON = -1,
 		SHARK,
+		SHARK_HARD,
 
 		MAX,
 	};
@@ -31,13 +39,26 @@ public:
 private:
 	static BOSS_KINDS nowBoss_;
 
+	SelectPlayer* player_;
+	StageBase* stage_;
+
+	std::vector<int>selectImgs_[(int)BOSS_KINDS::MAX];
+	int selectAnimeCounter_;
+	int selectAnimeInterval_;
+	Vector2I selectObjPos_;
+	float selectObjAngle_;
+	bool selectObjParry_;
+
+	const Vector2I SELECT_OBJ_POS_DEFAULT = { 550,600 };
+
 	int rankingFrameImg_;
 
+	const Vector2I RANKING_POS = { 1150,225 };
+	static constexpr int RANKING_POS_Y_SPACE = 120;
 
 	struct KeyInfo { bool prev = false, now = false, down = false, up = false; };
 	KeyInfo upKey_;
 	KeyInfo downKey_;
-	KeyInfo deciKey_;
 	void Input(void);
 };
 
