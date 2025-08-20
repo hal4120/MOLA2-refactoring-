@@ -316,7 +316,6 @@ SharkHard::ATTACK_KINDS SharkHard::AttackLottery(void)
 	else if (rand <= 10000) {
 		ret = ATTACK_KINDS::UNI;
 	}
-	ret = ATTACK_KINDS::MIZU;
 	return ret;
 }
 
