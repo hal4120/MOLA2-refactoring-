@@ -65,6 +65,7 @@ private:
 	struct KeyInfo { bool prev = false, now = false, down = false, up = false; };
 	KeyInfo upKey_;
 	KeyInfo downKey_;
+	KeyInfo titleBackKey_;
 
 	enum NUMBER_NAME { ONE,TWO,THREE,FOUR,FIVE,MAX };
 	KeyInfo numberKey_[NUMBER_NAME::MAX];

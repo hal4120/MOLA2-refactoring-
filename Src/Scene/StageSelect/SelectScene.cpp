@@ -22,6 +22,7 @@ SelectScene::SelectScene():
 	stage_(nullptr),
 	upKey_(),
 	downKey_(),
+	titleBackKey_(),
 	numberKey_(),
 	rankingFrameImg_(-1),
 	selectObjImgs_(),
@@ -82,6 +83,11 @@ void SelectScene::Init(void)
 void SelectScene::Update(void)
 {
 	Input();
+
+	if (titleBackKey_.down) {
+		SceneManager::GetInstance().ChangeScene(SCENE_ID::TITLE);
+		return;
+	}
 
 	stage_->Update();
 	player_->Update();
@@ -224,6 +230,15 @@ void SelectScene::Input(void)
 		) ? false : true;
 	downKey_.down = (!downKey_.prev && downKey_.now);
 	downKey_.up = (downKey_.prev && !downKey_.now);
+
+
+	titleBackKey_.prev = titleBackKey_.now;
+	titleBackKey_.now = (
+		(CheckHitKey(KEY_INPUT_ESCAPE) == 0) &&
+		((input & PAD_INPUT_START) == 0)
+		) ? false : true;
+	titleBackKey_.down = (!titleBackKey_.prev && titleBackKey_.now);
+	titleBackKey_.up = (titleBackKey_.prev && !titleBackKey_.now);
 
 
 	for (int i = 0; i < NUMBER_NAME::MAX; i++) {

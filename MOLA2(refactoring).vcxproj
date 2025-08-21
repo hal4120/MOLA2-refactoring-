@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\Game\Pause\GamePauseScene.cpp" />
     <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkura.cpp" />
     <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkuraShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Mizu\HardMizu.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="Src\Scene\Title\Object\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\Game\Pause\GamePauseScene.h" />
     <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkura.h" />
     <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkuraShooter.h" />
     <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Mizu\HardMizu.h" />

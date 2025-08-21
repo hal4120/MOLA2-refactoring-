@@ -9,6 +9,8 @@
 #include"../../Manager/BlastEffect/BlastEffectManager.h"
 #include"../../Manager/Score/Score.h"
 
+#include"Pause/GamePauseScene.h"
+
 #include"../StageSelect/SelectScene.h"
 
 #include"../../Object/Player/Player.h"
@@ -35,7 +37,9 @@ GameScene::GameScene():
 	stage_(nullptr),
 	eMng_(nullptr),
 	boss_(nullptr),
-	time_(0.0f)
+	pauseKey_(),
+	time_(0.0f),
+	enCounter_(0.0f)
 {
 }
 
@@ -104,10 +108,11 @@ void GameScene::Init(void)
 	stage_->Init();
 	player_->Init();
 	eMng_->Init();
-
 	boss_->Init();
 
 	time_ = 0.0f;
+
+	enCounter_ = 0.0f;
 
 	// ヒットストップカウンターの初期化
 	hitStop_ = 0;
@@ -125,12 +130,22 @@ void GameScene::Init(void)
 
 void GameScene::Update(void)
 {
+	Input();
+
+	if (pauseKey_.down) {
+		SceneManager::GetInstance().PushScene(std::make_shared<GamePauseScene>());
+		Smng::GetIns().Play(SOUND::SELECT, true);
+		return;
+	}
+
+
 	if (hitStop_ > 0) { hitStop_--; return; }
 	if (shake_ > 0) { shake_--; }
 	if (slow_ > 0) {
 		slow_--;
 		if (slow_ % slowInter_ != 0) { return; }
 	}
+
 
 	stage_->Update();
 	player_->Update();
@@ -141,6 +156,11 @@ void GameScene::Update(void)
 	collision_->Check();
 	blast_->Update();
 
+
+	if (boss_->GetEnCount()) {
+		enCounter_ += 0.06f;
+		if (enCounter_ >= 1000.0f) { enCounter_ = 0.0f; }
+	}
 
 	if (boss_->Timer()) { time_ += 1 / 60.0f; }
 
@@ -184,12 +204,7 @@ void GameScene::Draw(void)
 
 
 	if (boss_->GetEnCount()) {
-		static float enCounter = 0;
-
-		enCounter += 0.06f;
-		if (enCounter >= 1000.0f) { enCounter = 0.0f; }
-
-		int al = abs(sinf(enCounter) * 100) + 100;
+		int al = abs(sinf(enCounter_) * 100) + 100;
 
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, al);
 		DrawBox(0, 0, xx, yy, 0xff0000, true); 
@@ -244,6 +259,21 @@ void GameScene::Release(void)
 	}
 
 	DeleteGraph(mainScreen_);
+}
+
+
+void GameScene::Input(void)
+{
+	int input = GetJoypadInputState(DX_INPUT_PAD1);
+
+	pauseKey_.prev = pauseKey_.now;
+	pauseKey_.now = (
+		(CheckHitKey(KEY_INPUT_ESCAPE) == 0) &&
+		((input & PAD_INPUT_START) == 0)
+		) ? false : true;
+	pauseKey_.down = (!pauseKey_.prev && pauseKey_.now) ? true : false;
+	pauseKey_.up = (pauseKey_.prev && !pauseKey_.now) ? true : false;
+
 }
 
 void GameScene::Shake(ShakeKinds kinds, ShakeSize size, int time)

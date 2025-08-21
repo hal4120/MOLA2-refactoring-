@@ -59,8 +59,16 @@ private:
 
 	BossBase* boss_;
 
+
+	struct KeyInfo { bool down = false, up = false, prev = false, now = false; };
+	KeyInfo pauseKey_;
+	void Input(void);
+
 	// 時間
 	float time_;
+
+	// ワーニング
+	float enCounter_;
 
 	// ヒットストップカウンター
 	static int hitStop_;

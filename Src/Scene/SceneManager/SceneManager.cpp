@@ -195,7 +195,8 @@ void SceneManager::JumpScene(std::shared_ptr<SceneBase> scene)
 	scenes_.clear();
 
 	// V‚µ‚­Ï‚Ş
-	scenes_.push_back(scene);
+	ChangeScene(scene);
+	//scenes_.push_back(scene);
 }
 
 void SceneManager::JumpScene(SCENE_ID scene)
