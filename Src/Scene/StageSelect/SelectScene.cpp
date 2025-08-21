@@ -22,6 +22,7 @@ SelectScene::SelectScene():
 	stage_(nullptr),
 	upKey_(),
 	downKey_(),
+	numberKey_(),
 	rankingFrameImg_(-1),
 	selectObjImgs_(),
 	selectAnimeCounter_(0),
@@ -116,6 +117,8 @@ void SelectScene::Update(void)
 		}
 
 		if (player_->Parry()) { selectObjParry_ = true; Smng::GetIns().Play(SOUND::PARRY, true); }
+
+		RankingReset();
 	}
 
 	if (++selectAnimeInterval_ >= 10) {
@@ -221,4 +224,28 @@ void SelectScene::Input(void)
 		) ? false : true;
 	downKey_.down = (!downKey_.prev && downKey_.now);
 	downKey_.up = (downKey_.prev && !downKey_.now);
+
+
+	for (int i = 0; i < NUMBER_NAME::MAX; i++) {
+		numberKey_[i].prev = numberKey_[i].now;
+		numberKey_[i].now = (CheckHitKey(NUMBERS_KEY[i]) == 0) ? false : true;
+		numberKey_[i].down = (!numberKey_[i].prev && numberKey_[i].now);
+		numberKey_[i].up = (numberKey_[i].prev && !numberKey_[i].now);
+	}
+}
+
+void SelectScene::RankingReset(void)
+{
+	if (CheckHitKey(KEY_INPUT_0) == 0) { return; }
+
+	if (CheckHitKey(KEY_INPUT_6) && CheckHitKey(KEY_INPUT_8)) { Score::GetIns().RankingReset(nowBoss_); }
+
+	size_t input_num = 0;
+	NUMBER_NAME num = {};
+	for (int i = 0; i < NUMBER_NAME::MAX; i++) {
+		if (numberKey_[i].down) { num = (NUMBER_NAME)i;	 input_num++; }
+	}
+	if (input_num == 1) {
+		Score::GetIns().RankingReset(nowBoss_, num + 1);
+	}
 }

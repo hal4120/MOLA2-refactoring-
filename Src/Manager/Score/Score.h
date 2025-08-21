@@ -28,6 +28,13 @@ public:
 	ScoreInfo GetNowScore(void) { return nowScore_; }
 	std::vector<float>GetRanking(BOSS_KINDS k);
 
+	void RankingReset(BOSS_KINDS k, int rank) {
+		if (rank < 1 || RANKING_NUM < rank) { return; }
+		for (int i = rank; i < RANKING_NUM; i++) { ranking_[(int)k][i - 1] = ranking_[(int)k][i]; ranking_[(int)k][i] = -1; }
+	}
+	void RankingReset(BOSS_KINDS k) { for (auto& s : ranking_[(int)k]) { s = -1.0f; } }
+	void RankingAllReset(void) { for (auto& score : ranking_) { for (auto& s : score) { s = -1.0f; } } }
+
 	void Save(void);
 
 private:

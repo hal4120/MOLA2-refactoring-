@@ -65,7 +65,16 @@ private:
 	struct KeyInfo { bool prev = false, now = false, down = false, up = false; };
 	KeyInfo upKey_;
 	KeyInfo downKey_;
+
+	enum NUMBER_NAME { ONE,TWO,THREE,FOUR,FIVE,MAX };
+	KeyInfo numberKey_[NUMBER_NAME::MAX];
+	static constexpr int NUMBERS_KEY[NUMBER_NAME::MAX] = { 2,3,4,5,6 };
+
 	void Input(void);
+
+
+	void RankingReset(void);
+
 };
 
 using BOSS_KINDS = SelectScene::BOSS_KINDS;
