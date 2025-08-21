@@ -44,7 +44,7 @@ public:
 #pragma region パラメーター関係
 
 	// 最大ヒットポイント
-	static constexpr int HP_MAX = 200;
+	static constexpr int HP_MAX = 150;
 
 	// 移動速度
 	static constexpr float MOVE_SPEED = 5.0f;

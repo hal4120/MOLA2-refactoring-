@@ -143,7 +143,7 @@ void SharkHard::OnCollision(UnitBase* other)
 		GameScene::Slow(20);
 		GameScene::Shake();
 
-		HpDecrease(10);
+		HpDecrease(7);
 		return;
 	}
 

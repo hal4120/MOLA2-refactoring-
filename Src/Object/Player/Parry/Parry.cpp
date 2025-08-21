@@ -8,6 +8,7 @@
 
 #include"../../Enemy/EnemyBase.h"
 #include"../../Boss/Shark/Shark.h"
+#include"../../Boss/SharkHard/SharkHard.h"
 
 Parry::Parry(const Vector2& playerPos):
 	img_(),
@@ -103,7 +104,13 @@ void Parry::OnCollision(UnitBase* other)
 
 	if (dynamic_cast<EnemyBase*>(other) ||
 		dynamic_cast<Uni*>(other) ||
-		dynamic_cast<Mizu*>(other)) {
+		dynamic_cast<Mizu*>(other) ||
+		dynamic_cast<SharkTackle*>(other) ||
+		dynamic_cast<HardUni*>(other) ||
+		dynamic_cast<HardMizu*>(other) ||
+		dynamic_cast<HardSharkTackle*>(other)
+		) {
+
 
 		mag_ += MAG_ONE_SIZE_UP;
 		if (mag_ > MAX_MAG) { mag_ = MAX_MAG; }

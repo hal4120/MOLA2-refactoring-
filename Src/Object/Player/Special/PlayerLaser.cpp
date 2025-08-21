@@ -52,6 +52,8 @@ void PlayerLaser::Update(void)
 {
 	if (state_ == STATE::NON) {
 		unit_.isAlive_ = false;
+		Smng::GetIns().Stop(SOUND::PLAYER_LASER_CHARGE);
+		Smng::GetIns().Stop(SOUND::PLAYER_LASER);
 		return;
 	}
 
