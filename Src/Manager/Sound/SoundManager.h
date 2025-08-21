@@ -21,6 +21,7 @@ public:
 		BGM_RARARA,
 		BGM_BOSS,
 		BGM_TITLE,
+		BGM_GAMEOVER,
 
 		//-------------------
 

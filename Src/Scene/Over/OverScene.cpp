@@ -5,6 +5,7 @@
 #include"../../Utility/Utility.h"
 #include"../../Application/Application.h"
 #include"../SceneManager/SceneManager.h"
+#include"../../Manager/Sound/SoundManager.h"
 
 OverScene::OverScene():
 	img_(-1)
@@ -18,11 +19,12 @@ OverScene::~OverScene()
 void OverScene::Load(void)
 {
 	Utility::LoadImg(img_, "Data/Image/Over/GameOver.png");
+	Smng::GetIns().Load(SOUND::BGM_GAMEOVER);
 }
 
 void OverScene::Init(void)
 {
-
+	Smng::GetIns().Play(SOUND::BGM_GAMEOVER, true);
 }
 
 void OverScene::Update(void)
@@ -51,6 +53,7 @@ void OverScene::Draw(void)
 
 void OverScene::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::BGM_GAMEOVER);
 	DeleteGraph(img_);
 }
 

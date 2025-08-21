@@ -107,6 +107,7 @@ void SoundManager::Init(void)
 	sounds_[SOUND::BGM_RARARA].path_ = "BGM/Rarara.mp3";
 	sounds_[SOUND::BGM_BOSS].path_ = "BGM/BossBgm.mp3";
 	sounds_[SOUND::BGM_TITLE].path_ = "BGM/カートゥーン・キリィズショップ.mp3";
+	sounds_[SOUND::BGM_GAMEOVER].path_ = "BGM/GameOverBGM.mp3";
 
 
 	sounds_[SOUND::PLAYER_ATTACK].path_ = "SE/Parry.mp3";
