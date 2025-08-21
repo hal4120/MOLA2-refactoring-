@@ -100,7 +100,9 @@ void HardMizu::Release(void)
 
 void HardMizu::OnCollision(UnitBase* other)
 {
-	if (dynamic_cast<Player*>(other)) {
+	if (dynamic_cast<Player*>(other) ||
+		dynamic_cast<PlayerLaser*>(other)
+		) {
 		BlastEffectManager::On(unit_.pos_);
 		unit_.isAlive_ = false;
 		return;

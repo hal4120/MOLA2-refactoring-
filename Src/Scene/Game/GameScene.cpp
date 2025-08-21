@@ -16,6 +16,7 @@
 #include"../../Object/Player/Player.h"
 #include"../../Object/Enemy/EnemyManager.h"
 #include"../../Object/Stage/Blue/BlueStage.h"
+#include"../../Object/Stage/Orange/OrangeStage.h"
 
 #include"../../Object/Boss/Shark/Shark.h"
 #include"../../Object/Boss/SharkHard/SharkHard.h"
@@ -79,7 +80,7 @@ void GameScene::Load(void)
 		break;
 	case SelectScene::BOSS_KINDS::SHARK_HARD:
 
-		stage_ = new BlueStage();
+		stage_ = new OrangeStage();
 
 		boss_ = new SharkHard(player_->GetUnit().pos_);
 

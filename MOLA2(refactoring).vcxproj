@@ -135,6 +135,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Stage\Green\GreenStage.cpp" />
+    <ClCompile Include="Src\Object\Stage\Orange\OrangeStage.cpp" />
     <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Tackle\HardSharkTackle.cpp" />
     <ClCompile Include="Src\Object\Boss\Shark\Attack\Tackle\SharkTackle.cpp" />
     <ClCompile Include="Src\Scene\Game\Pause\GamePauseScene.cpp" />
@@ -190,6 +192,8 @@
     <ClCompile Include="Src\Scene\Title\Object\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Stage\Green\GreenStage.h" />
+    <ClInclude Include="Src\Object\Stage\Orange\OrangeStage.h" />
     <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Tackle\HardSharkTackle.h" />
     <ClInclude Include="Src\Object\Boss\Shark\Attack\Tackle\SharkTackle.h" />
     <ClInclude Include="Src\Scene\Game\Pause\GamePauseScene.h" />

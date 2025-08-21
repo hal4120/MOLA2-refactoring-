@@ -10,7 +10,7 @@
 
 #include"Object/ClearPlayer.h"
 #include"../../Object/Stage/Old/OldStage.h"
-#include"../../Object/Stage/Blue/BlueStage.h"
+#include"../../Object/Stage/Green/GreenStage.h"
 
 ClearScene::ClearScene():
 	gameClearImg_(-1),
@@ -35,7 +35,7 @@ void ClearScene::Load(void)
 		Utility::LoadImg(rankImg_, "Data/Image/Clear/Rank/" + std::to_string(score.rank_) + ".png");
 	}
 
-	stage_ = new BlueStage();
+	stage_ = new GreenStage();
 	stage_->Load();
 
 	player_ = new ClearPlayer();
