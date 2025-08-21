@@ -5,6 +5,7 @@
 #include"../../../../../Application/Application.h"
 #include"../../../../../Scene/Game/GameScene.h"
 #include"../../../../../Manager/BlastEffect/BlastEffectManager.h"
+#include"../../../../../Manager/Sound/SoundManager.h"
 
 #include"../../../../Player/Player.h"
 
@@ -25,6 +26,7 @@ void HardIkura::Load(void)
 	unit_.para_.colliType = CollisionType::ENEMY;
 
 	unit_.para_.speed = SPEED;
+
 }
 
 void HardIkura::Update(void)
@@ -46,6 +48,7 @@ void HardIkura::Draw(void)
 	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, 0, img_, true);
 }
 
+
 void HardIkura::OnCollision(UnitBase* other)
 {
 	if (!other->GetUnit().isAlive_) { return; }
@@ -54,6 +57,8 @@ void HardIkura::OnCollision(UnitBase* other)
 		GameScene::Slow();
 		BlastEffectManager::On(unit_.pos_);
 	}
+
+	Smng::GetIns().Play(SOUND::IKURA, true);
 
 	unit_.isAlive_ = false;
 }

@@ -2,6 +2,8 @@
 
 #include"../../SharkHard.h"
 
+#include"../../../../../Manager/Sound/SoundManager.h"
+
 HardIkuraShooter::HardIkuraShooter(const Vector2& bossPos):
 	bossPos_(bossPos),
 	img_(),
@@ -25,6 +27,7 @@ void HardIkuraShooter::Load(void)
 		ikuras_.emplace_back(new HardIkura(img_));
 		ikuras_[ikuras_.size() - 1]->Load();
 	}
+	Smng::GetIns().Load(SOUND::IKURA);
 }
 
 void HardIkuraShooter::Init(void)
@@ -48,6 +51,7 @@ void HardIkuraShooter::Draw(void)
 
 void HardIkuraShooter::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::IKURA);
 	for (auto& ikura : ikuras_) { delete ikura; ikura = nullptr; }
 	ikuras_.clear();
 	DeleteGraph(img_);

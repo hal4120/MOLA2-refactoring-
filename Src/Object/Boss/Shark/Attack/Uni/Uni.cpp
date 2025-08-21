@@ -2,6 +2,7 @@
 
 #include"../../../../../Application/Application.h"
 #include"../../../../../Manager/BlastEffect/BlastEffectManager.h"
+#include"../../../../../Manager/Sound/SoundManager.h"
 
 #include"../../../../../Scene/Game/GameScene.h"
 
@@ -119,6 +120,7 @@ void Uni::Thrown(void)
 	float dif = sqrtf(vec.x * vec.x + vec.y * vec.y);
 	if (dif <= unit_.para_.speed) {
 		BlastEffectManager::On(unit_.pos_);
+		Smng::GetIns().Play(SOUND::BLAST, true, 150);
 		angle_ = 0.0f;
 		state_ = STATE::BLAST;
 	}

@@ -301,21 +301,21 @@ SharkHard::ATTACK_KINDS SharkHard::AttackLottery(void)
 
 	int rand = GetRand(10000);
 
-	if (rand <= 2000) {
+	if (rand <= 3000) {
 		ret = ATTACK_KINDS::IKURA;
 	}
-	else if (rand <= 4000) {
-		ret = ATTACK_KINDS::UNI;
-	}
 	else if (rand <= 6000) {
-		ret = ATTACK_KINDS::MIZU;
+		ret = ATTACK_KINDS::UNI;
 	}
 	else if (rand <= 8000) {
-		ret = ATTACK_KINDS::LASER;
+		ret = ATTACK_KINDS::MIZU;
 	}
 	else if (rand <= 10000) {
-		ret = ATTACK_KINDS::UNI;
+		ret = ATTACK_KINDS::LASER;
 	}
+	//else if (rand <= 10000) {
+	//	ret = ATTACK_KINDS::UNI;
+	//}
 	return ret;
 }
 

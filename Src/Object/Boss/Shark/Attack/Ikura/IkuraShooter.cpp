@@ -2,6 +2,8 @@
 
 #include"../../Shark.h"
 
+#include"../../../../../Manager/Sound/SoundManager.h"
+
 IkuraShooter::IkuraShooter(const Vector2& bossPos):
 	bossPos_(bossPos),
 	img_(),
@@ -25,6 +27,8 @@ void IkuraShooter::Load(void)
 		ikuras_.emplace_back(new Ikura(img_));
 		ikuras_[ikuras_.size() - 1]->Load();
 	}
+
+	Smng::GetIns().Load(SOUND::IKURA);
 }
 
 void IkuraShooter::Init(void)
@@ -48,6 +52,7 @@ void IkuraShooter::Draw(void)
 
 void IkuraShooter::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::IKURA);
 	for (auto& ikura : ikuras_) { delete ikura; ikura = nullptr; }
 	ikuras_.clear();
 	DeleteGraph(img_);

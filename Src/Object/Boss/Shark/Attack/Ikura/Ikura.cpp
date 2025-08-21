@@ -5,6 +5,7 @@
 #include"../../../../../Application/Application.h"
 #include"../../../../../Scene/Game/GameScene.h"
 #include"../../../../../Manager/BlastEffect/BlastEffectManager.h"
+#include"../../../../../Manager/Sound/SoundManager.h"
 
 #include"../../../../Player/Player.h"
 
@@ -54,6 +55,8 @@ void Ikura::OnCollision(UnitBase* other)
 		GameScene::Slow();
 		BlastEffectManager::On(unit_.pos_);
 	}
+
+	Smng::GetIns().Play(SOUND::IKURA, true);
 
 	unit_.isAlive_ = false;
 }

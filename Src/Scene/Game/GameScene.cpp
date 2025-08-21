@@ -204,7 +204,7 @@ void GameScene::Draw(void)
 
 
 	if (boss_->GetEnCount()) {
-		int al = abs(sinf(enCounter_) * 100) + 100;
+		int al = (int)(abs(sinf(enCounter_) * 100) + 100);
 
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, al);
 		DrawBox(0, 0, xx, yy, 0xff0000, true); 
