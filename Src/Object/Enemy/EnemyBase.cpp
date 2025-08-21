@@ -5,6 +5,7 @@
 
 #include"../Player/Player.h"
 #include"../Boss/Shark/Shark.h"
+#include"../Boss/SharkHard/SharkHard.h"
 
 EnemyBase::EnemyBase(NUMBER num):
 	number_(num),
@@ -113,7 +114,9 @@ void EnemyBase::OnCollision(UnitBase* other)
 
 	// パリィされたあとにボスにぶつかったときの処理
 	if (dynamic_cast<BossBase*>(other) ||
-		dynamic_cast<SharkLaser*>(other)) {
+		dynamic_cast<SharkLaser*>(other) ||
+		dynamic_cast<HardSharkLaser*>(other)
+		) {
 		unit_.isAlive_ = false;
 		BlastEffectManager::On(unit_.pos_);
 		return;

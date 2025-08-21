@@ -108,7 +108,7 @@ void Shark::OnCollision(UnitBase* other)
 		GameScene::Slow(20);
 		GameScene::Shake();
 
-		HpDecrease(10);
+		HpDecrease(5);
 		return;
 	}
 
@@ -116,14 +116,14 @@ void Shark::OnCollision(UnitBase* other)
 		GameScene::Slow(20);
 		GameScene::Shake();
 
-		HpDecrease(10);
+		HpDecrease(5);
 		return;
 	}
 	if (dynamic_cast<Mizu*>(other)) {
 		GameScene::Slow(20);
 		GameScene::Shake();
 
-		HpDecrease(5);
+		HpDecrease(1);
 		return;
 	}
 
@@ -131,7 +131,7 @@ void Shark::OnCollision(UnitBase* other)
 		GameScene::Slow(20);
 		GameScene::Shake();
 
-		HpDecrease(5);
+		HpDecrease(2);
 		return;
 	}
 

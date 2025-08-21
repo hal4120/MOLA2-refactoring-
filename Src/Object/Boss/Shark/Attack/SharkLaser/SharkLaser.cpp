@@ -5,6 +5,8 @@
 
 #include"../../Shark.h"
 
+#include"../../../../Player/Parry/Parry.h"
+
 SharkLaser::SharkLaser(const Vector2& bossPos):
 	img_(),
 	state_(STATE::NON),
@@ -100,6 +102,8 @@ void SharkLaser::Release(void)
 void SharkLaser::OnCollision(UnitBase* other)
 {
 	if (!other->GetUnit().isAlive_ || other->GetUnit().inviciCounter_ > 0) { return; }
+
+	if (dynamic_cast<Parry*>(other)) { return; }
 
 	BlastEffectManager::On(other->GetUnit().pos_);
 }
