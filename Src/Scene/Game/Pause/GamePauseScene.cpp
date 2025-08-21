@@ -141,11 +141,13 @@ void GamePauseScene::Release(void)
 void GamePauseScene::Input(void)
 {
 	int input = GetJoypadInputState(DX_INPUT_PAD1);
+	XINPUT_STATE state = {};
+	if (GetJoypadXInputState(DX_INPUT_PAD1, &state) != 0) { state = {}; }
 
 	pauseKey_.prev = pauseKey_.now;
 	pauseKey_.now = (
 		(CheckHitKey(KEY_INPUT_ESCAPE) == 0) &&
-		((input & PAD_INPUT_START) == 0)
+		(state.Buttons[XINPUT_BUTTON_START] == 0)
 		) ? false : true;
 	pauseKey_.down = (!pauseKey_.prev && pauseKey_.now) ? true : false;
 	pauseKey_.up = (pauseKey_.prev && !pauseKey_.now) ? true : false;

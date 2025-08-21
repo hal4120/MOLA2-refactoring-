@@ -263,7 +263,7 @@ Vector2 Utility::Bezier(const Vector2& p1, const Vector2& p2, const Vector2& p3,
 
 double Utility::Magnitude(const Vector2& v)
 {
-    return sqrt((v.x * v.x) + (v.y * v.y));
+    return sqrtf((v.x * v.x) + (v.y * v.y));
 }
 
 int Utility::SqrMagnitude(const Vector2& v)

@@ -19,10 +19,12 @@ Shark::Shark(const Vector2& playerPos):
 	attackEnd_(false),
 	deathCou_(0),
 	attackState_(),
+	spAttackMeasu_(0),
 	ikura_(nullptr),
 	uni_(nullptr),
 	mizu_(nullptr),
-	laser_(nullptr)
+	laser_(nullptr),
+	tackle_(nullptr)
 {
 }
 
@@ -64,6 +66,8 @@ void Shark::Load(void)
 	mizu_->Load();
 	laser_ = new SharkLaser(unit_.pos_);
 	laser_->Load();
+	tackle_ = new SharkTackle();
+	tackle_->Load();
 }
 
 void Shark::Init(void)
@@ -92,17 +96,25 @@ void Shark::Init(void)
 
 	attackState_ = ATTACK_KINDS::NON;
 
+	spAttackMeasu_ = SP_ATTACK_MEASU;
+
 	end_ = false;
 
-	ikura_->Init();
+
 	uni_->Init();
 	mizu_->Init();
 	laser_->Init();
+	tackle_->Init();
 }
 
 void Shark::OnCollision(UnitBase* other)
 {
-	if (state_ == (int)STATE::DAMAGE || state_ == (int)STATE::DEATH) { return; }
+	if (state_ == (int)STATE::DAMAGE ||
+		state_ == (int)STATE::DEATH	||
+		((attackState_ == ATTACK_KINDS::TACKLE) && (unit_.pos_.x - (unit_.para_.size.x / 2) > Application::SCREEN_SIZE_X))
+		) {
+		return;
+	}
 
 	if (dynamic_cast<EnemyBase*>(other)) {
 		GameScene::Slow(20);
@@ -131,7 +143,7 @@ void Shark::OnCollision(UnitBase* other)
 		GameScene::Slow(20);
 		GameScene::Shake();
 
-		HpDecrease(2);
+		HpDecrease(5);
 		return;
 	}
 
@@ -145,6 +157,7 @@ std::vector<UnitBase*> Shark::AttackIns(void)
 	for (auto& uni : uni_->Unis()) { ret.emplace_back(uni); }
 	ret.emplace_back(mizu_);
 	ret.emplace_back(laser_);
+	ret.emplace_back(tackle_);
 
 	return ret;
 }
@@ -177,7 +190,6 @@ void Shark::Move(void)
 	}
 	else
 	{
-		attackInterval_ = ATTACK_INTERVAL;
 		attackInit_ = false;
 		state_ = (int)STATE::ATTACK;
 		ChangeMotion((int)MOTION::ATTACK);
@@ -189,6 +201,7 @@ void Shark::Attack(void)
 	// UŒ‚ó‘Ô‚Ö‘JˆÚŒãA‚P‰ñ–Ú‚Ìˆ—```````
 	if (!attackInit_) {
 
+		attackInterval_ = ATTACK_INTERVAL;
 		attackInit_ = true;
 		attackEnd_ = false;
 
@@ -210,6 +223,10 @@ void Shark::Attack(void)
 		case Shark::ATTACK_KINDS::LASER:
 			laser_->On();
 			break;
+		case Shark::ATTACK_KINDS::TACKLE:
+			if (TacklePreparation()) { tackle_->On(); }
+			else { attackInit_ = false; tackle_->EndReset(); }
+			break;
 		}
 	}
 	//```````````````````````
@@ -229,6 +246,14 @@ void Shark::Attack(void)
 		break;
 	case Shark::ATTACK_KINDS::LASER:
 		if (laser_->End()) { attackEnd_ = true; }
+		break;
+	case Shark::ATTACK_KINDS::TACKLE:
+		if (tackle_->End()) {
+			if (TackleEnd()) {
+				attackEnd_ = true;
+				spAttackMeasu_ = SP_ATTACK_MEASU;
+			}
+		}
 		break;
 	}
 	//```````````````````````
@@ -282,6 +307,8 @@ void Shark::HpDecrease(int damage)
 
 	laser_->Off();
 
+	if (attackState_ == ATTACK_KINDS::TACKLE) { state_ = (int)STATE::ATTACK; unit_.inviciCounter_ = 10; }
+
 	unit_.hp_ -= damage;
 	if (unit_.hp_ <= 0) {
 		unit_.hp_ = 0;
@@ -312,18 +339,21 @@ Shark::ATTACK_KINDS Shark::AttackLottery(void)
 	else if (rand <= 10000) {
 		ret = ATTACK_KINDS::LASER;
 	}
-	//else if (rand <= 10000) {
-	//	ret = ATTACK_KINDS::UNI;
-	//}
+	
+	if (spAttackMeasu_ <= 0) { ret = ATTACK_KINDS::TACKLE; }
+	
 	return ret;
 }
 
 void Shark::AttackUpdate(void)
 {
+	if (spAttackMeasu_ > 0) { spAttackMeasu_--; }
+
 	ikura_->Update();
 	uni_->Update();
 	mizu_->Update();
 	laser_->Update();
+	tackle_->Update();
 }
 
 void Shark::AttackDraw(void)
@@ -332,6 +362,7 @@ void Shark::AttackDraw(void)
 	uni_->Draw();
 	mizu_->Draw();
 	laser_->Draw();
+	tackle_->Draw();
 }
 
 void Shark::AttackRelease(void)
@@ -356,4 +387,30 @@ void Shark::AttackRelease(void)
 		delete laser_;
 		laser_ = nullptr;
 	}
+	if (tackle_) {
+		tackle_->Release();
+		delete tackle_;
+		tackle_ = nullptr;
+	}
+}
+
+bool Shark::TacklePreparation(void)
+{
+	unit_.pos_.x += 3.0f;
+
+	if (unit_.pos_.x - unit_.para_.size.x / 2 > Application::SCREEN_SIZE_X) { return true; }
+
+	return false;
+}
+
+bool Shark::TackleEnd(void)
+{
+	unit_.pos_.x -= 3.0f;
+
+	if (unit_.pos_.x + unit_.para_.size.x / 2 < Application::SCREEN_SIZE_X) {
+		unit_.pos_.x = Application::SCREEN_SIZE_X - (unit_.para_.size.x / 2);
+		return true; 
+	}
+
+	return false;
 }

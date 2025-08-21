@@ -167,6 +167,8 @@ void Player::OnCollision(UnitBase* other)
 
 	Smng::GetIns().Play(SOUND::BLAST, true);
 
+	BlastEffectManager::On(unit_.pos_);
+
 	knockBackVec_ = unit_.pos_ - other->GetUnit().pos_;
 	knockBackVec_ /= sqrtf(knockBackVec_.x * knockBackVec_.x + knockBackVec_.y * knockBackVec_.y);
 

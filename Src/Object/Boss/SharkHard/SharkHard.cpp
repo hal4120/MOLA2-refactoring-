@@ -19,10 +19,12 @@ SharkHard::SharkHard(const Vector2& playerPos) :
 	attackEnd_(false),
 	deathCou_(0),
 	attackState_(),
+	spAttackMeasu_(0),
 	ikura_(nullptr),
 	uni_(nullptr),
 	mizu_(nullptr),
-	laser_(nullptr)
+	laser_(nullptr),
+	tackle_(nullptr)
 {
 }
 
@@ -64,6 +66,8 @@ void SharkHard::Load(void)
 	mizu_->Load();
 	laser_ = new HardSharkLaser(unit_.pos_);
 	laser_->Load();
+	tackle_ = new HardSharkTackle();
+	tackle_->Load();
 }
 
 void SharkHard::Init(void)
@@ -92,17 +96,25 @@ void SharkHard::Init(void)
 
 	attackState_ = ATTACK_KINDS::NON;
 
+	spAttackMeasu_ = SP_ATTACK_MEASU;
+
 	end_ = false;
 
 	ikura_->Init();
 	uni_->Init();
 	mizu_->Init();
 	laser_->Init();
+	tackle_->Init();
 }
 
 void SharkHard::OnCollision(UnitBase* other)
 {
-	if (state_ == (int)STATE::DAMAGE || state_ == (int)STATE::DEATH) { return; }
+	if (state_ == (int)STATE::DAMAGE ||
+		state_ == (int)STATE::DEATH ||
+		((attackState_ == ATTACK_KINDS::TACKLE) && (unit_.pos_.x - (unit_.para_.size.x / 2) > Application::SCREEN_SIZE_X))
+		) {
+		return;
+	}
 
 	if (dynamic_cast<EnemyBase*>(other)) {
 		GameScene::Slow(20);
@@ -131,7 +143,7 @@ void SharkHard::OnCollision(UnitBase* other)
 		GameScene::Slow(20);
 		GameScene::Shake();
 
-		HpDecrease(5);
+		HpDecrease(10);
 		return;
 	}
 
@@ -145,6 +157,7 @@ std::vector<UnitBase*> SharkHard::AttackIns(void)
 	for (auto& uni : uni_->Unis()) { ret.emplace_back(uni); }
 	ret.emplace_back(mizu_);
 	ret.emplace_back(laser_);
+	ret.emplace_back(tackle_);
 
 	return ret;
 }
@@ -178,7 +191,6 @@ void SharkHard::Move(void)
 	}
 	else
 	{
-		attackInterval_ = ATTACK_INTERVAL;
 		attackInit_ = false;
 		state_ = (int)STATE::ATTACK;
 		ChangeMotion((int)MOTION::ATTACK);
@@ -189,6 +201,8 @@ void SharkHard::Attack(void)
 {
 	// çUåÇèÛë‘Ç÷ëJà⁄å„ÅAÇPâÒñ⁄ÇÃèàóùÅ`Å`Å`Å`Å`Å`Å`
 	if (!attackInit_) {
+
+		attackInterval_ = ATTACK_INTERVAL;
 
 		attackInit_ = true;
 		attackEnd_ = false;
@@ -211,6 +225,10 @@ void SharkHard::Attack(void)
 		case SharkHard::ATTACK_KINDS::LASER:
 			laser_->On();
 			break;
+		case SharkHard::ATTACK_KINDS::TACKLE:
+			if (TacklePreparation()) { tackle_->On(); }
+			else { attackInit_ = false; tackle_->EndReset(); }
+			break;
 		}
 	}
 	//Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`
@@ -230,6 +248,14 @@ void SharkHard::Attack(void)
 		break;
 	case SharkHard::ATTACK_KINDS::LASER:
 		if (laser_->End()) { attackEnd_ = true; }
+		break;
+	case SharkHard::ATTACK_KINDS::TACKLE:
+		if (tackle_->End()) {
+			if (TackleEnd()) {
+				attackEnd_ = true;
+				spAttackMeasu_ = SP_ATTACK_MEASU;
+			}
+		}
 		break;
 	}
 	//Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`
@@ -313,18 +339,20 @@ SharkHard::ATTACK_KINDS SharkHard::AttackLottery(void)
 	else if (rand <= 10000) {
 		ret = ATTACK_KINDS::LASER;
 	}
-	//else if (rand <= 10000) {
-	//	ret = ATTACK_KINDS::UNI;
-	//}
+
+	if (spAttackMeasu_ <= 0) { ret = ATTACK_KINDS::TACKLE; }
 	return ret;
 }
 
 void SharkHard::AttackUpdate(void)
 {
+	if (spAttackMeasu_ > 0) { spAttackMeasu_--; }
+
 	ikura_->Update();
 	uni_->Update();
 	mizu_->Update();
 	laser_->Update();
+	tackle_->Update();
 }
 
 void SharkHard::AttackDraw(void)
@@ -333,6 +361,7 @@ void SharkHard::AttackDraw(void)
 	uni_->Draw();
 	mizu_->Draw();
 	laser_->Draw();
+	tackle_->Draw();
 }
 
 void SharkHard::AttackRelease(void)
@@ -357,4 +386,30 @@ void SharkHard::AttackRelease(void)
 		delete laser_;
 		laser_ = nullptr;
 	}
+	if (tackle_) {
+		tackle_->Release();
+		delete tackle_;
+		tackle_ = nullptr;
+	}
+}
+
+bool SharkHard::TacklePreparation(void)
+{
+	unit_.pos_.x += 3.0f;
+
+	if (unit_.pos_.x - unit_.para_.size.x / 2 > Application::SCREEN_SIZE_X) { return true; }
+
+	return false;
+}
+
+bool SharkHard::TackleEnd(void)
+{
+	unit_.pos_.x -= 3.0f;
+
+	if (unit_.pos_.x + unit_.para_.size.x / 2 < Application::SCREEN_SIZE_X) {
+		unit_.pos_.x = Application::SCREEN_SIZE_X - (unit_.para_.size.x / 2);
+		return true;
+	}
+
+	return false;
 }

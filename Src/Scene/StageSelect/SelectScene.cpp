@@ -211,6 +211,8 @@ void SelectScene::Release(void)
 void SelectScene::Input(void)
 {
 	int input = GetJoypadInputState(DX_INPUT_PAD1);
+	XINPUT_STATE state = {};
+	if (GetJoypadXInputState(DX_INPUT_PAD1, &state) != 0) { state = {}; }
 
 	upKey_.prev = upKey_.now;
 	upKey_.now = (
@@ -235,7 +237,7 @@ void SelectScene::Input(void)
 	titleBackKey_.prev = titleBackKey_.now;
 	titleBackKey_.now = (
 		(CheckHitKey(KEY_INPUT_ESCAPE) == 0) &&
-		((input & PAD_INPUT_START) == 0)
+		(state.Buttons[XINPUT_BUTTON_START] == 0)
 		) ? false : true;
 	titleBackKey_.down = (!titleBackKey_.prev && titleBackKey_.now);
 	titleBackKey_.up = (titleBackKey_.prev && !titleBackKey_.now);

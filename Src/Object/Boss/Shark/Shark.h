@@ -6,6 +6,7 @@
 #include"Attack/Uni/UniShooter.h"
 #include"Attack/Mizu/Mizu.h"
 #include"Attack/SharkLaser/SharkLaser.h"
+#include"Attack/Tackle/SharkTackle.h"
 
 class Shark : public BossBase
 {
@@ -110,6 +111,7 @@ private:
 		UNI,
 		MIZU,
 		LASER,
+		TACKLE,
 
 		MAX
 	};
@@ -124,6 +126,7 @@ private:
 	UniShooter* uni_;
 	Mizu* mizu_;
 	SharkLaser* laser_;
+	SharkTackle* tackle_;
 	//------------------------
 
 	// 攻撃の各主要関数を呼び出す場所---
@@ -131,6 +134,13 @@ private:
 	void AttackDraw(void)override;
 	void AttackRelease(void)override;
 	//---------------------------------
+
+	static constexpr int SP_ATTACK_MEASU = 1800;
+	int spAttackMeasu_;
+	// 突進準備
+	bool TacklePreparation(void);
+	// 突進終了
+	bool TackleEnd(void);
 
 #pragma endregion
 };

@@ -135,6 +135,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Tackle\HardSharkTackle.cpp" />
+    <ClCompile Include="Src\Object\Boss\Shark\Attack\Tackle\SharkTackle.cpp" />
     <ClCompile Include="Src\Scene\Game\Pause\GamePauseScene.cpp" />
     <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkura.cpp" />
     <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkuraShooter.cpp" />
@@ -188,6 +190,8 @@
     <ClCompile Include="Src\Scene\Title\Object\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Tackle\HardSharkTackle.h" />
+    <ClInclude Include="Src\Object\Boss\Shark\Attack\Tackle\SharkTackle.h" />
     <ClInclude Include="Src\Scene\Game\Pause\GamePauseScene.h" />
     <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkura.h" />
     <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Ikura\HardIkuraShooter.h" />

@@ -19,7 +19,7 @@ public:
 
 	static constexpr float DEFAULT_MAG = 1.0f;
 	static constexpr float MAG_ONE_SIZE_UP = 0.2f;
-	static constexpr float MAX_MAG = 2.0f;
+	static constexpr float MAX_MAG = 2.5f;
 
 	static constexpr int COOL_TIME = 60;
 	static constexpr float COOL_TIME_DRAW_SIZE_Y = 5.0f;
