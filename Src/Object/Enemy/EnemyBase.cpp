@@ -10,6 +10,7 @@
 EnemyBase::EnemyBase(NUMBER num):
 	number_(num),
 	imgs_(),
+	drawScale_(1.0f),
 	animSpeed(),
 	animCounter_(),
 	animInterval_(),
@@ -53,7 +54,7 @@ void EnemyBase::Update(void)
 void EnemyBase::Draw(void)
 {
 	if (!unit_.isAlive_) { return; }
-	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, (parry_) ? Utility::Deg2RadF(180.0f) : 0.0f, imgs_[animCounter_], true);
+	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, drawScale_, (parry_) ? Utility::Deg2RadF(180.0f) : 0.0f, imgs_[animCounter_], true);
 	if (arrow_) {
 		DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, arrowAngle_, arrowImg_, true);
 	}

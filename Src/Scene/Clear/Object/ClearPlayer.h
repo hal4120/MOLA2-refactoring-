@@ -13,8 +13,8 @@ public:
 
 	static constexpr int PLAYER_NUM = 2;
 
-	static constexpr int POS_X[PLAYER_NUM] = { 150,1350 };
-	static constexpr int POS_Y = 800;
+	static constexpr int POS_X[PLAYER_NUM] = { 210,1410 };
+	static constexpr int POS_Y = 625;
 
 	static constexpr float DEFAULT_ANGLE[PLAYER_NUM] = { -15.0f * (DX_PI_F / 180.0f),15.0f * (DX_PI_F / 180.0f) };
 

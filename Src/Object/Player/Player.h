@@ -6,6 +6,8 @@
 #include"Parry/Parry.h"
 #include"Special/PlayerLaser.h"
 
+enum class DIR { RIGHT, LEFT };
+
 class Player : public UnitBase
 {
 public:
@@ -66,6 +68,9 @@ private:
 
 	// 回転量
 	float angle_;
+
+	// 向き
+	DIR dir_;
 
 	// アニメーション処理
 	void Animation(void);

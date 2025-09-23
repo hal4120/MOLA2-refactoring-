@@ -54,6 +54,7 @@ void SelectScene::Load(void)
 
 	Utility::LoadArrayImg("Data/Image/Select/NormalShark.png", 6, 6, 1, 480, 480, selectObjImgs_[(int)BOSS_KINDS::SHARK]);
 	Utility::LoadArrayImg("Data/Image/Select/HardShark.png", 6, 6, 1, 480, 480, selectObjImgs_[(int)BOSS_KINDS::SHARK_HARD]);
+	Utility::LoadArrayImg("Data/Image/Select/Kraken.png", 6, 6, 1, 480, 480, selectObjImgs_[(int)BOSS_KINDS::KRAKEN]);
 
 	Utility::LoadImg(arrowImg_, "Data/Image/Effect/Arrow.png");
 

@@ -5,6 +5,8 @@
 #include<vector>
 #include<string>
 
+enum class DIR;
+
 class PlayerLaser : public UnitBase
 {
 public:
@@ -28,7 +30,7 @@ public:
 	// ビーム発射時間
 	static constexpr int ACTIVE_TIME = 20; //フレーム
 
-	PlayerLaser(const Vector2& playerPos);
+	PlayerLaser(const Vector2& playerPos, const DIR& dir);
 	~PlayerLaser();
 
 	void Load(void)override;
@@ -57,5 +59,6 @@ private:
 
 
 	const Vector2& player_;
+	const DIR& playerDir_;
 };
 

@@ -105,6 +105,8 @@ void HardSharkTackle::OnCollision(UnitBase* other)
 	if (dynamic_cast<Parry*>(other)) {
 		parry_ = true;
 
+		DamageFunPtr_();
+
 		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
 		moveVec_ = vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
 

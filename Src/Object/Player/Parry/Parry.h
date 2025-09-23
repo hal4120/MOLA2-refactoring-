@@ -4,6 +4,7 @@
 
 #include <functional>
 
+enum class DIR;
 
 class Parry : public UnitBase
 {
@@ -24,7 +25,7 @@ public:
 	static constexpr int COOL_TIME = 60;
 	static constexpr float COOL_TIME_DRAW_SIZE_Y = 5.0f;
 
-	Parry(const Vector2& playerPos);
+	Parry(const Vector2& playerPos, const DIR& dir);
 	~Parry();
 
 	void Load(void)override;
@@ -55,6 +56,6 @@ private:
 	int sizeUpCounter_;
 
 	const Vector2& player_;
+	const DIR& playerDir_;
 	std::function<void(void)>spChargeFunPtr_;
 };
-

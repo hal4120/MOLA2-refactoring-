@@ -68,6 +68,7 @@ void SharkHard::Load(void)
 	laser_->Load();
 	tackle_ = new HardSharkTackle();
 	tackle_->Load();
+	tackle_->SetDamageFun([this](void) { this->HpDecrease(5); });
 }
 
 void SharkHard::Init(void)
@@ -117,32 +118,20 @@ void SharkHard::OnCollision(UnitBase* other)
 	}
 
 	if (dynamic_cast<EnemyBase*>(other)) {
-		GameScene::Slow(20);
-		GameScene::Shake();
-
 		HpDecrease(5);
 		return;
 	}
 
 	if (dynamic_cast<HardUni*>(other)) {
-		GameScene::Slow(20);
-		GameScene::Shake();
-
 		HpDecrease(5);
 		return;
 	}
 	if (dynamic_cast<HardMizu*>(other)) {
-		GameScene::Slow(20);
-		GameScene::Shake();
-
 		HpDecrease(1);
 		return;
 	}
 
 	if (dynamic_cast<PlayerLaser*>(other)) {
-		GameScene::Slow(20);
-		GameScene::Shake();
-
 		HpDecrease(7);
 		return;
 	}
@@ -301,6 +290,9 @@ void SharkHard::Death(void)
 
 void SharkHard::HpDecrease(int damage)
 {
+	GameScene::Slow(20);
+	GameScene::Shake();
+
 	unit_.inviciCounter_ = 10;
 	ChangeMotion((int)MOTION::DAMAGE, false);
 	animCounter_ = 1;

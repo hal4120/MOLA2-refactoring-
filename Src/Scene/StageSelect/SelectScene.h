@@ -16,6 +16,7 @@ public:
 		NON = -1,
 		SHARK,
 		SHARK_HARD,
+		KRAKEN,
 
 		MAX,
 	};
@@ -59,8 +60,8 @@ private:
 
 	int rankingFrameImg_;
 
-	const Vector2I RANKING_POS = { 1150,225 };
-	static constexpr int RANKING_POS_Y_SPACE = 120;
+	const Vector2I RANKING_POS = { 1226,210 };
+	static constexpr int RANKING_POS_Y_SPACE = 112;
 
 	struct KeyInfo { bool prev = false, now = false, down = false, up = false; };
 	KeyInfo upKey_;

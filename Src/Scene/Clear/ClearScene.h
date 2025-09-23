@@ -12,7 +12,7 @@ public:
 
 	static constexpr int TIME_FRAME_IMG_LOAD_SIZE_X = 865;
 	static constexpr int TIME_FRAME_IMG_LOAD_SIZE_Y = 525;
-	static constexpr int TIME_FRAME_POS_Y = 630;
+	static constexpr int TIME_FRAME_POS_Y = 600;
 
 
 	ClearScene();

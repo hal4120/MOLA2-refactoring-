@@ -2,6 +2,8 @@
 
 #include"../../../../UnitBase.h"
 
+#include <functional>
+
 class SharkTackle : public UnitBase
 {
 public:
@@ -39,6 +41,8 @@ public:
 	void EndReset(void) { end_ = false; }
 	const bool End(void)const { return end_; }
 
+	void SetDamageFun(std::function<void(void)>ptr) { DamageFunPtr_ = std::move(ptr); }
+
 private:
 	int img_[LOAD_SIZE];
 	int animeCounter_;
@@ -69,4 +73,6 @@ private:
 	void ParryFunc(void);
 
 	void Animation(void);
+
+	std::function<void(void)>DamageFunPtr_;
 };

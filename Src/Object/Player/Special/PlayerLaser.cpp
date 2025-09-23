@@ -6,12 +6,14 @@
 
 #include"../Player.h"
 
-PlayerLaser::PlayerLaser(const Vector2& playerPos):
+PlayerLaser::PlayerLaser(const Vector2& playerPos, const DIR& dir):
 	img_(),
 	state_(STATE::NON),
 	counter_(0),
 	countInterval_(0),
-	player_(playerPos)
+
+	player_(playerPos),
+	playerDir_(dir)
 {
 }
 
@@ -58,7 +60,9 @@ void PlayerLaser::Update(void)
 	}
 
 	unit_.pos_ = player_;
-	unit_.pos_.x += Player::LOAD_SIZE_X / 2;
+	unit_.pos_.x += (playerDir_ == DIR::RIGHT) ? (Player::LOAD_SIZE_X / 2) : -(Player::LOAD_SIZE_X / 2);
+	unit_.para_.center.x = (playerDir_ == DIR::RIGHT) ? (SIZE_X / 2.0f) : -(SIZE_X / 2.0f);
+
 
 	if (++countInterval_ >= ANIM_SPEED) {
 		countInterval_ = 0;
@@ -86,7 +90,7 @@ void PlayerLaser::Draw(void)
 {
 	if (state_ == STATE::NON) { return; }
 
-	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, 0.0f, SIZE_Y / 2.0f, 1, 1, 0, img_[state_][counter_ % img_[state_].size()], true);
+	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, (playerDir_ == DIR::RIGHT) ? 0.0f :(float)SIZE_X, SIZE_Y / 2.0f, 1, 1, 0, img_[state_][counter_ % img_[state_].size()], true, (bool)playerDir_);
 }
 
 void PlayerLaser::Release(void)

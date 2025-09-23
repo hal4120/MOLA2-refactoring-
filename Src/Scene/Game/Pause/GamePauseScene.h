@@ -32,8 +32,8 @@ private:
 	enum class PAUSE_SELECT { NON = -1, PLAY, REPLAY, TITLE, MAX };
 	PAUSE_SELECT nowSelect_;
 
-	static constexpr int POS_X = 170;
-	static constexpr int POS_Y[(int)PAUSE_SELECT::MAX] = { 395,610,820 };
+	static constexpr int POS_X = 190;
+	static constexpr int POS_Y[(int)PAUSE_SELECT::MAX] = { 365,571,780 };
 
 
 	struct KeyInfo { bool down = false, up = false, prev = false, now = false; };

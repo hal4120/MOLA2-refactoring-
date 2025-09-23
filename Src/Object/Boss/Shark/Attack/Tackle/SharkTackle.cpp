@@ -72,7 +72,7 @@ void SharkTackle::Draw(void)
 	if (standByCounter_ < STAND_BY_TIME) {
 		if (standByCounter_ / 10 % 2 == 1) {
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-			DrawBox(0, unit_.pos_.y - (unit_.para_.size.y / 2), Application::SCREEN_SIZE_X, unit_.pos_.y + (unit_.para_.size.y / 2), 0xff0000, true);
+			DrawBoxAA(0, unit_.pos_.y - (unit_.para_.size.y / 2), Application::SCREEN_SIZE_X, unit_.pos_.y + (unit_.para_.size.y / 2), 0xff0000, true);
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 	}
@@ -91,6 +91,8 @@ void SharkTackle::OnCollision(UnitBase* other)
 
 	if (dynamic_cast<Parry*>(other)) {
 		parry_ = true;
+
+		DamageFunPtr_();
 
 		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
 		moveVec_ = vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
@@ -119,7 +121,7 @@ void SharkTackle::LeftTackle(void)
 		standByCounter_ = 0;
 		reverse_ = false;
 
-		unit_.pos_.y = (float)(GetRand(Application::SCREEN_SIZE_Y - (unit_.para_.size.y / 2)) + unit_.para_.size.y / 2);
+		unit_.pos_.y = (float)(GetRand(Application::SCREEN_SIZE_Y - (int)(unit_.para_.size.y / 2)) + unit_.para_.size.y / 2);
 	}
 }
 
@@ -168,7 +170,7 @@ void SharkTackle::On(void)
 	unit_.para_.colliType = CollisionType::ENEMY;
 
 	unit_.pos_.x = (float)Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2);
-	unit_.pos_.y = (float)(GetRand(Application::SCREEN_SIZE_Y - (unit_.para_.size.y / 2)) + unit_.para_.size.y / 2);
+	unit_.pos_.y = (float)(GetRand(Application::SCREEN_SIZE_Y - (int)(unit_.para_.size.y / 2)) + unit_.para_.size.y / 2);
 }
 
 

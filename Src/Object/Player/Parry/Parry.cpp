@@ -10,7 +10,7 @@
 #include"../../Boss/Shark/Shark.h"
 #include"../../Boss/SharkHard/SharkHard.h"
 
-Parry::Parry(const Vector2& playerPos):
+Parry::Parry(const Vector2& playerPos, const DIR& dir):
 	img_(),
 	counter_(0),
 	countInterval_(0),
@@ -20,7 +20,8 @@ Parry::Parry(const Vector2& playerPos):
 	sizeUpImg_(-1),
 	sizeUpCounter_(0),
 
-	player_(playerPos)
+	player_(playerPos),
+	playerDir_(dir)
 {
 }
 
@@ -63,7 +64,8 @@ void Parry::Update(void)
 	if (coolTime_ > 0) { coolTime_--; }
 
 	unit_.pos_ = player_;
-	unit_.pos_.x += Player::LOAD_SIZE_X / 2;
+
+	unit_.pos_.x += (playerDir_ == DIR::RIGHT) ? (Player::LOAD_SIZE_X / 2) : -(Player::LOAD_SIZE_X / 2);
 
 	if (sizeUpCounter_ > 0) { sizeUpCounter_--; }
 
@@ -82,7 +84,7 @@ void Parry::Draw(void)
 {
 	if (sizeUpCounter_ > 0) {
 		int alpha = sizeUpCounter_ * 2;
-		float posSub = SIZE_UP_COUNT - sizeUpCounter_;
+		float posSub = (float)(SIZE_UP_COUNT - sizeUpCounter_);
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		DrawRotaGraphF(player_.x, player_.y - posSub, 2, 0, sizeUpImg_, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -93,8 +95,9 @@ void Parry::Draw(void)
 		DrawBoxAA(sPos.x, sPos.y, sPos.x + Player::LOAD_SIZE_X, sPos.y + oneSize.y, 0x000000, true);
 		DrawBoxAA(sPos.x, sPos.y, sPos.x + (coolTime_ * oneSize.x), sPos.y + oneSize.y, 0x00ffff, true);
 	}
+
 	if (!unit_.isAlive_) { return; }
-	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, 0.0f, LOAD_SIZE_Y / 2.0f, mag_, mag_, 0, img_[counter_], true);
+	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, (playerDir_ == DIR::RIGHT) ? 0.0f : LOAD_SIZE_X, LOAD_SIZE_Y / 2.0f, mag_, mag_, 0, img_[counter_], true, (bool)playerDir_);
 }
 
 void Parry::Release(void)
@@ -131,9 +134,10 @@ void Parry::OnCollision(UnitBase* other)
 
 		mag_ += MAG_ONE_SIZE_UP;
 		if (mag_ > MAX_MAG) { mag_ = MAX_MAG; }
-		unit_.para_.radius = LOAD_SIZE_X * mag_;
-
-		sizeUpCounter_ = SIZE_UP_COUNT;
+		else {
+			sizeUpCounter_ = SIZE_UP_COUNT;
+			unit_.para_.radius = LOAD_SIZE_X * mag_;
+		}
 
 		spChargeFunPtr_();
 

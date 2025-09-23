@@ -68,6 +68,7 @@ void Shark::Load(void)
 	laser_->Load();
 	tackle_ = new SharkTackle();
 	tackle_->Load();
+	tackle_->SetDamageFun([this](void) { this->HpDecrease(5); });
 }
 
 void Shark::Init(void)
@@ -117,32 +118,20 @@ void Shark::OnCollision(UnitBase* other)
 	}
 
 	if (dynamic_cast<EnemyBase*>(other)) {
-		GameScene::Slow(20);
-		GameScene::Shake();
-
 		HpDecrease(5);
 		return;
 	}
 
 	if (dynamic_cast<Uni*>(other)) {
-		GameScene::Slow(20);
-		GameScene::Shake();
-
 		HpDecrease(5);
 		return;
 	}
 	if (dynamic_cast<Mizu*>(other)) {
-		GameScene::Slow(20);
-		GameScene::Shake();
-
 		HpDecrease(1);
 		return;
 	}
 
 	if (dynamic_cast<PlayerLaser*>(other)) {
-		GameScene::Slow(20);
-		GameScene::Shake();
-
 		HpDecrease(5);
 		return;
 	}
@@ -299,6 +288,9 @@ void Shark::Death(void)
 
 void Shark::HpDecrease(int damage)
 {
+	GameScene::Slow(20);
+	GameScene::Shake();
+
 	state_ = (int)STATE::DAMAGE;
 	ChangeMotion((int)MOTION::DAMAGE, false);
 	animCounter_ = 1;

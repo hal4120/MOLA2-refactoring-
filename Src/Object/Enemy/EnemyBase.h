@@ -46,6 +46,9 @@ protected:
 	// ‰æ‘œ
 	std::vector<int>imgs_;
 
+	// ‰æ‘œ•\¦”{—¦
+	float drawScale_;
+
 	// ”Ô†
 	NUMBER number_;
 

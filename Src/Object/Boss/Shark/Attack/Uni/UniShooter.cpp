@@ -55,7 +55,7 @@ void UniShooter::Update(void)
 
 void UniShooter::Draw(void)
 {
-	if (isReticle_) { DrawRotaGraph(target_.x, target_.y, ((sinf(reticleFloat_) + 1.0f) / 2.0f) + 0.5f, reticleFloat_, reticleImg_, true); }
+	if (isReticle_) { DrawRotaGraphF(target_.x, target_.y, ((sinf(reticleFloat_) + 1.0f) / 2.0f) + 0.5f, reticleFloat_, reticleImg_, true); }
 	for (auto& uni : unis_) { uni->Draw(); }
 }
 

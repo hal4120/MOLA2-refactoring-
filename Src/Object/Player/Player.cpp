@@ -20,6 +20,7 @@ Player::Player():
 	knockBackVec_(),
 
 	angle_(0.0f),
+	dir_(DIR::RIGHT),
 
 	parry_(nullptr),
 	laser_(nullptr),
@@ -82,11 +83,11 @@ void Player::Load(void)
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;
 	unit_.para_.colliType = CollisionType::ALLY;
 
-	parry_ = new Parry(unit_.pos_);
+	parry_ = new Parry(unit_.pos_, dir_);
 	parry_->Load();
 	parry_->SetSpChargeFun([this](void) { this->SpecialCharge(); });
 
-	laser_ = new PlayerLaser(unit_.pos_);
+	laser_ = new PlayerLaser(unit_.pos_,dir_);
 	laser_->Load();
 
 }
@@ -117,6 +118,8 @@ void Player::Init(void)
 	gameEnd_ = false;
 
 	specialCharge_ = 0;
+
+	dir_ = DIR::RIGHT;
 }
 
 void Player::Update(void)
@@ -142,7 +145,7 @@ void Player::Draw(void)
 
 	// ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	if (unit_.inviciCounter_ / 10 % 2 == 1) { SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100); }
-	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, angle_, img_[animCounter_], true);
+	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, angle_, img_[animCounter_], true, (bool)dir_);
 	if (unit_.inviciCounter_ / 10 % 2 == 1) { SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); }
 
 	parry_->Draw();
@@ -256,6 +259,10 @@ void Player::Default(void)
 		moveVec = Utility::Normalize(moveVec);
 		moveVec *= unit_.para_.speed;
 		unit_.pos_ += moveVec;
+
+		if (moveVec.x != 0.0f && laser_->GetUnit().isAlive_ == false) {
+			dir_ = (moveVec.x > 0.0f) ? DIR::RIGHT : DIR::LEFT;
+		}
 
 		Vector2 min = { unit_.para_.size.x / 2,unit_.para_.size.y / 2 };
 		Vector2 max = { Application::SCREEN_SIZE_X - min.x,Application::SCREEN_SIZE_Y - min.y };
