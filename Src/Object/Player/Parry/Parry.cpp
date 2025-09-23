@@ -16,6 +16,10 @@ Parry::Parry(const Vector2& playerPos):
 	countInterval_(0),
 	mag_(1.0f),
 	coolTime_(0),
+
+	sizeUpImg_(-1),
+	sizeUpCounter_(0),
+
 	player_(playerPos)
 {
 }
@@ -38,6 +42,8 @@ void Parry::Load(void)
 	unit_.isInvici_ = false;
 	unit_.aliveCollision_ = false;
 
+	Utility::LoadImg(sizeUpImg_, "Data/Image/Player/Parry/SizeUp.png");
+
 	Smng::GetIns().Load(SOUND::PLAYER_ATTACK);
 	Smng::GetIns().Load(SOUND::PARRY);
 }
@@ -48,6 +54,8 @@ void Parry::Init(void)
 	countInterval_ = 0;
 
 	mag_ = DEFAULT_MAG;
+
+	sizeUpCounter_ = 0;
 }
 
 void Parry::Update(void)
@@ -56,6 +64,8 @@ void Parry::Update(void)
 
 	unit_.pos_ = player_;
 	unit_.pos_.x += Player::LOAD_SIZE_X / 2;
+
+	if (sizeUpCounter_ > 0) { sizeUpCounter_--; }
 
 	if (!unit_.isAlive_) { return; }
 
@@ -70,6 +80,13 @@ void Parry::Update(void)
 
 void Parry::Draw(void)
 {
+	if (sizeUpCounter_ > 0) {
+		int alpha = sizeUpCounter_ * 2;
+		float posSub = SIZE_UP_COUNT - sizeUpCounter_;
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+		DrawRotaGraphF(player_.x, player_.y - posSub, 2, 0, sizeUpImg_, true);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 	if (coolTime_ > 0) {
 		Vector2 oneSize = Vector2((float)Player::LOAD_SIZE_X / (float)COOL_TIME, COOL_TIME_DRAW_SIZE_Y);
 		Vector2 sPos = player_ - Vector2(Player::LOAD_SIZE_X / 2.0f, (Player::LOAD_SIZE_Y / 2.0f) + oneSize.y);
@@ -83,6 +100,7 @@ void Parry::Draw(void)
 void Parry::Release(void)
 {
 	Smng::GetIns().Delete(SOUND::PLAYER_ATTACK);
+	DeleteGraph(sizeUpImg_);
 	for (auto& id : img_) { DeleteGraph(id); }
 }
 
@@ -111,10 +129,11 @@ void Parry::OnCollision(UnitBase* other)
 		dynamic_cast<HardSharkTackle*>(other)
 		) {
 
-
 		mag_ += MAG_ONE_SIZE_UP;
 		if (mag_ > MAX_MAG) { mag_ = MAX_MAG; }
 		unit_.para_.radius = LOAD_SIZE_X * mag_;
+
+		sizeUpCounter_ = SIZE_UP_COUNT;
 
 		spChargeFunPtr_();
 

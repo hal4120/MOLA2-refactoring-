@@ -3,23 +3,37 @@
 #include<DxLib.h>
 
 #include"../../Manager/Input/InputManager.h"
+#include"../../Manager/Input/KeyManager.h"
 #include"../../Scene/Game/GameScene.h"
 #include"../../Manager/BlastEffect/BlastEffectManager.h"
 #include"../../Manager/Sound/SoundManager.h"
 
 Player::Player():
 	img_(),
+
 	animCounter_(0),
 	animInterval_(0),
+
 	state_(STATE::DEFAULT),
 	stateFuncPtr_(),
+
 	knockBackVec_(),
+
 	angle_(0.0f),
+
 	parry_(nullptr),
 	laser_(nullptr),
+
 	gameEnd_(false),
+
 	specialCharge_(0),
 	specialChargeImg_(),
+	specialChargeMaxImg_(-1),
+	specialChargeMaxFlash_(0),
+
+	specialChargeMaxButtonImg_(),
+	specialChargeMaxKeyImg_(),
+
 	uiImg_(-1),
 	lifeImg_()
 {
@@ -41,7 +55,19 @@ void Player::Load(void)
 	for (int i = 0; i <= LIFE_MAX; i++) {
 		Utility::LoadImg(lifeImg_[i], "Data/Image/Player/UI/Life/" + std::to_string(i) + ".png");
 	}
-	Utility::LoadArrayImg("Data/Image/Player/UI/SpecialCharge.png", SPECIAL_CHARGE_MAX + 1, 1, SPECIAL_CHARGE_MAX + 1, 1600, 103, specialChargeImg_);
+	Utility::LoadArrayImg("Data/Image/Player/UI/Special/SpecialCharge.png", SPECIAL_CHARGE_MAX + 1, 1, SPECIAL_CHARGE_MAX + 1, 1600, 103, specialChargeImg_);
+	Utility::LoadImg(specialChargeMaxImg_, "Data/Image/Player/UI/Special/SpecialChargeMax.png");
+
+	for (int i = 0; i < 2; i++) {
+		std::string sPath = "Data/Image/Player/UI/Special/Button/";
+		std::string ePath = ".png";
+		Utility::LoadImg(specialChargeMaxButtonImg_[i], (sPath + std::to_string(i + 1) + ePath).c_str());
+	}
+	for (int i = 0; i < 2; i++) {
+		std::string sPath = "Data/Image/Player/UI/Special/Key/";
+		std::string ePath = ".png";
+		Utility::LoadImg(specialChargeMaxKeyImg_[i], (sPath + std::to_string(i + 1) + ePath).c_str());
+	}
 
 	// 関数ポインタにそれぞれの関数のポインタを格納
 	stateFuncPtr_[STATE::DEFAULT] = &Player::Default;
@@ -95,9 +121,6 @@ void Player::Init(void)
 
 void Player::Update(void)
 {
-	// 入力情報の更新
-	Input();
-
 	Invi();
 
 	// 現在のステートに対応する関数を実行
@@ -136,6 +159,19 @@ void Player::UIDraw(void)
 
 	DrawRotaGraph3(0, yy, 0, 500, 0.3, 0.3, 0, uiImg_, true);
 	DrawRotaGraph3(160, (yy - (150 / 2))+30, 0, 150, 0.3, 0.3, 0, lifeImg_[unit_.hp_], true);
+	if (specialCharge_ >= SPECIAL_CHARGE_MAX) {
+		if (specialChargeMaxFlash_ / 10 % 2 == 0) { SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150); }
+		DrawRotaGraph3(150, (yy - (150 / 2) - 30), 0, 51, 0.3, 0.3, 0, specialChargeMaxImg_, true);
+		if (specialChargeMaxFlash_ / 10 % 2 == 0) { SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); }
+		DrawRotaGraph3(
+			680, (yy - (150 / 2) - 30), 200, 200,
+			0.2, 0.2, 0,
+			(KEY::GetIns().IsControllerConnected()) ?
+			specialChargeMaxButtonImg_[specialChargeMaxFlash_ / 10 % 2] :
+			specialChargeMaxKeyImg_[specialChargeMaxFlash_ / 10 % 2],
+			true
+		);
+	}
 	DrawRotaGraph3(150, (yy - (150 / 2) - 30), 0, 51, 0.3, 0.3, 0, specialChargeImg_[specialCharge_], true);
 }
 
@@ -152,10 +188,16 @@ void Player::Release(void)
 		laser_ = nullptr;
 	}
 
+	// 画像解放
+	for (auto& id : specialChargeMaxButtonImg_) { DeleteGraph(id); }
+	for (auto& id : specialChargeMaxKeyImg_) { DeleteGraph(id); }
+
+	for (auto& id : specialChargeImg_) { DeleteGraph(id); }
+	DeleteGraph(specialChargeMaxImg_);
+
 	for (auto& id : lifeImg_) { DeleteGraph(id); }
 	DeleteGraph(uiImg_);
 
-	// 画像解放
 	for (auto& id : img_) { DeleteGraph(id); }
 }
 
@@ -192,32 +234,40 @@ void Player::Animation(void)
 			animCounter_ = 0;
 		}
 	}
+	if (specialCharge_ >= SPECIAL_CHARGE_MAX) {
+		if (++specialChargeMaxFlash_ >= 600) { specialChargeMaxFlash_ = 0; }
+	}
 }
 
 void Player::Default(void)
 {
-	Vector2 moveVec = {};
+	auto& key = KEY::GetIns();
 
-	if (up_.now_) { moveVec.y--; }
-	if (down_.now_) { moveVec.y++; }
-	if (left_.now_) { moveVec.x--; }
-	if (right_.now_) { moveVec.x++; }
+	Vector2 moveVec = key.GetLeftStickVec();
 
-	moveVec *= unit_.para_.speed;
+	if (moveVec == 0.0f) {
+		if (key.GetInfo(KEY_TYPE::UP).now) { moveVec.y--; }
+		if (key.GetInfo(KEY_TYPE::DOWN).now) { moveVec.y++; }
+		if (key.GetInfo(KEY_TYPE::LEFT).now) { moveVec.x--; }
+		if (key.GetInfo(KEY_TYPE::RIGHT).now) { moveVec.x++; }
+	}
 
-	unit_.pos_ += moveVec;
+	if (moveVec != 0.0f) {
+		moveVec = Utility::Normalize(moveVec);
+		moveVec *= unit_.para_.speed;
+		unit_.pos_ += moveVec;
 
-	Vector2 min = { unit_.para_.size.x / 2,unit_.para_.size.y / 2 };
-	Vector2 max = { Application::SCREEN_SIZE_X - min.x,Application::SCREEN_SIZE_Y - min.y };
-	if (unit_.pos_.x < min.x) { unit_.pos_.x = min.x; }
-	if (unit_.pos_.y < min.y) { unit_.pos_.y = min.y; }
-	if (unit_.pos_.x > max.x) { unit_.pos_.x = max.x; }
-	if (unit_.pos_.y > max.y) { unit_.pos_.y = max.y; }
+		Vector2 min = { unit_.para_.size.x / 2,unit_.para_.size.y / 2 };
+		Vector2 max = { Application::SCREEN_SIZE_X - min.x,Application::SCREEN_SIZE_Y - min.y };
+		if (unit_.pos_.x < min.x) { unit_.pos_.x = min.x; }
+		if (unit_.pos_.y < min.y) { unit_.pos_.y = min.y; }
+		if (unit_.pos_.x > max.x) { unit_.pos_.x = max.x; }
+		if (unit_.pos_.y > max.y) { unit_.pos_.y = max.y; }
+	}
 
+	if (key.GetInfo(KEY_TYPE::ATTACK).down) { parry_->On(); }
 
-	if (attackKey_.downTrg_) { parry_->On(); }
-
-	if (specialKey_.downTrg_ && specialCharge_ >= SPECIAL_CHARGE_MAX) {
+	if (key.GetInfo(KEY_TYPE::SPECIAL_ATTACK).down && specialCharge_ >= SPECIAL_CHARGE_MAX) {
 		specialCharge_ = 0;
 		laser_->On();
 		state_ = STATE::SPECIAL;
@@ -253,66 +303,4 @@ void Player::Over(void)
 
 	angle_ -= Utility::Deg2RadF(3.0f);
 	if (angle_ < -Utility::Deg2RadF(120.0f)) { gameEnd_ = true; }
-}
-
-void Player::Input(void)
-{
-	int input = GetJoypadInputState(DX_INPUT_PAD1);
-
-	up_.prev_ = up_.now_;
-	up_.now_ = (
-		(CheckHitKey(KEY_INPUT_UP) == 0) &&
-		(CheckHitKey(KEY_INPUT_W) == 0) &&
-		((input & PAD_INPUT_UP) == 0)
-		) ? false : true;
-	up_.downTrg_ = (!up_.prev_ && up_.now_);
-	up_.upTrg_ = (up_.prev_ && !up_.now_);
-
-	down_.prev_ = down_.now_;
-	down_.now_ = (
-		(CheckHitKey(KEY_INPUT_DOWN) == 0) &&
-		(CheckHitKey(KEY_INPUT_S) == 0) &&
-		((input & PAD_INPUT_DOWN) == 0)
-		) ? false : true;
-	down_.downTrg_ = (!down_.prev_ && down_.now_);
-	down_.upTrg_ = (down_.prev_ && !down_.now_);
-
-	left_.prev_ = left_.now_;
-	left_.now_ = (
-		(CheckHitKey(KEY_INPUT_LEFT) == 0) &&
-		(CheckHitKey(KEY_INPUT_A) == 0)&&
-		((input & PAD_INPUT_LEFT) == 0)
-		) ? false : true;
-	left_.downTrg_ = (!left_.prev_ && left_.now_);
-	left_.upTrg_ = (left_.prev_ && !left_.now_);
-
-	right_.prev_ = right_.now_;
-	right_.now_ = (
-		(CheckHitKey(KEY_INPUT_RIGHT) == 0) &&
-		(CheckHitKey(KEY_INPUT_D) == 0)&&
-		((input & PAD_INPUT_RIGHT) == 0)
-		) ? false : true;
-	right_.downTrg_ = (!right_.prev_ && right_.now_);
-	right_.upTrg_ = (right_.prev_ && !right_.now_);
-
-	attackKey_.prev_ = attackKey_.now_;
-	attackKey_.now_ = (
-		(CheckHitKey(KEY_INPUT_SPACE) == 0) &&
-		(CheckHitKey(KEY_INPUT_J) == 0) &&
-		((input & PAD_INPUT_B) == 0) &&
-		((input & PAD_INPUT_A) == 0)
-		) ? false : true;
-	attackKey_.downTrg_ = (!attackKey_.prev_ && attackKey_.now_);
-	attackKey_.upTrg_ = (attackKey_.prev_ && !attackKey_.now_);
-
-	specialKey_.prev_ = specialKey_.now_;
-	specialKey_.now_ = (
-		(CheckHitKey(KEY_INPUT_V) == 0) &&
-		(CheckHitKey(KEY_INPUT_B) == 0) &&
-		((input & 0x40) == 0) &&
-		((input & PAD_INPUT_Y) == 0) &&
-		((input & PAD_INPUT_X) == 0)
-		) ? false : true;
-	specialKey_.downTrg_ = (!specialKey_.prev_ && specialKey_.now_);
-	specialKey_.upTrg_ = (specialKey_.prev_ && !specialKey_.now_);
 }

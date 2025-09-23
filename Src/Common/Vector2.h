@@ -51,6 +51,9 @@ public:
 	Vector2I operator/(const int value)const;
 	void operator/=(const int value);
 	//--------------------------------------------
+
+	bool operator==(const int value) const;
+	bool operator!=(const int value) const;
 };
 
 class Vector2
@@ -106,4 +109,8 @@ public:
 	Vector2 operator/(const float value)const;
 	void operator/=(const float value);
 	//--------------------------------------------
+
+
+	bool operator==(const float value) const;
+	bool operator!=(const float value) const;
 };

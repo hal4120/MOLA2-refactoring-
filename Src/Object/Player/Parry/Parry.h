@@ -50,6 +50,10 @@ private:
 
 	float mag_;
 
+	int sizeUpImg_;
+	const int SIZE_UP_COUNT = 120;
+	int sizeUpCounter_;
+
 	const Vector2& player_;
 	std::function<void(void)>spChargeFunPtr_;
 };

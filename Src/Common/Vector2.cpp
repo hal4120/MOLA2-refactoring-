@@ -107,6 +107,16 @@ void Vector2I::operator/=(const int value)
 	y = y / value;
 }
 
+bool Vector2I::operator==(const int value) const
+{
+	return (x == value && y == value);
+}
+
+bool Vector2I::operator!=(const int value) const
+{
+	return (x != value || y != value);
+}
+
 
 
 Vector2::Vector2(void)
@@ -216,4 +226,14 @@ void Vector2::operator/=(const float value)
 {
 	x = x / value;
 	y = y / value;
+}
+
+bool Vector2::operator==(const float value) const
+{
+	return (x == value && y == value);
+}
+
+bool Vector2::operator!=(const float value) const
+{
+	return (x != value || y != value);
 }

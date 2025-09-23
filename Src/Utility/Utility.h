@@ -60,6 +60,11 @@ public:
 	static int SqrMagnitude(const Vector2& v);
 	static double Distance(const Vector2& v1, const Vector2& v2);
 
+
+	// ベクトルの正規化
+	static Vector2 Normalize(const Vector2& v);
+	static Vector2 Normalize(const Vector2I& v);
+
 	// 画像読み込み（エラーチェック付き）
 	static void LoadImg(int& handle, std::string path);
 	// 画像読み込み（エラーチェック付き）

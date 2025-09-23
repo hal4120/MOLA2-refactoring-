@@ -78,11 +78,11 @@ void HardSharkTackle::Draw(void)
 			{
 			case HardSharkTackle::DIR_STATE::LEFT:
 			case HardSharkTackle::DIR_STATE::RIGHT:
-				DrawBox(0, unit_.pos_.y - (unit_.para_.size.y / 2), Application::SCREEN_SIZE_X, unit_.pos_.y + (unit_.para_.size.y / 2), 0xff0000, true);
+				DrawBoxAA(0, unit_.pos_.y - (unit_.para_.size.y / 2), Application::SCREEN_SIZE_X, unit_.pos_.y + (unit_.para_.size.y / 2), 0xff0000, true);
 				break;
 			case HardSharkTackle::DIR_STATE::UP:
 			case HardSharkTackle::DIR_STATE::DOWN:
-				DrawBox(unit_.pos_.x - (unit_.para_.size.x / 2), 0, unit_.pos_.x + (unit_.para_.size.x / 2), Application::SCREEN_SIZE_Y, 0xff0000, true);
+				DrawBoxAA(unit_.pos_.x - (unit_.para_.size.x / 2), 0, unit_.pos_.x + (unit_.para_.size.x / 2), Application::SCREEN_SIZE_Y, 0xff0000, true);
 				break;
 			}
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -138,7 +138,7 @@ void HardSharkTackle::LeftTackle(void)
 		unit_.para_.size.y = work;
 
 		unit_.pos_.y = Application::SCREEN_SIZE_Y + (unit_.para_.size.y / 2);
-		unit_.pos_.x = (float)(GetRand(Application::SCREEN_SIZE_X - (unit_.para_.size.x / 2)) + unit_.para_.size.x / 2);
+		unit_.pos_.x = ((float)GetRand(Application::SCREEN_SIZE_X - (int)(unit_.para_.size.x / 2)) + unit_.para_.size.x / 2);
 	}
 }
 
@@ -153,7 +153,7 @@ void HardSharkTackle::UpTackle(void)
 		angle_ = -Utility::Deg2RadF(90.0f);
 
 
-		unit_.pos_.x = (float)(GetRand(Application::SCREEN_SIZE_X - (unit_.para_.size.x / 2)) + unit_.para_.size.x / 2);
+		unit_.pos_.x = ((float)GetRand(Application::SCREEN_SIZE_X - (int)(unit_.para_.size.x / 2)) + unit_.para_.size.x / 2);
 	}
 
 }
@@ -175,7 +175,7 @@ void HardSharkTackle::DownTackle(void)
 		unit_.para_.size.y = work;
 
 		unit_.pos_.x = -(unit_.para_.size.x / 2);
-		unit_.pos_.y = (float)(GetRand(Application::SCREEN_SIZE_Y - (unit_.para_.size.y / 2)) + unit_.para_.size.y / 2);
+		unit_.pos_.y = ((float)GetRand(Application::SCREEN_SIZE_Y - (int)(unit_.para_.size.y / 2)) + unit_.para_.size.y / 2);
 	}
 }
 
@@ -227,7 +227,7 @@ void HardSharkTackle::On(void)
 	unit_.para_.colliType = CollisionType::ENEMY;
 
 	unit_.pos_.x = (float)Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2);
-	unit_.pos_.y = (float)(GetRand(Application::SCREEN_SIZE_Y - (unit_.para_.size.y / 2)) + unit_.para_.size.y / 2);
+	unit_.pos_.y = ((float)GetRand(Application::SCREEN_SIZE_Y - (int)(unit_.para_.size.y / 2)) + unit_.para_.size.y / 2);
 }
 
 

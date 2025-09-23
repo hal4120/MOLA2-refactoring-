@@ -85,27 +85,15 @@ private:
 	// ノックバック関係
 	Vector2 knockBackVec_;
 
-
-
-	// 入力情報管理
-	struct InputInfo
-	{
-		bool prev_ = false;
-		bool now_ = false;
-		bool upTrg_ = false;
-		bool downTrg_ = false;
-	};
-	InputInfo up_, down_, left_, right_;
-	InputInfo attackKey_;
-	InputInfo specialKey_;
-
-	void Input(void);
-
 	Parry* parry_;
 	PlayerLaser* laser_;
 
 	int specialCharge_;
 	int specialChargeImg_[SPECIAL_CHARGE_MAX + 1];
+	int specialChargeMaxImg_;
+	int specialChargeMaxFlash_;
+	int specialChargeMaxButtonImg_[2];
+	int specialChargeMaxKeyImg_[2];
 
 	bool gameEnd_;
 

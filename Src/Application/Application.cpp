@@ -4,6 +4,7 @@
 
 #include"../Manager/FPS/FPS.h"
 #include"../Manager/Input/InputManager.h"
+#include"../Manager/Input/KeyManager.h"
 #include"../Scene/SceneManager/SceneManager.h"
 #include"../Manager/Score/Score.h"
 #include"../Manager/Sound/SoundManager.h"
@@ -50,6 +51,7 @@ void Application::Init(void)
 	SetUseDirectInputFlag(true);
 	InputManager::CreateInstance();
 	InputManager::GetInstance().Init();
+	KEY::CreateIns();
 
 	// スコア管理クラスの生成とロード
 	Score::CreateInstance();
@@ -80,6 +82,7 @@ void Application::Run(void)
 		if (!fps_->UpdateFrameRate()) continue;
 
 		InputManager::GetInstance().Update();	// 入力制御更新
+		KEY::GetIns().Update();
 		SceneManager::GetInstance().Update();	// シーン管理更新
 		fps_->CalcFrameRate();					// フレームレート計算
 
@@ -97,6 +100,7 @@ void Application::Release(void)
 {
 	// 入力制御削除
 	InputManager::GetInstance().Destroy();
+	KEY::DeleteIns();
 
 	// スコア管理クラスのセーブと削除
 	Score::DeleteIns();

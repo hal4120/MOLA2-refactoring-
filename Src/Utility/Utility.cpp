@@ -276,6 +276,24 @@ double Utility::Distance(const Vector2& v1, const Vector2& v2)
     return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
 }
 
+Vector2 Utility::Normalize(const Vector2& v)
+{
+    double mag = Magnitude(v);
+    if (mag == 0.0) {
+        return { 0.0f,0.0f };
+    }
+    return { static_cast<float>(v.x / mag), static_cast<float>(v.y / mag) };
+}
+
+Vector2 Utility::Normalize(const Vector2I& v)
+{
+    double mag = Magnitude({ static_cast<float>(v.x), static_cast<float>(v.y) });
+    if (mag == 0.0) {
+        return { 0.0f,0.0f };
+    }
+    return { static_cast<float>(v.x / mag), static_cast<float>(v.y / mag) };
+}
+
 void Utility::LoadImg(int& handle, std::string path)
 {
     handle = LoadGraph(path.c_str());

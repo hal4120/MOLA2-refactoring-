@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\Input\KeyManager.cpp" />
     <ClCompile Include="Src\Object\Stage\Green\GreenStage.cpp" />
     <ClCompile Include="Src\Object\Stage\Orange\OrangeStage.cpp" />
     <ClCompile Include="Src\Object\Boss\SharkHard\Attack\Tackle\HardSharkTackle.cpp" />
@@ -192,6 +193,7 @@
     <ClCompile Include="Src\Scene\Title\Object\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\Input\KeyManager.h" />
     <ClInclude Include="Src\Object\Stage\Green\GreenStage.h" />
     <ClInclude Include="Src\Object\Stage\Orange\OrangeStage.h" />
     <ClInclude Include="Src\Object\Boss\SharkHard\Attack\Tackle\HardSharkTackle.h" />
