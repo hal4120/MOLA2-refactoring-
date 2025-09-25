@@ -113,4 +113,15 @@ public:
 
 	bool operator==(const float value) const;
 	bool operator!=(const float value) const;
+
+	bool operator==(const Vector2 value) const;
+	bool operator!=(const Vector2 value) const;
+
+	bool operator<=(const float value)const;
+	bool operator<(const float value)const;
+	bool operator>=(const float value)const;
+	bool operator>(const float value)const;
+
+	Vector2 Abs(void)const;
+
 };
