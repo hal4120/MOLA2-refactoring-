@@ -21,6 +21,7 @@
 #include"../../Object/Boss/Shark/Shark.h"
 #include"../../Object/Boss/SharkHard/SharkHard.h"
 #include"../../Object/Boss/Kraken/Kraken.h"
+#include"../../Object/Boss/Crab/Crab.h"
 
 int GameScene::hitStop_ = 0;
 
@@ -92,6 +93,13 @@ void GameScene::Load(void)
 
 		boss_ = new Kraken(player_->GetUnit().pos_);
 
+		break;
+	case SelectScene::BOSS_KINDS::CRAB:
+
+		stage_ = new BlueStage();
+
+		boss_ = new Crab(player_->GetUnit().pos_);
+		
 		break;
 	}
 

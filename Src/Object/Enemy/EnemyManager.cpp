@@ -17,6 +17,9 @@ EnemyManager::EnemyManager(BOSS_KINDS k):
 	case BOSS_KINDS::KRAKEN:
 		for (int i = 0; i < ENEMY_MAX; i++) { enemys_[i] = new Ika((NUMBER)i); }
 		break;
+	case BOSS_KINDS::CRAB:
+		for (int i = 0; i < ENEMY_MAX; i++) { enemys_[i] = new Monkfish((NUMBER)i); }
+		break;
 	}
 }
 

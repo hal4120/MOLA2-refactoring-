@@ -17,6 +17,7 @@ public:
 		SHARK,
 		SHARK_HARD,
 		KRAKEN,
+		CRAB,
 
 		MAX,
 	};
