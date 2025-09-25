@@ -207,8 +207,8 @@ void Player::Release(void)
 void Player::OnCollision(UnitBase* other)
 {
 	if (state_ == STATE::DEATH) { return; }
-	GameScene::Shake(ShakeKinds::ROUND, ShakeSize::MEDIUM);
-	GameScene::Slow(20);
+	GameScene::Shake(ShakeKinds::ROUND, ShakeSize::MEDIUM,10);
+	GameScene::Slow(10);
 
 	Smng::GetIns().Play(SOUND::BLAST, true);
 

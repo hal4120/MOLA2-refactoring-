@@ -25,7 +25,8 @@ Kraken::Kraken(const Vector2& playerPos) :
 
 	deathCou_(0),
 
-	sumi_(nullptr)
+	sumi_(nullptr),
+	sphere_(nullptr)
 {
 }
 
@@ -62,8 +63,10 @@ void Kraken::Load(void)
 	SET_STATE(STATE::DAMAGE, &Kraken::Damage);
 	SET_STATE(STATE::DEATH, &Kraken::Death);
 
-	sumi_ = new SumiShooter(unit_.pos_, playerPos_);
+	sumi_ = new SumiShooter(unit_.pos_, angle_, playerPos_);
 	sumi_->Load();
+	sphere_ = new Sphere(unit_.pos_, angle_, playerPos_);
+	sphere_->Load();
 }
 
 void Kraken::Init(void)
@@ -85,17 +88,28 @@ void Kraken::Init(void)
 	unit_.hp_ = HP_MAX;
 
 	reverse_ = false;
-	angle_ = 0.0f;
+	angle_ = Utility::Deg2RadF(180.0f);
 
 	end_ = false;
 
 	sumi_->Init();
+	sphere_->Init();
 }
 
 void Kraken::OnCollision(UnitBase* other)
 {
 
 	if (dynamic_cast<EnemyBase*>(other)) {
+		HpDecrease(5);
+		return;
+	}
+
+	if (dynamic_cast<PlayerLaser*>(other)) {
+		HpDecrease(5);
+		return;
+	}
+
+	if (dynamic_cast<Sphere*>(other)) {
 		HpDecrease(5);
 		return;
 	}
@@ -120,6 +134,8 @@ void Kraken::HpDecrease(int damage)
 		deathCou_ = 0;
 	}
 
+	unit_.inviciCounter_ = 10;
+
 	if (enCount_) { state_ = (int)STATE::MOVE; unit_.inviciCounter_ = 10; }
 }
 
@@ -129,6 +145,7 @@ std::vector<UnitBase*> Kraken::AttackIns(void)
 	std::vector<UnitBase*> ret;
 
 	for (auto& ins : sumi_->Sumis()) { ret.emplace_back(ins); }
+	ret.emplace_back(sphere_);
 
 	return ret;
 }
@@ -152,10 +169,15 @@ void Kraken::Move(void)
 #pragma region ˆÚ“®ó‘Ô‚Ö‘JˆÚŒã ‚P‰ñ–Ú‚Ìˆ—
 	if (!moveInit_) {
 		auto destinationRotyly = [&](void)->Vector2 {
-			Vector2 ret = DESTINATION_TABLE[GetRand(DESTINATION_POS_NUM)];
-			while (true) {
-				if (ret == destination_) { ret = DESTINATION_TABLE[GetRand(DESTINATION_POS_NUM)]; }
-				else { break; }
+			Vector2 ret = {};
+			float sub = 100000.0f;
+
+			for (int i = 0; i < DESTINATION_POS_NUM; i++) {
+				if (sub > (DESTINATION_TABLE[i] - playerPos_).length() &&
+					destination_ != DESTINATION_TABLE[i]) {
+					sub = (DESTINATION_TABLE[i] - playerPos_).length();
+					ret = DESTINATION_TABLE[i];
+				}
 			}
 			return ret;
 			};
@@ -198,7 +220,7 @@ void Kraken::Attack(void)
 
 		attackInit_ = true;
 		attackEnd_ = false;
-
+		
 		attackState_ = AttackLottery();
 		switch (attackState_)
 		{
@@ -208,6 +230,11 @@ void Kraken::Attack(void)
 		case Kraken::ATTACK_KINDS::SUMI:
 			sumi_->On();
 			ChangeMotion((int)MOTION::ATTACK1);
+			break;
+		case Kraken::ATTACK_KINDS::TENTACLE:
+			break;
+		case Kraken::ATTACK_KINDS::SPHERE:
+			sphere_->On();
 			break;
 		case Kraken::ATTACK_KINDS::TACKLE:
 			break;
@@ -222,6 +249,11 @@ void Kraken::Attack(void)
 		angle_ += Utility::Deg2RadF(180.0f);
 		sumi_->Shot();
 		if (sumi_->End()) { attackEnd_ = true; }
+		break;
+	case Kraken::ATTACK_KINDS::TENTACLE:
+		break;
+	case Kraken::ATTACK_KINDS::SPHERE:
+		attackEnd_ = true;
 		break;
 	case Kraken::ATTACK_KINDS::TACKLE:
 		break;
@@ -268,11 +300,13 @@ void Kraken::Death(void)
 void Kraken::AttackUpdate(void)
 {
 	sumi_->Update();
+	sphere_->Update();
 }
 
 void Kraken::AttackDraw(void)
 {
 	sumi_->Draw();
+	sphere_->Draw();
 }
 
 void Kraken::AttackRelease(void)
@@ -281,6 +315,11 @@ void Kraken::AttackRelease(void)
 		sumi_->Release();
 		delete sumi_;
 		sumi_ = nullptr;
+	}
+	if (sphere_) {
+		sphere_->Release();
+		delete sphere_;
+		sphere_ = nullptr;
 	}
 }
 

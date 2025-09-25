@@ -11,6 +11,7 @@ EnemyBase::EnemyBase(NUMBER num):
 	number_(num),
 	imgs_(),
 	drawScale_(1.0f),
+
 	animSpeed(),
 	animCounter_(),
 	animInterval_(),
@@ -33,9 +34,10 @@ void EnemyBase::Load(void)
 
 void EnemyBase::Init(void)
 {
-	unit_.pos_ = RES_POS[number_];
+	dir_ = DIR::RIGHT;
+	unit_.pos_ = RES_POS[(int)dir_][number_];
 	unit_.isAlive_ = true;
-	moveVec_ = { -1.0f,0.0f };
+	moveVec_ = MOVE_VEC_TABLE[(int)dir_];
 	parry_ = false;
 }
 
@@ -54,7 +56,7 @@ void EnemyBase::Update(void)
 void EnemyBase::Draw(void)
 {
 	if (!unit_.isAlive_) { return; }
-	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, drawScale_, (parry_) ? Utility::Deg2RadF(180.0f) : 0.0f, imgs_[animCounter_], true);
+	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, drawScale_, atan2f(moveVec_.y, moveVec_.x), imgs_[animCounter_], true);
 	if (arrow_) {
 		DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, arrowAngle_, arrowImg_, true);
 	}
@@ -127,8 +129,12 @@ void EnemyBase::OnCollision(UnitBase* other)
 void EnemyBase::Move(void)
 {
 	unit_.pos_ += moveVec_ * ((parry_) ? PARRY_SPEED : unit_.para_.speed);
-	if ((unit_.pos_.x + (unit_.para_.size.x / 2.0f) < 0.0f) ||
-		unit_.pos_.x - (unit_.para_.size.x / 2.0f) > Application::SCREEN_SIZE_X) {
+	if (
+		(unit_.pos_.x + (unit_.para_.size.x / 2.0f) < 0.0f) ||
+		(unit_.pos_.y + (unit_.para_.size.y / 2.0f) < 0.0f) ||
+		(unit_.pos_.x - (unit_.para_.size.x / 2.0f) > Application::SCREEN_SIZE_X) ||
+		(unit_.pos_.y - (unit_.para_.size.y / 2.0f) > Application::SCREEN_SIZE_Y)
+		) {
 		unit_.isAlive_ = false;
 	}
 }
@@ -137,9 +143,9 @@ void EnemyBase::Respawn(void)
 {
 	if (++respawnCounter_ >= respawnTime) {
 		respawnCounter_ = 0;
-		unit_.pos_ = RES_POS[number_];
+		unit_.pos_ = RES_POS[(int)dir_][number_];
 		unit_.isAlive_ = true;
-		moveVec_ = { -1.0f,0.0f };
+		moveVec_ = MOVE_VEC_TABLE[(int)dir_];
 		parry_ = false;
 		unit_.para_.colliType = CollisionType::ENEMY;
 	}
