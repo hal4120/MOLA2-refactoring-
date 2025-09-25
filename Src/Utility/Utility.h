@@ -60,6 +60,8 @@ public:
 	static int SqrMagnitude(const Vector2& v);
 	static double Distance(const Vector2& v1, const Vector2& v2);
 
+	static float VecToAngle(const Vector2& v);
+
 
 	// ƒxƒNƒgƒ‹‚Ì³‹K‰»
 	static Vector2 Normalize(const Vector2& v);

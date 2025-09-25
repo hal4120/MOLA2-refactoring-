@@ -1,5 +1,7 @@
 #include "Vector2.h"
 
+#include<algorithm>
+
 // コンストラクタ
 Vector2I::Vector2I(void)
 {
@@ -236,4 +238,39 @@ bool Vector2::operator==(const float value) const
 bool Vector2::operator!=(const float value) const
 {
 	return (x != value || y != value);
+}
+
+bool Vector2::operator==(const Vector2 value) const
+{
+	return (x == value.x && y == value.x);
+}
+
+bool Vector2::operator!=(const Vector2 value) const
+{
+	return (x != value.x || y != value.x);
+}
+
+bool Vector2::operator<=(const float value) const
+{
+	return (x <= value && y <= value);
+}
+
+bool Vector2::operator<(const float value) const
+{
+	return (x < value && y < value);
+}
+
+bool Vector2::operator>=(const float value) const
+{
+	return (x >= value && y >= value);
+}
+
+bool Vector2::operator>(const float value) const
+{
+	return (x > value && y > value);
+}
+
+Vector2 Vector2::Abs(void) const
+{
+	return { abs(x),abs(y) };
 }

@@ -276,6 +276,11 @@ double Utility::Distance(const Vector2& v1, const Vector2& v2)
     return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
 }
 
+float Utility::VecToAngle(const Vector2& v)
+{
+    return atan2f(v.y, v.x);
+}
+
 Vector2 Utility::Normalize(const Vector2& v)
 {
     double mag = Magnitude(v);
