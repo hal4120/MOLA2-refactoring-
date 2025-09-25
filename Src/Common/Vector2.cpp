@@ -242,12 +242,12 @@ bool Vector2::operator!=(const float value) const
 
 bool Vector2::operator==(const Vector2 value) const
 {
-	return (x == value.x && y == value.x);
+	return (x == value.x && y == value.y);
 }
 
 bool Vector2::operator!=(const Vector2 value) const
 {
-	return (x != value.x || y != value.x);
+	return (x != value.x || y != value.y);
 }
 
 bool Vector2::operator<=(const float value) const
@@ -255,9 +255,19 @@ bool Vector2::operator<=(const float value) const
 	return (x <= value && y <= value);
 }
 
+bool Vector2::operator<=(const Vector2 value) const
+{
+	return (x <= value.x && y <= value.y);
+}
+
 bool Vector2::operator<(const float value) const
 {
 	return (x < value && y < value);
+}
+
+bool Vector2::operator<(const Vector2 value) const
+{
+	return (x < value.x && y < value.y);
 }
 
 bool Vector2::operator>=(const float value) const
@@ -265,12 +275,27 @@ bool Vector2::operator>=(const float value) const
 	return (x >= value && y >= value);
 }
 
+bool Vector2::operator>=(const Vector2 value) const
+{
+	return (x >= value.x && y >= value.y);
+}
+
 bool Vector2::operator>(const float value) const
 {
 	return (x > value && y > value);
 }
 
+bool Vector2::operator>(const Vector2 value) const
+{
+	return (x > value.x && y > value.y);
+}
+
 Vector2 Vector2::Abs(void) const
 {
 	return { abs(x),abs(y) };
+}
+
+float Vector2::length(void) const
+{
+	return sqrtf(x * x + y * y);
 }

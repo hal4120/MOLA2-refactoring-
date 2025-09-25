@@ -118,10 +118,16 @@ public:
 	bool operator!=(const Vector2 value) const;
 
 	bool operator<=(const float value)const;
+	bool operator<=(const Vector2 value)const;
 	bool operator<(const float value)const;
+	bool operator<(const Vector2 value)const;
 	bool operator>=(const float value)const;
+	bool operator>=(const Vector2 value)const;
 	bool operator>(const float value)const;
+	bool operator>(const Vector2 value)const;
 
 	Vector2 Abs(void)const;
+
+	float length(void)const;
 
 };

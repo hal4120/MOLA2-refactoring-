@@ -62,7 +62,7 @@ void Kraken::Load(void)
 	SET_STATE(STATE::DAMAGE, &Kraken::Damage);
 	SET_STATE(STATE::DEATH, &Kraken::Death);
 
-	sumi_ = new SumiShooter(unit_.pos_, playerPos_);
+	sumi_ = new SumiShooter(unit_.pos_, angle_, playerPos_);
 	sumi_->Load();
 }
 
@@ -85,7 +85,7 @@ void Kraken::Init(void)
 	unit_.hp_ = HP_MAX;
 
 	reverse_ = false;
-	angle_ = 0.0f;
+	angle_ = Utility::Deg2RadF(180.0f);
 
 	end_ = false;
 
@@ -152,10 +152,15 @@ void Kraken::Move(void)
 #pragma region ˆÚ“®ó‘Ô‚Ö‘JˆÚŒã ‚P‰ñ–Ú‚Ìˆ—
 	if (!moveInit_) {
 		auto destinationRotyly = [&](void)->Vector2 {
-			Vector2 ret = DESTINATION_TABLE[GetRand(DESTINATION_POS_NUM)];
-			while (true) {
-				if (ret == destination_) { ret = DESTINATION_TABLE[GetRand(DESTINATION_POS_NUM)]; }
-				else { break; }
+			Vector2 ret = {};
+			float sub = 100000.0f;
+
+			for (int i = 0; i < DESTINATION_POS_NUM; i++) {
+				if (sub > (DESTINATION_TABLE[i] - playerPos_).length() &&
+					destination_ != DESTINATION_TABLE[i]) {
+					sub = (DESTINATION_TABLE[i] - playerPos_).length();
+					ret = DESTINATION_TABLE[i];
+				}
 			}
 			return ret;
 			};

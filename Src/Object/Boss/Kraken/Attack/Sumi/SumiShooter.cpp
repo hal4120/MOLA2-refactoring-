@@ -4,8 +4,9 @@
 
 #include"../../../../../Manager/Sound/SoundManager.h"
 
-SumiShooter::SumiShooter(const Vector2& bossPos, const Vector2& playerPos) :
+SumiShooter::SumiShooter(const Vector2& bossPos, const float& bossAngle, const Vector2& playerPos) :
 	bossPos_(bossPos),
+	bossAngle_(bossAngle),
 	playerPos_(playerPos),
 	img_(),
 	ikuras_(),
@@ -73,8 +74,11 @@ void SumiShooter::Shot(void)
 	if (searchCount_ < ONE_SHOT_NUM) { shot_ = false; return; }
 
 
-	Vector2 position = bossPos_;
-	position.x -= Kraken::SIZE_X / 2.0f;
+	MATRIX mat = MGetIdent();
+	mat = MMult(mat, MGetRotZ(bossAngle_));
+	VECTOR ofset = VTransform({ -Kraken::SIZE_X / 2.0f,0.0f,0.0f }, mat);
+	Vector2 position = bossPos_ + Vector2(ofset.x, ofset.y);
+
 	Vector2 vec = playerPos_ - position;
 
 	float angle = atan2f(vec.y, vec.x);

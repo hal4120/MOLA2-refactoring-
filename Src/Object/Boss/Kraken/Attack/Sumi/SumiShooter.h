@@ -6,7 +6,7 @@ class SumiShooter
 {
 public:
 	static constexpr int ONE_SHOT_NUM = 3;							//1回で出す個数
-	static constexpr int SHOT_NUM = 20;								//打つ回数
+	static constexpr int SHOT_NUM = 10;								//打つ回数
 	static constexpr int ALL_SHOT_NUM = ONE_SHOT_NUM * SHOT_NUM;	//合計で出す個数
 
 	static constexpr float DEFAULT_ANGLE = DX_PI_F;
@@ -14,7 +14,7 @@ public:
 
 	static constexpr int SHOT_INTERVAL = 10;	//フレーム
 
-	SumiShooter(const Vector2& bossPos, const Vector2& playerPos);
+	SumiShooter(const Vector2& bossPos, const float& bossAngle, const Vector2& playerPos);
 	~SumiShooter();
 
 	void Load(void);
@@ -34,6 +34,7 @@ private:
 	std::vector<Sumi*>ikuras_;
 
 	const Vector2& bossPos_;
+	const float& bossAngle_;
 	const Vector2& playerPos_;
 
 	bool shot_;
