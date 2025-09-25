@@ -139,59 +139,76 @@ void Crab::Move(void)
 	Vector2 target = DESTINATION[nextDestPlace_];
 	Vector2 dir = { target.x - unit_.pos_.x, target.y - unit_.pos_.y };
 
-	// 距離
 	float len = sqrtf(dir.x * dir.x + dir.y * dir.y);
 
-	if (len > unit_.para_.speed)
+	if (len > 1.0f)
 	{
 		// 正規化
 		dir.x /= len;
 		dir.y /= len;
 
+		// 補間で滑らかに方向転換
+		moveVec_.x = moveVec_.x * 0.9f + dir.x * 0.1f;
+		moveVec_.y = moveVec_.y * 0.9f + dir.y * 0.1f;
+
 		// 移動
-		unit_.pos_.x += dir.x * unit_.para_.speed;
-		unit_.pos_.y += dir.y * unit_.para_.speed;
+		unit_.pos_.x += moveVec_.x * unit_.para_.speed;
+		unit_.pos_.y += moveVec_.y * unit_.para_.speed;
+
+		// ★縦移動のときだけ回転
+		if ((nextDestPlace_ == DESTINATION_PLACE::TOP_RIGHT) ||
+			(nextDestPlace_ == DESTINATION_PLACE::TOP_LEFT) ||
+			(nextDestPlace_ == DESTINATION_PLACE::UNDER_RIGHT) ||
+			(nextDestPlace_ == DESTINATION_PLACE::UNDER_LEFT))
+		{
+			// 縦方向の移動範囲
+			float bottomY = Application::SCREEN_SIZE_Y - SIZE_Y / 2;
+			float topY = SIZE_Y / 2;
+
+			// 進行度 0.0 (下) → 1.0 (上)
+			float t = (bottomY - unit_.pos_.y) / (bottomY - topY);
+			if (t < 0.0f) t = 0.0f;
+			else if (t > 1.0f) t = 1.0f;
+
+			// 下 → 上へ移動中は逆回転（0 → -π）
+			angle_ = -DX_PI_F * t;
+		}
 
 		ChangeMotion((int)MOTION::MOVE);
 	}
 	else
 	{
-		// 位置を目標地点に揃える
+		// 到着処理
 		unit_.pos_ = target;
 
-		// 到着後の行動
 		switch (nextDestPlace_)
 		{
 		case DESTINATION_PLACE::UNDER_RIGHT:
-
 			nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT;
-
 			isReverse(true);
-
+			angle_ = 0.0f; // 下は通常向き
 			break;
+
 		case DESTINATION_PLACE::UNDER_LEFT:
-
 			nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT;
-
 			isReverse(false);
-
+			angle_ = 0.0f; // 下は通常向き
 			break;
+
 		case DESTINATION_PLACE::TOP_RIGHT:
-
 			nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT;
-
-			isReverse(true);
-
-			break;
-		case DESTINATION_PLACE::TOP_LEFT:
-
-			nextDestPlace_ = DESTINATION_PLACE::TOP_RIGHT;
-
 			isReverse(false);
+			angle_ = DX_PI_F; // 上は逆さま
+			break;
 
+		case DESTINATION_PLACE::TOP_LEFT:
+			nextDestPlace_ = DESTINATION_PLACE::TOP_RIGHT;
+			isReverse(true);
+			angle_ = DX_PI_F; // 上は逆さま
 			break;
 		}
 
+		unit_.para_.speed = MOVE_SPEED;
 		state_ = (int)STATE::ATTACK;
 	}
 }
@@ -214,6 +231,12 @@ void Crab::Attack(void)
 			break;
 		}
 	}
+
+	// デバック用処理
+	if (CheckHitKey(KEY_INPUT_1)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT; }
+	if (CheckHitKey(KEY_INPUT_2)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT; }
+	if (CheckHitKey(KEY_INPUT_3)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::TOP_RIGHT; }
+	if (CheckHitKey(KEY_INPUT_4)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT; }
 }
 
 void Crab::Damage(void)
