@@ -30,7 +30,7 @@ void TitleMonkfish::Update(void)
 void TitleMonkfish::Draw(void)
 {
 	for (int i = 0; i < NUM; i++) {
-		DrawRotaGraph(POS[i].x, POS[i].y, 2, -Utility::Deg2RadF(15.0f) + Utility::Deg2RadF(sinf(angle_[i]) * 15.0f), img_, true);
+		DrawRotaGraph(POS[i].x, POS[i].y, 2, Utility::Deg2RadF(165.0f) + Utility::Deg2RadF(sinf(angle_[i]) * 15.0f), img_, true);
 	}
 }
 
