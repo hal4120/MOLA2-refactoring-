@@ -290,7 +290,7 @@ void Shark::Death(void)
 
 void Shark::HpDecrease(int damage)
 {
-	GameScene::Slow(20);
+	GameScene::Slow(10);
 	GameScene::Shake();
 
 	state_ = (int)STATE::DAMAGE;

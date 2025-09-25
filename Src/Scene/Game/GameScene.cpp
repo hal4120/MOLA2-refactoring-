@@ -61,7 +61,6 @@ void GameScene::Load(void)
 	blast_ = new BlastEffectManager();
 	blast_->Load();
 
-	auto kinds = SelectScene::GetNowBoss();
 	
 	
 	player_ = new Player();
@@ -70,6 +69,7 @@ void GameScene::Load(void)
 	collision_->Add(player_->ParryIns());
 	collision_->Add(player_->LaserIns());
 
+	auto kinds = SelectScene::GetNowBoss();
 
 	switch (kinds)
 	{
@@ -89,7 +89,7 @@ void GameScene::Load(void)
 		break;
 	case SelectScene::BOSS_KINDS::KRAKEN:
 
-		stage_ = new BlueStage();
+		stage_ = new OrangeStage();
 
 		boss_ = new Kraken(player_->GetUnit().pos_);
 
