@@ -37,9 +37,10 @@ void Kraken::Load(void)
 
 	BossBase::SCALE = this->SCALE;
 
-	unit_.para_.size.y = SIZE_Y;
 	unit_.para_.size.x = SIZE_X;
-	unit_.para_.radius = SIZE_Y;
+	unit_.para_.size.y = SIZE_Y;
+	unit_.para_.radius = SIZE_Y / 2;
+	drawCenter_ = { LOAD_SIZE / 3,LOAD_SIZE / 2 };
 
 	maxHP = HP_MAX;
 

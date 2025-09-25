@@ -12,6 +12,9 @@ BossBase::BossBase(const Vector2& playerPos) :
 	stateFuncPtr(),
 	SCALE(1.0f),
 	reverse_(false),
+
+	drawCenter_(0.0f,0.0f),
+
 	motion_(),
 	animCounter_(),
 	animInterval_(),
@@ -44,7 +47,30 @@ void BossBase::Draw(void)
 	AttackDraw();
 
 	if (!unit_.isAlive_) { return; }
-	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, SCALE, angle_, imgs_.at((int)motion_).at(animCounter_), true, reverse_);
+	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, drawCenter_.x, drawCenter_.y, SCALE, SCALE, angle_, imgs_.at((int)motion_).at(animCounter_), true, reverse_);
+
+
+	// “–‚½‚è”»’è‚Ì•`‰æ‚Ìƒ‰ƒ€ƒ_ŠÖ”
+	auto DrawDebug = [&](void)->void {
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
+		switch (unit_.para_.colliShape)
+		{
+		case CollisionShape::CIRCLE:
+			DrawCircleAA(unit_.pos_.x, unit_.pos_.y, unit_.para_.radius, 30, 0xffffff);
+			break;
+		case CollisionShape::RECTANGLE:
+			DrawBox(unit_.pos_.x - unit_.para_.size.x / 2, unit_.pos_.y - unit_.para_.size.y / 2, unit_.pos_.x + unit_.para_.size.x / 2, unit_.pos_.y + unit_.para_.size.y / 2, 0xffffff, true);
+			break;
+		case CollisionShape::ELLIPSE:
+			DrawOval(unit_.pos_.x, unit_.pos_.y, unit_.para_.size.x / 2, unit_.para_.size.y / 2, 0xffffff, true);
+			break;
+		}
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		};
+
+	// “–‚½‚è”»’è‚Ì•`‰æ
+	DrawDebug();
+
 }
 
 void BossBase::Release(void)

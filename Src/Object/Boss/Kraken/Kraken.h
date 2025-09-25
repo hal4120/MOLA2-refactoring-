@@ -16,8 +16,8 @@ public:
 	static constexpr float SCALE = 4.0f;
 
 	// 最終的に描画される際のサイズ(当たり判定などで使用するサイズ)
-	static constexpr float SIZE_X = LOAD_SIZE * SCALE;
-	static constexpr float SIZE_Y = (LOAD_SIZE * SCALE) / 2.0f;
+	static constexpr float SIZE_X = (LOAD_SIZE * SCALE) / 2.0f;
+	static constexpr float SIZE_Y = (LOAD_SIZE * SCALE) / 1.5f;
 
 	// モーションの列挙型定義
 	enum class MOTION {
@@ -103,6 +103,11 @@ private:
 
 	// 死亡演出のカウンター
 	int deathCou_;
+
+
+#pragma region 移動関係
+
+#pragma endregion
 
 
 #pragma region 攻撃関係

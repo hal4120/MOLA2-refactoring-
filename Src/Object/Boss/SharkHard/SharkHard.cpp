@@ -48,6 +48,8 @@ void SharkHard::Load(void)
 	unit_.para_.size.x = SIZE_X;
 	unit_.para_.radius = SIZE_Y;
 
+	drawCenter_ = LOAD_SIZE / 2.0f;
+
 	maxHP = HP_MAX;
 
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;

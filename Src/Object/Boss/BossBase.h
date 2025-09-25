@@ -38,6 +38,8 @@ protected:
 	float SCALE;
 	bool reverse_;
 
+	Vector2 drawCenter_;
+
 	int motion_;
 	int animCounter_;
 	int animInterval_;
