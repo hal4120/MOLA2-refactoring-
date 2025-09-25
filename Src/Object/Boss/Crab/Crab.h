@@ -17,7 +17,8 @@ public:
 	static constexpr float SIZE_Y = 35 * SCALE;
 
 	// 描画する際の中央座標
-	const Vector2 DRAW_CENTER_POS = { LOAD_SIZE * 0.6, LOAD_SIZE * 0.84 };
+	const Vector2 DRAW_CENTER_POS = { LOAD_SIZE * 0.4, LOAD_SIZE * 0.84 };
+	const Vector2 REVERSE_DRAW_CENTER_POS = { LOAD_SIZE * 0.6, LOAD_SIZE * 0.84 };
 
 	// モーションの列挙型定義
 	enum class MOTION {
@@ -96,6 +97,8 @@ private:
 	void Death(void);
 	//-----------------------------------------------------
 
+	void isReverse(bool isReverse);
+
 	// HP減少関数
 	void HpDecrease(int damage);
 
@@ -105,6 +108,8 @@ private:
 	// ボスの移動先のテーブル
 	const Vector2 DESTINATION[DESTINATION_INDEX] =
 	{
+		{ Application::SCREEN_SIZE_X / 3,		Application::SCREEN_SIZE_Y - SIZE_Y / 2 },
+		{ Application::SCREEN_SIZE_X / 3 * 2,	Application::SCREEN_SIZE_Y - SIZE_Y / 2 },
 	};
 
 	// 死亡演出のカウンター
@@ -145,10 +150,7 @@ private:
 
 	static constexpr int SP_ATTACK_MEASU = 1800;
 	int spAttackMeasu_;
-	// 突進準備
-	bool TacklePreparation(void);
-	// 突進終了
-	bool TackleEnd(void);
+
 
 #pragma endregion
 };

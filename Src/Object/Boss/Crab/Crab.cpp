@@ -35,7 +35,7 @@ void Crab::Load(void)
 	unit_.para_.size.x = SIZE_X;
 	unit_.para_.size.y = SIZE_Y;
 	unit_.para_.radius = SIZE_X;
-	drawCenter_ = DRAW_CENTER_POS;
+	drawCenter_ = REVERSE_DRAW_CENTER_POS;
 
 	maxHP = HP_MAX;
 
@@ -58,8 +58,10 @@ void Crab::Init(void)
 {
 	unit_.isAlive_ = true;
 
-	unit_.pos_.x = Application::SCREEN_SIZE_X + SIZE_X;
-	unit_.pos_.y = Application::SCREEN_SIZE_Y - SIZE_Y / 2;
+	//unit_.pos_.x = Application::SCREEN_SIZE_X + SIZE_X;
+	//unit_.pos_.y = Application::SCREEN_SIZE_Y - SIZE_Y / 2;
+
+	unit_.pos_ = DESTINATION[0];
 
 	state_ = (int)STATE::MOVE;
 
@@ -71,7 +73,8 @@ void Crab::Init(void)
 
 	unit_.hp_ = HP_MAX;
 
-	reverse_ = true;
+	isReverse(true);
+
 	angle_ = 0.0f;
 
 	end_ = false;
@@ -165,6 +168,19 @@ void Crab::Damage(void)
 void Crab::Death(void)
 {
 
+}
+void Crab::isReverse(bool isReverse)
+{
+	reverse_ = isReverse;
+
+	if (reverse_)
+	{
+		drawCenter_ = REVERSE_DRAW_CENTER_POS;
+	}
+	else
+	{
+		drawCenter_ = DRAW_CENTER_POS;
+	}
 }
 void Crab::AttackUpdate(void)
 {
