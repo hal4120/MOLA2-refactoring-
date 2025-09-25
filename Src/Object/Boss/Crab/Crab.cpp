@@ -3,7 +3,6 @@
 #include <DxLib.h>
 
 #include"../../../Manager/BlastEffect/BlastEffectManager.h"
-#include"../../../Application/Application.h"
 #include"../../../Scene/SceneManager/SceneManager.h"
 #include"../../../Manager/Sound/SoundManager.h"
 #include"../../../Scene/Game/GameScene.h"
@@ -61,7 +60,9 @@ void Crab::Init(void)
 	//unit_.pos_.x = Application::SCREEN_SIZE_X + SIZE_X;
 	//unit_.pos_.y = Application::SCREEN_SIZE_Y - SIZE_Y / 2;
 
-	unit_.pos_ = DESTINATION[0];
+	// ボスの初期位置
+	unit_.pos_ = DESTINATION[DESTINATION_PLACE::UNDER_RIGHT];
+	nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT;
 
 	state_ = (int)STATE::MOVE;
 
@@ -69,7 +70,7 @@ void Crab::Init(void)
 
 	deathCou_ = 0;
 
-	ChangeMotion((int)MOTION::ATTACK4);
+	ChangeMotion((int)MOTION::IDLE);
 
 	unit_.hp_ = HP_MAX;
 
@@ -134,7 +135,65 @@ bool Crab::Timer(void)
 }
 
 void Crab::Move(void)
-{
+{	
+	Vector2 target = DESTINATION[nextDestPlace_];
+	Vector2 dir = { target.x - unit_.pos_.x, target.y - unit_.pos_.y };
+
+	// 距離
+	float len = sqrtf(dir.x * dir.x + dir.y * dir.y);
+
+	if (len > unit_.para_.speed)
+	{
+		// 正規化
+		dir.x /= len;
+		dir.y /= len;
+
+		// 移動
+		unit_.pos_.x += dir.x * unit_.para_.speed;
+		unit_.pos_.y += dir.y * unit_.para_.speed;
+
+		ChangeMotion((int)MOTION::MOVE);
+	}
+	else
+	{
+		// 位置を目標地点に揃える
+		unit_.pos_ = target;
+
+		// 到着後の行動
+		switch (nextDestPlace_)
+		{
+		case DESTINATION_PLACE::UNDER_RIGHT:
+
+			nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT;
+
+			isReverse(true);
+
+			break;
+		case DESTINATION_PLACE::UNDER_LEFT:
+
+			nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT;
+
+			isReverse(false);
+
+			break;
+		case DESTINATION_PLACE::TOP_RIGHT:
+
+			nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT;
+
+			isReverse(true);
+
+			break;
+		case DESTINATION_PLACE::TOP_LEFT:
+
+			nextDestPlace_ = DESTINATION_PLACE::TOP_RIGHT;
+
+			isReverse(false);
+
+			break;
+		}
+
+		state_ = (int)STATE::ATTACK;
+	}
 }
 
 void Crab::Attack(void)
@@ -169,6 +228,7 @@ void Crab::Death(void)
 {
 
 }
+
 void Crab::isReverse(bool isReverse)
 {
 	reverse_ = isReverse;
@@ -182,6 +242,7 @@ void Crab::isReverse(bool isReverse)
 		drawCenter_ = DRAW_CENTER_POS;
 	}
 }
+
 void Crab::AttackUpdate(void)
 {
 }

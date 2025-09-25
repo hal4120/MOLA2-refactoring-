@@ -1,6 +1,8 @@
 #pragma once
 #include "../BossBase.h"
 
+#include"../../../Application/Application.h"
+
 class Crab : public BossBase
 {
 public:
@@ -66,8 +68,6 @@ public:
 	// 死亡演出の長さ
 	static constexpr int DEATH_PERFOR_TIME = 180;
 
-	static constexpr int DESTINATION_INDEX = 6;
-
 #pragma endregion
 
 	Crab(const Vector2& playerPos);
@@ -97,6 +97,7 @@ private:
 	void Death(void);
 	//-----------------------------------------------------
 
+	// true : 左向き / false : 右向き
 	void isReverse(bool isReverse);
 
 	// HP減少関数
@@ -105,11 +106,24 @@ private:
 	// ボス自体の動きのベクトル
 	Vector2 moveVec_;
 
-	// ボスの移動先のテーブル
-	const Vector2 DESTINATION[DESTINATION_INDEX] =
+	enum DESTINATION_PLACE
 	{
-		{ Application::SCREEN_SIZE_X / 3,		Application::SCREEN_SIZE_Y - SIZE_Y / 2 },
+		UNDER_RIGHT,
+		UNDER_LEFT,
+		TOP_RIGHT,
+		TOP_LEFT,
+		MAX
+	};
+
+	DESTINATION_PLACE nextDestPlace_;
+
+	// ボスの移動先のテーブル
+	const Vector2 DESTINATION[DESTINATION_PLACE::MAX] =
+	{
 		{ Application::SCREEN_SIZE_X / 3 * 2,	Application::SCREEN_SIZE_Y - SIZE_Y / 2 },
+		{ Application::SCREEN_SIZE_X / 3,		Application::SCREEN_SIZE_Y - SIZE_Y / 2 },
+		{ Application::SCREEN_SIZE_X / 3 * 2,	SIZE_Y / 2 },
+		{ Application::SCREEN_SIZE_X / 3,		SIZE_Y / 2 },
 	};
 
 	// 死亡演出のカウンター
