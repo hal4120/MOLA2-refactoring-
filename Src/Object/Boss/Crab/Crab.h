@@ -10,11 +10,14 @@ public:
 	static constexpr int LOAD_SIZE = 96;
 
 	// 画像の拡大率(元画像が小さいため拡大して使用する)
-	static constexpr float SCALE = 4.0f;
+	static constexpr float SCALE = 6.0f;
 
-	// 最終的に描画される際のサイズ(当たり判定などで使用するサイズ)
-	static constexpr float SIZE_X = LOAD_SIZE * SCALE;
-	static constexpr float SIZE_Y = (LOAD_SIZE * SCALE) / 2.0f;
+	// 最終的なボス自体のサイズ(当たり判定などで使用するサイズ)
+	static constexpr float SIZE_X = 61 * SCALE;
+	static constexpr float SIZE_Y = 35 * SCALE;
+
+	// 描画する際の中央座標
+	const Vector2 DRAW_CENTER_POS = { LOAD_SIZE * 0.6, LOAD_SIZE * 0.84 };
 
 	// モーションの列挙型定義
 	enum class MOTION {
@@ -62,6 +65,8 @@ public:
 	// 死亡演出の長さ
 	static constexpr int DEATH_PERFOR_TIME = 180;
 
+	static constexpr int DESTINATION_INDEX = 6;
+
 #pragma endregion
 
 	Crab(const Vector2& playerPos);
@@ -96,6 +101,11 @@ private:
 
 	// ボス自体の動きのベクトル
 	Vector2 moveVec_;
+
+	// ボスの移動先のテーブル
+	const Vector2 DESTINATION[DESTINATION_INDEX] =
+	{
+	};
 
 	// 死亡演出のカウンター
 	int deathCou_;
