@@ -54,6 +54,8 @@ protected:
 	int maxHP;
 
 	float angle_;
+	float ofsetAngle_;
+	float totalAngle_;
 
 	bool end_;
 

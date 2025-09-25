@@ -14,7 +14,14 @@
 Kraken::Kraken(const Vector2& playerPos) :
 	BossBase(playerPos),
 
+	idleTime_(0),
+
 	moveVec_(),
+	moveInit_(false),
+
+	attackState_(ATTACK_KINDS::NON),
+	attackInit_(false),
+	attackEnd_(false),
 
 	deathCou_(0),
 
@@ -42,11 +49,14 @@ void Kraken::Load(void)
 	unit_.para_.radius = SIZE_Y / 2;
 	drawCenter_ = { LOAD_SIZE / 3,LOAD_SIZE / 2 };
 
+	ofsetAngle_ = Utility::Deg2RadF(180.0f);
+
 	maxHP = HP_MAX;
 
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;
 
 #define SET_STATE(state, func) stateFuncPtr[(int)(state)] = static_cast<STATEFUNC>(func)
+	SET_STATE(STATE::IDLE, &Kraken::Idle);
 	SET_STATE(STATE::MOVE, &Kraken::Move);
 	SET_STATE(STATE::ATTACK, &Kraken::Attack);
 	SET_STATE(STATE::DAMAGE, &Kraken::Damage);
@@ -65,7 +75,8 @@ void Kraken::Init(void)
 
 	state_ = (int)STATE::MOVE;
 
-	moveVec_ = { 0.0f,1.0f };
+	moveInit_ = false;
+	moveVec_ = { 0.0f,0.0f };
 
 	deathCou_ = 0;
 
@@ -96,7 +107,6 @@ void Kraken::HpDecrease(int damage)
 	GameScene::Slow(20);
 	GameScene::Shake();
 
-	state_ = (int)STATE::DAMAGE;
 	ChangeMotion((int)MOTION::DAMAGE, false);
 	animCounter_ = 1;
 
@@ -129,14 +139,54 @@ bool Kraken::Timer(void)
 	return true;
 }
 
+void Kraken::Idle(void)
+{
+	if (--idleTime_ <= 0) {
+		idleTime_ = 0;
+		state_ = (int)STATE::MOVE;
+	}
+}
+
 void Kraken::Move(void)
 {
-	static int cou = 0;
-	if (++cou > 200) {
-		cou = 0;
-		attackInit_ = false;
-		state_ = (int)STATE::ATTACK;
+#pragma region à⁄ìÆèÛë‘Ç÷ëJà⁄å„ ÇPâÒñ⁄ÇÃèàóù
+	if (!moveInit_) {
+		auto destinationRotyly = [&](void)->Vector2 {
+			Vector2 ret = DESTINATION_TABLE[GetRand(DESTINATION_POS_NUM)];
+			while (true) {
+				if (ret == destination_) { ret = DESTINATION_TABLE[GetRand(DESTINATION_POS_NUM)]; }
+				else { break; }
+			}
+			return ret;
+			};
+
+		destination_ = destinationRotyly();
+
+		moveVec_ = destination_ - unit_.pos_;
+		if (moveVec_ != 0.0f) {
+			moveVec_ = Utility::Normalize(moveVec_) * unit_.para_.speed;
+			angle_ = atan2f(moveVec_.y, moveVec_.x);
+		}
+
+		moveInit_ = true;
 	}
+#pragma endregion
+#pragma region à⁄ìÆèàóù
+	unit_.pos_ += moveVec_;
+	ChangeMotion((int)MOTION::MOVE);
+#pragma endregion
+#pragma region à⁄ìÆèIóπîªíË çUåÇèÛë‘Ç÷ëJà⁄
+	if ((destination_ - unit_.pos_).Abs() <= unit_.para_.speed / 2) {
+		state_ = (int)STATE::ATTACK;
+		attackInit_ = false;
+
+		ChangeMotion((int)MOTION::IDLE);
+
+		angle_ = Utility::VecToAngle(playerPos_ - unit_.pos_);
+
+		moveInit_ = false;
+	}
+#pragma endregion
 }
 
 void Kraken::Attack(void)
@@ -144,7 +194,8 @@ void Kraken::Attack(void)
 #pragma region çUåÇèÛë‘Ç÷ëJà⁄å„ ÇPâÒñ⁄ÇÃèàóù
 	if (!attackInit_) {
 
-		attackInterval_ = ATTACK_INTERVAL;
+		idleTime_ = ATTACK_INTERVAL;
+
 		attackInit_ = true;
 		attackEnd_ = false;
 
@@ -163,11 +214,12 @@ void Kraken::Attack(void)
 		}
 	}
 #pragma endregion
-
 #pragma region çUåÇèÛë‘íÜÇÃÇ›çsÇ§çXêVèàóù Ç‹ÇΩçUåÇèIóπîªíf
 	switch (attackState_)
 	{
 	case Kraken::ATTACK_KINDS::SUMI:
+		angle_ = Utility::VecToAngle(playerPos_ - unit_.pos_);
+		angle_ += Utility::Deg2RadF(180.0f);
 		sumi_->Shot();
 		if (sumi_->End()) { attackEnd_ = true; }
 		break;
@@ -175,11 +227,10 @@ void Kraken::Attack(void)
 		break;
 	}
 #pragma endregion
-
 #pragma region çUåÇèIóπ í èÌèÛë‘Ç÷ëJà⁄
 	if (attackEnd_) {
-		attackInterval_ = ATTACK_INTERVAL;
-		state_ = (int)STATE::MOVE;
+		idleTime_ = ATTACK_INTERVAL;
+		state_ = (int)STATE::IDLE;
 		ChangeMotion((int)MOTION::IDLE);
 	}
 #pragma endregion

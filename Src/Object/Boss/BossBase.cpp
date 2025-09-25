@@ -20,7 +20,11 @@ BossBase::BossBase(const Vector2& playerPos) :
 	animInterval_(),
 	animLoop_(),
 	enCount_(true),
+
+	totalAngle_(0.0f),
 	angle_(0.0f),
+	ofsetAngle_(0.0f),
+
 	maxHP(-1),
 	end_(false)
 {
@@ -39,6 +43,8 @@ void BossBase::Update(void)
 	Invi();
 	if (enCount_) { EnCount(); }
 	else { (this->*stateFuncPtr[state_])(); }
+	totalAngle_ = angle_ + ofsetAngle_;
+
 	Animation();
 }
 
@@ -47,7 +53,7 @@ void BossBase::Draw(void)
 	AttackDraw();
 
 	if (!unit_.isAlive_) { return; }
-	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, drawCenter_.x, drawCenter_.y, SCALE, SCALE, angle_, imgs_.at((int)motion_).at(animCounter_), true, reverse_);
+	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, drawCenter_.x, drawCenter_.y, SCALE, SCALE, totalAngle_, imgs_.at((int)motion_).at(animCounter_), true, reverse_);
 
 
 	// ìñÇΩÇËîªíËÇÃï`âÊÇÃÉâÉÄÉ_ä÷êî
@@ -59,15 +65,14 @@ void BossBase::Draw(void)
 			DrawCircleAA(unit_.pos_.x, unit_.pos_.y, unit_.para_.radius, 30, 0xffffff);
 			break;
 		case CollisionShape::RECTANGLE:
-			DrawBox(unit_.pos_.x - unit_.para_.size.x / 2, unit_.pos_.y - unit_.para_.size.y / 2, unit_.pos_.x + unit_.para_.size.x / 2, unit_.pos_.y + unit_.para_.size.y / 2, 0xffffff, true);
+			DrawBoxAA(unit_.pos_.x - unit_.para_.size.x / 2, unit_.pos_.y - unit_.para_.size.y / 2, unit_.pos_.x + unit_.para_.size.x / 2, unit_.pos_.y + unit_.para_.size.y / 2, 0xffffff, true);
 			break;
 		case CollisionShape::ELLIPSE:
-			DrawOval(unit_.pos_.x, unit_.pos_.y, unit_.para_.size.x / 2, unit_.para_.size.y / 2, 0xffffff, true);
+			DrawOvalAA(unit_.pos_.x, unit_.pos_.y, unit_.para_.size.x / 2, unit_.para_.size.y / 2, 30, 0xffffff, true);
 			break;
 		}
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		};
-
 	// ìñÇΩÇËîªíËÇÃï`âÊ
 	DrawDebug();
 
@@ -84,8 +89,9 @@ void BossBase::Release(void)
 
 void BossBase::ChangeMotion(int motion, bool loop)
 {
-	motion_ = motion;
 	animLoop_ = loop;
+	if (loop && motion_ == motion) { return; }
+	motion_ = motion;
 	animCounter_ = 0;
 	animInterval_ = 0;
 }

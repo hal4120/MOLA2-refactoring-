@@ -86,9 +86,10 @@ public:
 private:
 
 	// ó‘Ô‚Ì—ñ‹“Œ^’è‹`
-	enum class STATE { MOVE, ATTACK, DAMAGE, DEATH, MAX };
+	enum class STATE { IDLE, MOVE, ATTACK, DAMAGE, DEATH, MAX };
 
 	// ó‘Ô•ÊŠÖ”------------------------------------------
+	void Idle(void);
 	void Move(void);
 	void Attack(void);
 	void Damage(void);
@@ -105,15 +106,35 @@ private:
 	int deathCou_;
 
 
+	int idleTime_;
+
 #pragma region ˆÚ“®ŠÖŒW
+
+	// ’è”
+	static constexpr int DESTINATION_POS_NUM = 9;
+	const Vector2 DESTINATION_TABLE[DESTINATION_POS_NUM] =
+	{
+		{1600 / 6 * 1.0f,900 / 6 * 1.0f},
+		{1600 / 6 * 3.0f,900 / 6 * 1.0f},
+		{1600 / 6 * 5.0f,900 / 6 * 1.0f},
+		{1600 / 6 * 1.0f,900 / 6 * 3.0f},
+		{1600 / 6 * 3.0f,900 / 6 * 3.0f},
+		{1600 / 6 * 5.0f,900 / 6 * 3.0f},
+		{1600 / 6 * 1.0f,900 / 6 * 5.0f},
+		{1600 / 6 * 3.0f,900 / 6 * 5.0f},
+		{1600 / 6 * 5.0f,900 / 6 * 5.0f}
+	};
+
+
+	// ˆÚ“®‘JˆÚŒã1‰ñ–Ú‚ğŒ©•ª‚¯‚é•Ï”
+	bool moveInit_;
+
+	Vector2 destination_;
 
 #pragma endregion
 
 
 #pragma region UŒ‚ŠÖŒW
-
-	// UŒ‚‚ÌŠÔŠu‚ğŠÇ—‚·‚éƒJƒEƒ“ƒ^[
-	int attackInterval_;
 
 	// UŒ‚‘JˆÚŒã1‰ñ–Ú‚ğŒ©•ª‚¯‚é•Ï”
 	bool attackInit_;
