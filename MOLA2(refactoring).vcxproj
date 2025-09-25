@@ -136,6 +136,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\Manager\Input\KeyManager.cpp" />
+    <ClCompile Include="Src\Object\Boss\Crab\Attack\Bubble.cpp" />
+    <ClCompile Include="Src\Object\Boss\Crab\Attack\BubbleShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Crab\Crab.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sumi\Sumi.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sumi\SumiShooter.cpp" />
@@ -199,6 +201,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Manager\Input\KeyManager.h" />
+    <ClInclude Include="Src\Object\Boss\Crab\Attack\Bubble.h" />
+    <ClInclude Include="Src\Object\Boss\Crab\Attack\BubbleShooter.h" />
     <ClInclude Include="Src\Object\Boss\Crab\Crab.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sumi\Sumi.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sumi\SumiShooter.h" />
