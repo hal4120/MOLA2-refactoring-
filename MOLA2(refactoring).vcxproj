@@ -137,8 +137,10 @@
   <ItemGroup>
     <ClCompile Include="Src\Manager\Input\KeyManager.cpp" />
     <ClCompile Include="Src\Object\Boss\Crab\Crab.cpp" />
+    <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sphere\Sphere.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sumi\Sumi.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sumi\SumiShooter.cpp" />
+    <ClCompile Include="Src\Object\Boss\Kraken\Attack\Tentacle\Tentacle.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Kraken.cpp" />
     <ClCompile Include="Src\Object\Enemy\Ika\Ika.cpp" />
     <ClCompile Include="Src\Object\Stage\Green\GreenStage.cpp" />
@@ -200,8 +202,10 @@
   <ItemGroup>
     <ClInclude Include="Src\Manager\Input\KeyManager.h" />
     <ClInclude Include="Src\Object\Boss\Crab\Crab.h" />
+    <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sphere\Sphere.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sumi\Sumi.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sumi\SumiShooter.h" />
+    <ClInclude Include="Src\Object\Boss\Kraken\Attack\Tentacle\Tentacle.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Kraken.h" />
     <ClInclude Include="Src\Object\Enemy\Ika\Ika.h" />
     <ClInclude Include="Src\Object\Stage\Green\GreenStage.h" />
