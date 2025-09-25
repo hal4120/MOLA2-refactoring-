@@ -4,6 +4,7 @@
 #include<cmath>
 
 #include"../../Application/Application.h"
+#include"../../Manager/Input/KeyManager.h"
 #include"../../scene/SceneManager/SceneManager.h"
 #include"../../Manager/Sound/SoundManager.h"
 #include"../../Manager/BlastEffect/BlastEffectManager.h"
@@ -40,7 +41,6 @@ GameScene::GameScene():
 	stage_(nullptr),
 	eMng_(nullptr),
 	boss_(nullptr),
-	pauseKey_(),
 	time_(0.0f),
 	enCounter_(0.0f)
 {
@@ -61,7 +61,6 @@ void GameScene::Load(void)
 	blast_ = new BlastEffectManager();
 	blast_->Load();
 
-	auto kinds = SelectScene::GetNowBoss();
 	
 	
 	player_ = new Player();
@@ -70,6 +69,7 @@ void GameScene::Load(void)
 	collision_->Add(player_->ParryIns());
 	collision_->Add(player_->LaserIns());
 
+	auto kinds = SelectScene::GetNowBoss();
 
 	switch (kinds)
 	{
@@ -89,7 +89,7 @@ void GameScene::Load(void)
 		break;
 	case SelectScene::BOSS_KINDS::KRAKEN:
 
-		stage_ = new BlueStage();
+		stage_ = new OrangeStage();
 
 		boss_ = new Kraken(player_->GetUnit().pos_);
 
@@ -147,14 +147,11 @@ void GameScene::Init(void)
 
 void GameScene::Update(void)
 {
-	Input();
-
-	if (pauseKey_.down) {
+	if (KEY::GetIns().GetInfo(KEY_TYPE::PAUSE).down) {
 		SceneManager::GetInstance().PushScene(std::make_shared<GamePauseScene>());
 		Smng::GetIns().Play(SOUND::SELECT, true);
 		return;
 	}
-
 
 	if (hitStop_ > 0) { hitStop_--; return; }
 	if (shake_ > 0) { shake_--; }
@@ -162,7 +159,6 @@ void GameScene::Update(void)
 		slow_--;
 		if (slow_ % slowInter_ != 0) { return; }
 	}
-
 
 	stage_->Update();
 	player_->Update();
@@ -276,24 +272,6 @@ void GameScene::Release(void)
 	}
 
 	DeleteGraph(mainScreen_);
-}
-
-
-void GameScene::Input(void)
-{
-	int input = GetJoypadInputState(DX_INPUT_PAD1);
-	XINPUT_STATE state = {};
-	if (GetJoypadXInputState(DX_INPUT_PAD1, &state) != 0) { state = {}; }
-
-	pauseKey_.prev = pauseKey_.now;
-	pauseKey_.now = (
-		(CheckHitKey(KEY_INPUT_ESCAPE) == 0) &&
-		(state.Buttons[XINPUT_BUTTON_START] == 0)
-		) ? false : true;
-	pauseKey_.down = (!pauseKey_.prev && pauseKey_.now) ? true : false;
-	pauseKey_.up = (pauseKey_.prev && !pauseKey_.now) ? true : false;
-
-
 }
 
 void GameScene::Shake(ShakeKinds kinds, ShakeSize size, int time)

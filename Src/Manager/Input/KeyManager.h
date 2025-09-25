@@ -32,6 +32,8 @@ public:
 		SPECIAL_ATTACK,
 
 		// ƒVƒXƒeƒ€‘€ì
+		PAUSE,
+
 		GAME_END,
 
 		MAX,

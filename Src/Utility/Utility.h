@@ -6,7 +6,6 @@
 
 class Utility
 {
-
 public:
 
 	// ラジアン(rad)・度(deg)変換用

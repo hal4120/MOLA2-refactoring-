@@ -59,11 +59,6 @@ private:
 
 	BossBase* boss_;
 
-
-	struct KeyInfo { bool down = false, up = false, prev = false, now = false; };
-	KeyInfo pauseKey_;
-	void Input(void);
-
 	// ŽžŠÔ
 	float time_;
 

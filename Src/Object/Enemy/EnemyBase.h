@@ -7,24 +7,83 @@
 class EnemyBase : public UnitBase
 {
 public:
+	enum class DIR { UP, DOWN, LEFT, RIGHT, MAX };
 	enum NUMBER { ONE, TWO, THREE, FOUR, FIVE, MAX };
 
-	const Vector2 RES_POS[NUMBER::MAX] =
+	const Vector2 RES_POS[(int)DIR::MAX][NUMBER::MAX] =
 	{
-		{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
-		(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 1 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)},
+		{
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 1 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			0.0f - (unit_.para_.size.y / 2.0f)},
 
-		{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
-		(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 2 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)},
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 2 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			0.0f - (unit_.para_.size.y / 2.0f)},
 
-		{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
-		(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 3 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)},
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 3 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			0.0f - (unit_.para_.size.y / 2.0f)},
 
-		{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
-		(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 4 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)},
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 4 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			0.0f - (unit_.para_.size.y / 2.0f)},
 
-		{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
-		(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 5 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)}
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 5 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			0.0f - (unit_.para_.size.y / 2.0f)},
+		},
+		{
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 1 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			Application::SCREEN_SIZE_Y - (unit_.para_.size.y / 2.0f)},
+
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 2 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			Application::SCREEN_SIZE_Y - (unit_.para_.size.y / 2.0f)},
+
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 3 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			Application::SCREEN_SIZE_Y - (unit_.para_.size.y / 2.0f)},
+
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 4 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			Application::SCREEN_SIZE_Y - (unit_.para_.size.y / 2.0f)},
+
+			{(Application::SCREEN_SIZE_X / NUMBER::MAX) * 5 - (Application::SCREEN_SIZE_X / NUMBER::MAX / 2),
+			Application::SCREEN_SIZE_Y - (unit_.para_.size.y / 2.0f)},
+		},
+		{
+			{0.0f - (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 1 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)	},
+
+			{0.0f - (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 2 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)	},
+
+			{0.0f - (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 3 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)	},
+
+			{0.0f - (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 4 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)	},
+
+			{0.0f - (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 5 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)}
+		},
+		{
+			{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 1 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)},
+
+			{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 2 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)},
+
+			{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 3 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)},
+
+			{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 4 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)},
+
+			{Application::SCREEN_SIZE_X + (unit_.para_.size.x / 2.0f),
+			(Application::SCREEN_SIZE_Y / NUMBER::MAX) * 5 - (Application::SCREEN_SIZE_Y / NUMBER::MAX / 2)}
+		}
+	};
+
+	const Vector2 MOVE_VEC_TABLE[(int)DIR::MAX] =
+	{
+		{0.0f,1.0f},
+		{0.0f,-1.0f},
+		{1.0f,0.0f},
+		{-1.0f,0.0f}
 	};
 
 	static constexpr float PARRY_SPEED = 20.0f;
@@ -52,6 +111,8 @@ protected:
 	// 番号
 	NUMBER number_;
 
+	DIR dir_;
+
 	// アニメーション関係
 	int animSpeed;
 	int animCounter_;
@@ -61,7 +122,7 @@ protected:
 	// リスポーン関係
 	int respawnCounter_;
 	int respawnTime;
-	void Respawn(void);
+	virtual void Respawn(void);
 
 	// 移動
 	Vector2 moveVec_;
