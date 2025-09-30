@@ -49,8 +49,9 @@ void Bubble::Draw(void)
 		unit_.pos_.x, 
 		unit_.pos_.y, 
 		unit_.para_.radius,
-		0xffffff, 
-		true);
+		0xffffff,
+		false
+	);
 }
 
 void Bubble::OnCollision(UnitBase* other)

@@ -126,6 +126,11 @@ void Crab::HpDecrease(int damage)
 	}
 }
 
+void Crab::DestinationLottery(void)
+{
+
+}
+
 std::vector<UnitBase*> Crab::AttackIns(void)
 {
 	std::vector<UnitBase*> ret;
@@ -150,16 +155,13 @@ void Crab::Move(void)
 	if (len > 1.0f)
 	{
 		// ³‹K‰»
-		dir.x /= len;
-		dir.y /= len;
+		dir /= len;
 
 		// •âŠÔ‚ÅŠŠ‚ç‚©‚É•ûŒü“]Š·
-		moveVec_.x = moveVec_.x * 0.9f + dir.x * 0.1f;
-		moveVec_.y = moveVec_.y * 0.9f + dir.y * 0.1f;
+		moveVec_ = moveVec_ * 0.9f + dir * 0.1f;
 
 		// ˆÚ“®
-		unit_.pos_.x += moveVec_.x * unit_.para_.speed;
-		unit_.pos_.y += moveVec_.y * unit_.para_.speed;
+		unit_.pos_ += moveVec_ * unit_.para_.speed;
 
 		// šcˆÚ“®‚Ì‚Æ‚«‚¾‚¯‰ñ“]
 		if ((nextDestPlace_ == DESTINATION_PLACE::TOP_RIGHT) ||
@@ -176,8 +178,14 @@ void Crab::Move(void)
 			if (t < 0.0f) t = 0.0f;
 			else if (t > 1.0f) t = 1.0f;
 
-			// ‰º ¨ ã‚ÖˆÚ“®’†‚Í‹t‰ñ“]i0 ¨ -ƒÎj
-			angle_ = -DX_PI_F * t;
+			if (moveVec_.y < 0) {
+				// ã•ûŒü‚ÉˆÚ“®’†i‰º ¨ ãj
+				angle_ = DX_PI_F * t;  // © Œ³‚Ì‹ti”½Œv‰ñ‚èj
+			}
+			else {
+				// ‰º•ûŒü‚ÉˆÚ“®’†iã ¨ ‰ºj
+				angle_ = -DX_PI_F * t; // © Œ³‚Ì‹tiŒv‰ñ‚èj
+			}
 		}
 
 		ChangeMotion((int)MOTION::MOVE);
@@ -196,13 +204,13 @@ void Crab::Move(void)
 			break;
 
 		case DESTINATION_PLACE::UNDER_LEFT:
-			nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT;
+			nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT;
 			isReverse(false);
 			angle_ = 0.0f; // ‰º‚Í’ÊíŒü‚«
 			break;
 
 		case DESTINATION_PLACE::TOP_RIGHT:
-			nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT;
+			nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT;
 			isReverse(false);
 			angle_ = DX_PI_F; // ã‚Í‹t‚³‚Ü
 			break;
@@ -213,6 +221,8 @@ void Crab::Move(void)
 			angle_ = DX_PI_F; // ã‚Í‹t‚³‚Ü
 			break;
 		}
+
+
 
 		unit_.para_.speed = MOVE_SPEED;
 		state_ = (int)STATE::ATTACK;
@@ -248,9 +258,9 @@ void Crab::Attack(void)
 		break;
 	case Crab::ATTACK_KINDS::BUBBLE:
 		 bubble_->Shot();
-    if (bubble_->End()) {
-        attackEnd_ = true;
-    }
+		if (bubble_->End()) {
+			attackEnd_ = true;
+		}
 		break;
 	case Crab::ATTACK_KINDS::MAX:
 		break;

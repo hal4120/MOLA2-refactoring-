@@ -18,8 +18,7 @@ BubbleShooter::~BubbleShooter()
 
 void BubbleShooter::Load(void)
 {
-    // バブル画像をロードする（仮：白円なので不要なら消してOK）
-    img_ = LoadGraph("Data/Image/Bubble.png");
+    //img_ = LoadGraph("Data/Image/Boss/Clab/Attack/Bubble.png");
 
     bubbles_.reserve(BUBBLE_NUM);
     for (int i = 0; i < BUBBLE_NUM; i++) {

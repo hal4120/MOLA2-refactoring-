@@ -128,6 +128,8 @@ private:
 		{ Application::SCREEN_SIZE_X / 3,		SIZE_Y / 2 },
 	};
 
+	void DestinationLottery(void);
+
 	// 死亡演出のカウンター
 	int deathCou_;
 
