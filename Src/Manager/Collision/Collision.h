@@ -8,13 +8,19 @@ public:
 	Collision();
 	~Collision();
 
+	// オブジェクト追加
 	void Add(UnitBase* obj) { if (obj) objects_.emplace_back(obj); }
 	void Add(std::vector<UnitBase*> obj) { for (auto& o : obj) { Add(o); } }
+
+	// 情報破棄
 	void Clear(){ objects_.clear(); }
+
+	// 当たり判定実行
 	void Check();
 
 
 private:
+	// オブジェクトのインスタンスを持つ配列
 	std::vector<UnitBase*> objects_;
 
 	// 当たり判定の形の振り分け
