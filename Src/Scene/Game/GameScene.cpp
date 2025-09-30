@@ -61,8 +61,6 @@ void GameScene::Load(void)
 	blast_ = new BlastEffectManager();
 	blast_->Load();
 
-	
-	
 	player_ = new Player();
 	player_->Load();
 	collision_->Add(player_);
