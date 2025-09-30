@@ -55,7 +55,7 @@ void SelectScene::Load(void)
 	Utility::LoadArrayImg("Data/Image/Select/NormalShark.png", 6, 6, 1, 480, 480, selectObjImgs_[(int)BOSS_KINDS::SHARK]);
 	Utility::LoadArrayImg("Data/Image/Select/HardShark.png", 6, 6, 1, 480, 480, selectObjImgs_[(int)BOSS_KINDS::SHARK_HARD]);
 	Utility::LoadArrayImg("Data/Image/Select/Kraken.png", 6, 6, 1, 480, 480, selectObjImgs_[(int)BOSS_KINDS::KRAKEN]);
-	Utility::LoadArrayImg("Data/Image/Select/Crab.png", 6, 6, 1, 480, 480, selectObjImgs_[(int)BOSS_KINDS::CRAB]);
+	Utility::LoadArrayImg("Data/Image/Select/Crab.png", 4, 4, 1, 600, 250, selectObjImgs_[(int)BOSS_KINDS::CRAB]);
 
 	Utility::LoadImg(arrowImg_, "Data/Image/Effect/Arrow.png");
 
@@ -110,6 +110,8 @@ void SelectScene::Update(void)
 
 			Smng::GetIns().Play(SOUND::SELECT, true);
 
+			selectAnimeCounter_ = 0;
+
 			nowBoss_ = (BOSS_KINDS)( ((int)nowBoss_) - 1 );
 			if (((int)nowBoss_) <= (int)BOSS_KINDS::NON) { nowBoss_ = (BOSS_KINDS)(((int)BOSS_KINDS::MAX) - 1); }
 
@@ -119,6 +121,7 @@ void SelectScene::Update(void)
 
 			Smng::GetIns().Play(SOUND::SELECT, true);
 
+			selectAnimeCounter_ = 0;
 			nowBoss_ = (BOSS_KINDS)(((int)nowBoss_) + 1);
 			if (((int)nowBoss_) >= (int)BOSS_KINDS::MAX) { nowBoss_ = (BOSS_KINDS)(((int)BOSS_KINDS::NON) + 1); }
 
