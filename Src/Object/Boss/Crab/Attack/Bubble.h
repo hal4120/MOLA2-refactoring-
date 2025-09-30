@@ -3,7 +3,8 @@
 
 class Bubble : public UnitBase
 {
-	static constexpr int SIZE = 20;
+public:
+	static constexpr int SIZE = 40;
 	static constexpr float SPEED = 8.0f;
 
 	Bubble(int img);

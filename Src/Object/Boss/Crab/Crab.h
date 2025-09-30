@@ -3,6 +3,8 @@
 
 #include"../../../Application/Application.h"
 
+#include "Attack/BubbleShooter.h"
+
 class Crab : public BossBase
 {
 public:
@@ -144,16 +146,18 @@ private:
 	{
 		NON = -1,
 
+		BUBBLE,
+
 		MAX
 	};
 
 	// 現在の攻撃
 	ATTACK_KINDS attackState_;
 	// 攻撃の種類の抽選を行う関数
-	ATTACK_KINDS AttackLottery(void) { return ATTACK_KINDS::NON; }
+	ATTACK_KINDS AttackLottery(void) { return ATTACK_KINDS::BUBBLE; }
 
 	//各攻撃のインスタンス----
-	
+	BubbleShooter* bubble_;
 	//------------------------
 
 	// 攻撃の各主要関数を呼び出す場所---

@@ -8,11 +8,13 @@
 #include"../../../Scene/Game/GameScene.h"
 
 #include"../../Enemy/EnemyBase.h"
+#include"../../Player/Special/PlayerLaser.h"
 
 Crab::Crab(const Vector2& playerPos) :
 	BossBase(playerPos),
 	moveVec_(),
-	deathCou_(0)
+	deathCou_(0),
+	bubble_()
 {
 }
 
@@ -48,7 +50,8 @@ void Crab::Load(void)
 
 #pragma region 攻撃のロード
 
-
+	bubble_ = new BubbleShooter(unit_.pos_, playerPos_);
+	bubble_->Load();
 
 #pragma endregion
 }
@@ -56,9 +59,6 @@ void Crab::Load(void)
 void Crab::Init(void)
 {
 	unit_.isAlive_ = true;
-
-	//unit_.pos_.x = Application::SCREEN_SIZE_X + SIZE_X;
-	//unit_.pos_.y = Application::SCREEN_SIZE_Y - SIZE_Y / 2;
 
 	// ボスの初期位置
 	unit_.pos_ = DESTINATION[DESTINATION_PLACE::UNDER_RIGHT];
@@ -81,7 +81,7 @@ void Crab::Init(void)
 	end_ = false;
 
 #pragma region 攻撃の初期化
-
+	bubble_->Init();
 #pragma endregion
 }
 
@@ -92,6 +92,13 @@ void Crab::OnCollision(UnitBase* other)
 		HpDecrease(5);
 		return;
 	}
+
+	if (dynamic_cast<PlayerLaser*>(other))
+	{
+		HpDecrease(3);
+		unit_.inviciCounter_ = 5;
+		return;
+	}
 }
 
 void Crab::HpDecrease(int damage)
@@ -99,7 +106,7 @@ void Crab::HpDecrease(int damage)
 	GameScene::Slow(20);
 	GameScene::Shake();
 
-	state_ = (int)STATE::DAMAGE;
+	//state_ = (int)STATE::DAMAGE;
 	ChangeMotion((int)MOTION::DAMAGE, false);
 	animCounter_ = 1;
 
@@ -123,8 +130,7 @@ std::vector<UnitBase*> Crab::AttackIns(void)
 {
 	std::vector<UnitBase*> ret;
 
-	//for (auto& ins : sumi_->Sumis()) { ret.emplace_back(ins); }
-
+	for (auto& ins : bubble_->Bubbles()) { ret.emplace_back(ins); }
 	return ret;
 }
 
@@ -227,10 +233,34 @@ void Crab::Attack(void)
 		{
 		case Crab::ATTACK_KINDS::NON:
 			break;
+		case Crab::ATTACK_KINDS::BUBBLE:
+			bubble_->Init();
+			ChangeMotion((int)MOTION::ATTACK3);
+			break;
 		case Crab::ATTACK_KINDS::MAX:
 			break;
 		}
 	}
+
+	switch (attackState_)
+	{
+	case Crab::ATTACK_KINDS::NON:
+		break;
+	case Crab::ATTACK_KINDS::BUBBLE:
+		 bubble_->Shot();
+    if (bubble_->End()) {
+        attackEnd_ = true;
+    }
+		break;
+	case Crab::ATTACK_KINDS::MAX:
+		break;
+	}
+
+	if (attackEnd_) {
+		state_ = (int)STATE::MOVE;
+		attackInit_ = false;
+	}
+
 
 	// デバック用処理
 	if (CheckHitKey(KEY_INPUT_1)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT; }
@@ -249,7 +279,23 @@ void Crab::Damage(void)
 
 void Crab::Death(void)
 {
-
+	if (++deathCou_ >= DEATH_PERFOR_TIME) {
+		deathCou_ = 0;
+		unit_.isAlive_ = false;
+		end_ = true;
+	}
+	else {
+		angle_ += Utility::Deg2RadF(1.0f);
+		if (deathCou_ % 10 == 0) {
+			Vector2 point = unit_.pos_;
+			point += Vector2(
+				(float)(GetRand((int)(unit_.para_.size.x)) - unit_.para_.size.x / 2.0f),
+				(float)(GetRand((int)(unit_.para_.size.y)) - unit_.para_.size.y / 2.0f)
+			);
+			BlastEffectManager::On(point);
+		}
+		Smng::GetIns().Play(SOUND::GAME_END);
+	}
 }
 
 void Crab::isReverse(bool isReverse)
@@ -268,12 +314,15 @@ void Crab::isReverse(bool isReverse)
 
 void Crab::AttackUpdate(void)
 {
+	bubble_->Update();
 }
 
 void Crab::AttackDraw(void)
 {
+	bubble_->Draw();
 }
 
 void Crab::AttackRelease(void)
 {
+	bubble_->Release();
 }
