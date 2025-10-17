@@ -27,13 +27,17 @@ void Collision::Check()
 			const Base& ua = a->GetUnit();
 			const Base& ub = b->GetUnit();
 
+			// 属性が一緒なら判定を行わずにスキップ
 			if (ua.para_.colliType == ub.para_.colliType)continue;
 
+			// どちらかでも生存フラグが切れていたら判定を行わずにスキップ
 			if ((ua.aliveCollision_ && !ua.isAlive_) || (ub.aliveCollision_ && !ub.isAlive_)) continue;
 
+			// どちらかが無敵判定の状態にあれば判定を行わずにスキップ
 			if (ua.isInvici_ && ua.inviciCounter_ > 0)continue;
 			if (ub.isInvici_ && ub.inviciCounter_ > 0)continue;
 
+			// 判定を実行し、当たっていれば各々のOnCollisionを当たった相手を引数にして呼び出す
 			if (IsHit(ua, ub)) {
 				a->OnCollision(b);
 				b->OnCollision(a);
