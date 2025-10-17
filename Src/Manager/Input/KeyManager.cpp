@@ -2,16 +2,19 @@
 
 #include<DxLib.h>
 
+#include"../../Application/Application.h"
+#include"../../Utility/Utility.h"
+
 KeyManager* KeyManager::ins = nullptr;
 
 KeyManager::KeyManager():
 	keyInfo(),
 	keyboardFormat(),
-	controllerButtonFormat()
+	mouceButtonFormat(),
+	controllerButtonFormat(),
+	mouceFixed_(false)
 {
 }
-
-
 
 void KeyManager::Init(void)
 {
@@ -20,6 +23,9 @@ void KeyManager::Init(void)
 
 	// コントローラーのボタンを割り振るとき
 #define SET_C_BUTTON(type,key)controllerButtonFormat[(int)type].emplace_back(key)
+
+	// マウスのボタンを割り振るとき
+#define SET_MOUCE_BUTTON(type,key)mouceButtonFormat[(int)type].emplace_back(key)
 
 	// コントローラーのボタン以外(スティックやトリガーなど)を割り振るとき
 #define SET_C_OTHERS(type,key)controllerOthersFormat[(int)type].emplace_back(key)
@@ -60,10 +66,23 @@ void KeyManager::Init(void)
 
 	SET_KEYBOARD(KEY_TYPE::GAME_END, KEY_INPUT_ESCAPE);
 	SET_C_BUTTON(KEY_TYPE::GAME_END, XINPUT_BUTTON_START);
-
 }
 
 void KeyManager::Update(void)
+{
+	KeyUpdate();
+	MouceUpdate();
+}
+
+void KeyManager::Release(void)
+{
+	for (auto& input : keyboardFormat) { input.clear(); }			keyboardFormat->clear();
+	for (auto& input : controllerButtonFormat) { input.clear(); }	controllerButtonFormat->clear();
+	for (auto& input : mouceButtonFormat) { input.clear(); }		mouceButtonFormat->clear();
+	for (auto& input : controllerOthersFormat) { input.clear(); }	controllerOthersFormat->clear();
+}
+
+void KeyManager::KeyUpdate(void)
 {
 	for (int i = 0; i < (int)KEY_TYPE::MAX; i++) {
 		keyInfo[i].prev = keyInfo[i].now;
@@ -83,6 +102,10 @@ void KeyManager::Update(void)
 
 			if (state.Buttons[input] != 0) { b = true; }
 		}
+		for (auto& input : mouceButtonFormat[i]) {
+			if (b) { break; }
+			if (GetMouseInput() & input) { b = true; }
+		}
 		for (CONTROLLER_OTHERS input : controllerOthersFormat[i]) {
 			if (b) { break; }
 
@@ -94,13 +117,6 @@ void KeyManager::Update(void)
 		keyInfo[i].up = (keyInfo[i].prev && !keyInfo[i].now);
 		keyInfo[i].down = (!keyInfo[i].prev && keyInfo[i].now);
 	}
-}
-
-void KeyManager::Release(void)
-{
-	for (auto& input : keyboardFormat) { input.clear(); }
-	for (auto& input : controllerButtonFormat) { input.clear(); }
-	for (auto& input : controllerOthersFormat) { input.clear(); }
 }
 
 bool KeyManager::ControllerOthersInput(const CONTROLLER_OTHERS& input)
@@ -154,16 +170,39 @@ bool KeyManager::ControllerOthersInput(const CONTROLLER_OTHERS& input)
 	return false;
 }
 
-
-
-bool KeyManager::IsControllerConnected(void)
+void KeyManager::MouceUpdate(void)
 {
-	XINPUT_STATE state = {};
-	if (GetJoypadXInputState(DX_INPUT_PAD1, &state) != 0) { return false; }
-	return true;
+	if (mouceFixed_) {
+
+		mouceInfo.prev = { Application::SCREEN_SIZE_X / 2,Application::SCREEN_SIZE_Y / 2 };
+
+		GetMousePoint(&mouceInfo.now.x, &mouceInfo.now.y);
+
+		Vector2 move = mouceInfo.now.ToVector2() - mouceInfo.prev.ToVector2();
+
+		mouceInfo.move = (move.Length() > MOUCE_THRESHOLD) ? Utility::Normalize(mouceInfo.now - mouceInfo.prev) : Vector2(0.0f, 0.0f);
+
+		SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
+
+	}
+	else {
+
+		mouceInfo.prev = mouceInfo.now;
+
+		GetMousePoint(&mouceInfo.now.x, &mouceInfo.now.y);
+
+		Vector2 move = mouceInfo.now.ToVector2() - mouceInfo.prev.ToVector2();
+
+		mouceInfo.move = (move.Length() > MOUCE_THRESHOLD) ? Utility::Normalize(mouceInfo.now - mouceInfo.prev) : Vector2(0.0f, 0.0f);
+	}
 }
 
-Vector2 KeyManager::GetRightStickVec(void)
+bool KeyManager::GetControllerConnect(void) const
+{
+	return (GetJoypadNum() > 0);
+}
+
+Vector2 KeyManager::GetRightStickVec(void) const
 {
 	XINPUT_STATE state = {};
 	if (GetJoypadXInputState(DX_INPUT_PAD1, &state) != 0) { return { 0.0f,0.0f }; }
@@ -176,7 +215,8 @@ Vector2 KeyManager::GetRightStickVec(void)
 	return vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
 }
 
-Vector2 KeyManager::GetLeftStickVec(void)
+
+Vector2 KeyManager::GetLeftStickVec(void) const
 {
 	XINPUT_STATE state = {};
 	if (GetJoypadXInputState(DX_INPUT_PAD1, &state) != 0) { return { 0.0f,0.0f }; }

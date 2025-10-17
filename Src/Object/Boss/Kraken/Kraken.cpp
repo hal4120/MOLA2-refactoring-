@@ -173,9 +173,9 @@ void Kraken::Move(void)
 			float sub = 100000.0f;
 
 			for (int i = 0; i < DESTINATION_POS_NUM; i++) {
-				if (sub > (DESTINATION_TABLE[i] - playerPos_).length() &&
+				if (sub > (DESTINATION_TABLE[i] - playerPos_).Length() &&
 					destination_ != DESTINATION_TABLE[i]) {
-					sub = (DESTINATION_TABLE[i] - playerPos_).length();
+					sub = (DESTINATION_TABLE[i] - playerPos_).Length();
 					ret = DESTINATION_TABLE[i];
 				}
 			}

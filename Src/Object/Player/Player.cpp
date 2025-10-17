@@ -169,7 +169,7 @@ void Player::UIDraw(void)
 		DrawRotaGraph3(
 			680, (yy - (150 / 2) - 30), 200, 200,
 			0.2, 0.2, 0,
-			(KEY::GetIns().IsControllerConnected()) ?
+			(KEY::GetIns().GetControllerConnect()) ?
 			specialChargeMaxButtonImg_[specialChargeMaxFlash_ / 10 % 2] :
 			specialChargeMaxKeyImg_[specialChargeMaxFlash_ / 10 % 2],
 			true

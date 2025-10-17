@@ -31,6 +31,11 @@ public:
 	// 解放成功／失敗の判定
 	bool IsReleaseFail(void) const { return isReleaseFail_; };
 
+	// デバッグモードの取得
+	bool IsDebug(void) const { return isDebug_; };
+	// デバッグモードの切り替え
+	void DebugSwitch(void) { isDebug_ = !isDebug_; };
+
 private:
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
@@ -62,6 +67,9 @@ private:
 
 	// 解放失敗
 	bool isReleaseFail_;
+
+	// デバッグフラグ
+	bool isDebug_;
 
 	// FPS
 	FPS* fps_;

@@ -157,7 +157,7 @@ private:
 	// 現在の攻撃
 	ATTACK_KINDS attackState_;
 	// 攻撃の種類の抽選を行う関数
-	ATTACK_KINDS AttackLottery(void) { return ATTACK_KINDS::SPHERE; }
+	ATTACK_KINDS AttackLottery(void) { return ATTACK_KINDS::SUMI; }
 
 	//各攻撃のインスタンス----
 	SumiShooter* sumi_;

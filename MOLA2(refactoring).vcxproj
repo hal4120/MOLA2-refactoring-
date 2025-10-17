@@ -140,6 +140,7 @@
     <ClCompile Include="Src\Object\Boss\Crab\Attack\BubbleShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Crab\Crab.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sphere\Sphere.cpp" />
+    <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sphere\SphereShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sumi\Sumi.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sumi\SumiShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Tentacle\Tentacle.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="Src\Object\Boss\Crab\Attack\BubbleShooter.h" />
     <ClInclude Include="Src\Object\Boss\Crab\Crab.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sphere\Sphere.h" />
+    <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sphere\SphereShooter.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sumi\Sumi.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sumi\SumiShooter.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Tentacle\Tentacle.h" />

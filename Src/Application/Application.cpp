@@ -18,6 +18,7 @@ Application::Application(void)
 	isInitFail_ = false;
 	isReleaseFail_ = false;
 	fps_ = nullptr;
+	isDebug_ = false;
 }
 
 // デストラクタ
@@ -33,7 +34,7 @@ void Application::Init(void)
 
 	// ウィンドウ関連
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);	// サイズ変更
-	ChangeWindowMode(true);	// false = フルスクリーン
+	ChangeWindowMode(false);	// false = フルスクリーン
 
 	// DxLibの初期化
 	isInitFail_ = false;
@@ -89,7 +90,9 @@ void Application::Run(void)
 		ClearDrawScreen();
 
 		SceneManager::GetInstance().Draw();		// シーン管理描画
-		fps_->DrawFrameRate();					// フレームレート描画
+		//fps_->DrawFrameRate();					// フレームレート描画
+
+		if (KEY::GetIns().GetInfo(KEY_TYPE::MAX).down) { DebugSwitch(); }
 
 		ScreenFlip();
 	}

@@ -74,8 +74,7 @@ void BossBase::Draw(void)
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		};
 	// “–‚½‚è”»’è‚Ì•`‰æ
-	DrawDebug();
-
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void BossBase::Release(void)

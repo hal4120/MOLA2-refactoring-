@@ -1,7 +1,6 @@
 #pragma once
 
 #include<vector>
-
 #include"../../Common/Vector2.h"
 
 class KeyManager
@@ -43,21 +42,41 @@ public:
 
 	const KEY_INFO GetInfo(KEY_TYPE k) { return keyInfo[(int)k]; }
 
+	bool GetControllerConnect(void) const;
 
-	// コントローラーが接続されているか
-	bool IsControllerConnected(void);
+	Vector2 GetRightStickVec(void) const;
+	Vector2 GetLeftStickVec(void) const;
 
-	Vector2 GetRightStickVec(void);
-	Vector2 GetLeftStickVec(void);
+	struct MOUCE_INFO
+	{
+		Vector2I now = {};
+		Vector2I prev = {};
+		Vector2 move = {};
+	};
+
+	const MOUCE_INFO GetMouceInfo(void)const { return mouceInfo; }
+	const Vector2 GetMouceMove(void)const { return mouceInfo.move; }
+
+	const Vector2I GetMoucePoint(void)const { return mouceInfo.now; }
+
+	/// <summary>
+	/// マウスカーソルを中心に固定する設定
+	/// (固定した場合GetMouceMove()にてマウスの単位ベクトルを受け取れる)
+	/// </summary>
+	/// <param name="fixed">true=固定する、false=固定しない</param>
+	void SetMouceFixed(bool fixed) { mouceFixed_ = fixed; }
 
 private:
 	void Init(void);
 	void Release(void);
 
+	void KeyUpdate(void);
+
 	KEY_INFO keyInfo[(int)KEY_TYPE::MAX];
 
 	std::vector<int>keyboardFormat[(int)KEY_TYPE::MAX];
 	std::vector<int>controllerButtonFormat[(int)KEY_TYPE::MAX];
+	std::vector<int>mouceButtonFormat[(int)KEY_TYPE::MAX];
 	enum class CONTROLLER_OTHERS
 	{
 		LEFTSTICK_UP,
@@ -73,8 +92,14 @@ private:
 		LEFT_TRIGGER,
 		RIGHT_TRIGGER,
 	};
-	bool ControllerOthersInput(const CONTROLLER_OTHERS& input);
 	std::vector<CONTROLLER_OTHERS>controllerOthersFormat[(int)KEY_TYPE::MAX];
+	bool ControllerOthersInput(const CONTROLLER_OTHERS& input);
+
+
+	void MouceUpdate(void);
+	MOUCE_INFO mouceInfo;
+	bool mouceFixed_;
+	const float MOUCE_THRESHOLD = 1.0f;
 };
 
 using KEY = KeyManager;

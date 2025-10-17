@@ -58,7 +58,7 @@ void Sphere::Update(void)
 	if (--lockOnInterval_ <= 0) {
 		lockOnInterval_ = LOCK_ON_INTERVAL;
 		Vector2 vec = playerPos_ - unit_.pos_;
-		moveVec_ = (vec / vec.length()) * unit_.para_.speed;
+		moveVec_ = (vec / vec.Length()) * unit_.para_.speed;
 	}
 
 	unit_.pos_ += moveVec_;
@@ -102,7 +102,7 @@ void Sphere::OnCollision(UnitBase* other)
 		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
 		if (other->GetUnit().isAlive_) { 
 			unit_.para_.colliType = CollisionType::ALLY;
-			moveVec_ = (vec / vec.length()) * (unit_.para_.speed * 2.0f);
+			moveVec_ = (vec / vec.Length()) * (unit_.para_.speed * 2.0f);
 			GameScene::HitStop(10);
 		}
 		else {
@@ -136,7 +136,7 @@ void Sphere::On(void)
 
 	lockOnInterval_ = LOCK_ON_INTERVAL;
 	Vector2 vec = playerPos_ - unit_.pos_;
-	moveVec_ = (vec / vec.length()) * unit_.para_.speed;
+	moveVec_ = (vec / vec.Length()) * unit_.para_.speed;
 
 	unit_.isAlive_ = true;
 }
