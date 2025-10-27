@@ -92,7 +92,7 @@ void Application::Run(void)
 		SceneManager::GetInstance().Draw();		// シーン管理描画
 		//fps_->DrawFrameRate();					// フレームレート描画
 
-		if (KEY::GetIns().GetInfo(KEY_TYPE::MAX).down) { DebugSwitch(); }
+		if (KEY::GetIns().GetInfo(KEY_TYPE::DEBUG).down) { DebugSwitch(); }
 
 		ScreenFlip();
 	}

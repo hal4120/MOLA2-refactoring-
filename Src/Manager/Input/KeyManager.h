@@ -35,6 +35,8 @@ public:
 
 		GAME_END,
 
+		DEBUG,
+
 		MAX,
 	};
 
