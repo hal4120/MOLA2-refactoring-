@@ -26,7 +26,8 @@ Kraken::Kraken(const Vector2& playerPos) :
 	deathCou_(0),
 
 	sumi_(nullptr),
-	sphere_(nullptr)
+	sphere_(nullptr),
+	tentacle_(nullptr)
 {
 }
 
@@ -67,6 +68,8 @@ void Kraken::Load(void)
 	sumi_->Load();
 	sphere_ = new SphereShooter(unit_.pos_, angle_, playerPos_);
 	sphere_->Load();
+	tentacle_ = new TentacleShooter(playerPos_.x);
+	tentacle_->Load();
 }
 
 void Kraken::Init(void)
@@ -230,6 +233,8 @@ void Kraken::Attack(void)
 			ChangeMotion((int)MOTION::ATTACK1);
 			break;
 		case Kraken::ATTACK_KINDS::TENTACLE:
+			tentacle_->On();
+			ChangeMotion((int)MOTION::ATTACK1,false);
 			break;
 		case Kraken::ATTACK_KINDS::SPHERE:
 			sphere_->On();
@@ -249,6 +254,7 @@ void Kraken::Attack(void)
 		if (sumi_->End()) { attackEnd_ = true; }
 		break;
 	case Kraken::ATTACK_KINDS::TENTACLE:
+		attackEnd_ = tentacle_->End();
 		break;
 	case Kraken::ATTACK_KINDS::SPHERE:
 		attackEnd_ = true;
@@ -299,12 +305,14 @@ void Kraken::AttackUpdate(void)
 {
 	sumi_->Update();
 	sphere_->Update();
+	tentacle_->Update();
 }
 
 void Kraken::AttackDraw(void)
 {
 	sumi_->Draw();
 	sphere_->Draw();
+	tentacle_->Draw();
 }
 
 void Kraken::AttackRelease(void)
@@ -318,6 +326,11 @@ void Kraken::AttackRelease(void)
 		sphere_->Release();
 		delete sphere_;
 		sphere_ = nullptr;
+	}
+	if (tentacle_) {
+		tentacle_->Release();
+		delete tentacle_;
+		tentacle_ = nullptr;
 	}
 }
 

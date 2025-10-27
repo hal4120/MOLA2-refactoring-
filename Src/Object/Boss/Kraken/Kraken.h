@@ -4,6 +4,7 @@
 
 #include"Attack/Sumi/SumiShooter.h"
 #include"Attack/Sphere/SphereShooter.h"
+#include"Attack/Tentacle/TentacleShooter.h"
 
 class Kraken : public BossBase
 {
@@ -157,11 +158,12 @@ private:
 	// 現在の攻撃
 	ATTACK_KINDS attackState_;
 	// 攻撃の種類の抽選を行う関数
-	ATTACK_KINDS AttackLottery(void) { return ATTACK_KINDS::SPHERE; }
+	ATTACK_KINDS AttackLottery(void) { return ATTACK_KINDS::TENTACLE; }
 
 	//各攻撃のインスタンス----
 	SumiShooter* sumi_;
 	SphereShooter* sphere_;
+	TentacleShooter* tentacle_;
 	//------------------------
 
 	// 攻撃の各主要関数を呼び出す場所---
