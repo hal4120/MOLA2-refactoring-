@@ -8,9 +8,9 @@ public:
 	static constexpr float RADIUS = 30.0f;
 	static constexpr int ANIME_NUM = 9;
 
-	static constexpr int LOCK_ON_INTERVAL = 120;
+	static constexpr int LOCK_ON_INTERVAL = 60;
 
-	Sphere(const Vector2& bossPos, const float& bossAngle, const Vector2& playerPos);
+	Sphere(std::vector<int> image, const Vector2& bossPos, const float& bossAngle, const Vector2& playerPos);
 	~Sphere();
 
 	void Load(void)override;
@@ -27,13 +27,15 @@ public:
 
 
 private:
-	int img_[ANIME_NUM];
+	std::vector<int> img_;
 	int animeCounter_;
 	int animeInterval_;
 
 	Vector2 moveVec_;
 
 	int lockOnInterval_;
+
+	float rot_;
 
 	int arrowImg_;
 	float arrowAngle_;

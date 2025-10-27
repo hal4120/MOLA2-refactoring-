@@ -9,8 +9,8 @@ public:
 	~Collision();
 
 	// オブジェクト追加
-	void Add(UnitBase* obj) { if (obj) objects_.emplace_back(obj); }
-	void Add(std::vector<UnitBase*> obj) { for (auto& o : obj) { Add(o); } }
+	static void Add(UnitBase* obj) { if (obj) objects_.emplace_back(obj); }
+	static void Add(std::vector<UnitBase*> obj) { for (auto& o : obj) { Add(o); } }
 
 	// 情報破棄
 	void Clear(){ objects_.clear(); }
@@ -21,7 +21,7 @@ public:
 
 private:
 	// オブジェクトのインスタンスを持つ配列
-	std::vector<UnitBase*> objects_;
+	static std::vector<UnitBase*> objects_;
 
 	// 当たり判定の形の振り分け
 	bool IsHit(const Base& a, const Base& b);

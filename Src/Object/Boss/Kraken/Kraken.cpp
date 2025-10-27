@@ -65,7 +65,7 @@ void Kraken::Load(void)
 
 	sumi_ = new SumiShooter(unit_.pos_, angle_, playerPos_);
 	sumi_->Load();
-	sphere_ = new Sphere(unit_.pos_, angle_, playerPos_);
+	sphere_ = new SphereShooter(unit_.pos_, angle_, playerPos_);
 	sphere_->Load();
 }
 
@@ -93,7 +93,6 @@ void Kraken::Init(void)
 	end_ = false;
 
 	sumi_->Init();
-	sphere_->Init();
 }
 
 void Kraken::OnCollision(UnitBase* other)
@@ -145,7 +144,6 @@ std::vector<UnitBase*> Kraken::AttackIns(void)
 	std::vector<UnitBase*> ret;
 
 	for (auto& ins : sumi_->Sumis()) { ret.emplace_back(ins); }
-	ret.emplace_back(sphere_);
 
 	return ret;
 }

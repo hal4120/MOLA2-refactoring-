@@ -5,8 +5,9 @@
 
 #include"../../Object/Player/Parry/Parry.h"
 
-Collision::Collision():
-	objects_()
+std::vector<UnitBase*> Collision::objects_ = {};
+
+Collision::Collision()
 {
 
 }

@@ -11,21 +11,25 @@
 
 #include"../../../../Player/Player.h"
 
-Sphere::Sphere(const Vector2& bossPos, const float& bossAngle, const Vector2& playerPos):
+
+Sphere::Sphere(std::vector<int> image, const Vector2& bossPos, const float& bossAngle, const Vector2& playerPos):
+	//img_(image),
 	bossPos_(bossPos),
 	bossAngle_(bossAngle),
 	playerPos_(playerPos),
 
-	img_(),
 	animeCounter_(0),
 	animeInterval_(0),
 
 	lockOnInterval_(0),
 
+	rot_(0.0f),
+
 	end_(true),
 
 	moveVec_()
 {
+	img_ = std::move(image);
 }
 
 Sphere::~Sphere()
@@ -34,34 +38,46 @@ Sphere::~Sphere()
 
 void Sphere::Load(void)
 {
-	Utility::LoadArrayImg("Data/Image/Boss/Kraken/Attack/Sphere/Csphere.png", ANIME_NUM, ANIME_NUM, 1, RADIUS * 2, RADIUS * 2, img_);
+	//Utility::LoadArrayImg("Data/Image/Boss/Kraken/Attack/Sphere/Csphere.png", ANIME_NUM, ANIME_NUM, 1, RADIUS * 2, RADIUS * 2, img_);
 	Utility::LoadImg(arrowImg_, "Data/Image/Effect/Arrow.png");
-
-	unit_.para_.colliShape = CollisionShape::CIRCLE;
-	unit_.para_.colliType = CollisionType::ENEMY;
-	unit_.para_.radius = RADIUS * 3;
-
-	unit_.para_.speed = 2.0f;
-
 }
 
 void Sphere::Init(void)
 {
+	unit_.para_.colliShape = CollisionShape::CIRCLE;
+	unit_.para_.colliType = CollisionType::ENEMY;
+	unit_.para_.radius = RADIUS * 3;
+
+	unit_.para_.speed = 3.0f;
+
+	rot_ = 0.0f;
 }
 
 void Sphere::Update(void)
 {
 	if (!unit_.isAlive_) { return; }
 
+	rot_ += 0.1f;
+	if (rot_ > 1000.0f) { rot_ = 0.0f; }
+
 	arrow_ = false;
 
 	if (--lockOnInterval_ <= 0) {
 		lockOnInterval_ = LOCK_ON_INTERVAL;
-		Vector2 vec = playerPos_ - unit_.pos_;
-		moveVec_ = (vec / vec.Length()) * unit_.para_.speed;
+		if (unit_.para_.colliType == CollisionType::ENEMY) {
+			Vector2 vec = playerPos_ - unit_.pos_;
+			moveVec_ = (vec / vec.Length()) * unit_.para_.speed;
+		}
+		else if (unit_.para_.colliType == CollisionType::ALLY) {
+			Vector2 vec = bossPos_ - unit_.pos_;
+			moveVec_ = (vec / vec.Length()) * unit_.para_.speed;
+		}
 	}
 
 	unit_.pos_ += moveVec_;
+
+	unit_.pos_ += Vector2(sinf(rot_), cosf(rot_)) * 3.0f;
+
 	if (
 		(unit_.pos_.x + (unit_.para_.radius) < 0.0f) ||
 		(unit_.pos_.y + (unit_.para_.radius) < 0.0f) ||
@@ -89,11 +105,10 @@ void Sphere::Draw(void)
 	}
 }
 
-
 void Sphere::Release(void)
 {
 	DeleteGraph(arrowImg_);
-	for (auto& id : img_) { DeleteGraph(id); }
+	//for (auto& id : img_) { DeleteGraph(id); }
 }
 
 void Sphere::OnCollision(UnitBase* other)
@@ -119,13 +134,12 @@ void Sphere::OnCollision(UnitBase* other)
 
 	if (dynamic_cast<BossBase*>(other)) {
 		unit_.isAlive_ = false;
+		return;
 	}
 }
 
 void Sphere::On(void)
 {
-	if (unit_.isAlive_) { return; }
-
 	unit_.para_.colliType = CollisionType::ENEMY;
 
 	MATRIX mat = MGetIdent();
