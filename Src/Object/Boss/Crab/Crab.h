@@ -3,7 +3,8 @@
 
 #include"../../../Application/Application.h"
 
-#include "Attack/BubbleShooter.h"
+#include "Attack/Bubble/BubbleShooter.h"
+#include "Attack/Scissors/Scissors.h"
 
 class Crab : public BossBase
 {
@@ -28,14 +29,21 @@ public:
 	enum class MOTION {
 		MOVE,
 		IDLE,
-		ATTACK1, 
+		ATTACK1,
 		ATTACK2,
 		ATTACK3,
 		ATTACK4,
 		SPECIAL,
-		DAMAGE, 
+		DAMAGE,
 		DEATH,
-		MAX };
+		MAX
+	};
+
+	enum class DIR
+	{
+		RIGHT,
+		LEFT,
+	};
 
 	// 各モーションのファイルパス(読み込みを簡略化するための定義)
 	static constexpr const char* MOTION_PATH[(int)MOTION::MAX] =
@@ -99,8 +107,8 @@ private:
 	void Death(void);
 	//-----------------------------------------------------
 
-	// true : 左向き / false : 右向き
-	void isReverse(bool isReverse);
+	// 右向きか左向きの変更
+	void isReverse(DIR dir);
 
 	// HP減少関数
 	void HpDecrease(int damage);
@@ -149,6 +157,7 @@ private:
 		NON = -1,
 
 		BUBBLE,
+		SCISSOR,
 
 		MAX
 	};
@@ -156,10 +165,11 @@ private:
 	// 現在の攻撃
 	ATTACK_KINDS attackState_;
 	// 攻撃の種類の抽選を行う関数
-	ATTACK_KINDS AttackLottery(void) { return ATTACK_KINDS::BUBBLE; }
+	ATTACK_KINDS AttackLottery(void) { return ATTACK_KINDS::SCISSOR; }
 
 	//各攻撃のインスタンス----
 	BubbleShooter* bubble_;
+	Scissors* scissor_;
 	//------------------------
 
 	// 攻撃の各主要関数を呼び出す場所---

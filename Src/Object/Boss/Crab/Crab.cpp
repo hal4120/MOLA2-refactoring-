@@ -53,6 +53,9 @@ void Crab::Load(void)
 	bubble_ = new BubbleShooter(unit_.pos_, playerPos_);
 	bubble_->Load();
 
+	scissor_ = new Scissors(unit_.pos_, playerPos_);
+	scissor_->Load();
+
 #pragma endregion
 }
 
@@ -74,7 +77,7 @@ void Crab::Init(void)
 
 	unit_.hp_ = HP_MAX;
 
-	isReverse(true);
+	isReverse(DIR::LEFT);
 
 	angle_ = 0.0f;
 
@@ -82,6 +85,7 @@ void Crab::Init(void)
 
 #pragma region UŒ‚‚Ì‰Šú‰»
 	bubble_->Init();
+	scissor_->Init();
 #pragma endregion
 }
 
@@ -98,6 +102,10 @@ void Crab::OnCollision(UnitBase* other)
 		HpDecrease(3);
 		unit_.inviciCounter_ = 5;
 		return;
+	}
+
+	if (dynamic_cast<Scissors*>(other)) {
+		HpDecrease(10);
 	}
 }
 
@@ -136,6 +144,7 @@ std::vector<UnitBase*> Crab::AttackIns(void)
 	std::vector<UnitBase*> ret;
 
 	for (auto& ins : bubble_->Bubbles()) { ret.emplace_back(ins); }
+	ret.emplace_back(scissor_);
 	return ret;
 }
 
@@ -148,22 +157,22 @@ bool Crab::Timer(void)
 void Crab::Move(void)
 {	
 	Vector2 target = DESTINATION[nextDestPlace_];
-	Vector2 dir = { target.x - unit_.pos_.x, target.y - unit_.pos_.y };
+	Vector2 moveDir = { target.x - unit_.pos_.x, target.y - unit_.pos_.y };
 
-	float len = sqrtf(dir.x * dir.x + dir.y * dir.y);
+	float len = sqrtf(moveDir.x * moveDir.x + moveDir.y * moveDir.y);
 
 	if (len > 1.0f)
 	{
 		// ³‹K‰»
-		dir /= len;
+		moveDir /= len;
 
 		// •âŠÔ‚ÅŠŠ‚ç‚©‚É•ûŒü“]Š·
-		moveVec_ = moveVec_ * 0.9f + dir * 0.1f;
+		moveVec_ = moveVec_ * 0.9f + moveDir * 0.1f;
 
 		// ˆÚ“®
 		unit_.pos_ += moveVec_ * unit_.para_.speed;
 
-		// šcˆÚ“®‚Ì‚Æ‚«‚¾‚¯‰ñ“]
+		// cˆÚ“®‚Ì‚Æ‚«‚¾‚¯‰ñ“]
 		if ((nextDestPlace_ == DESTINATION_PLACE::TOP_RIGHT) ||
 			(nextDestPlace_ == DESTINATION_PLACE::TOP_LEFT) ||
 			(nextDestPlace_ == DESTINATION_PLACE::UNDER_RIGHT) ||
@@ -199,25 +208,25 @@ void Crab::Move(void)
 		{
 		case DESTINATION_PLACE::UNDER_RIGHT:
 			nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT;
-			isReverse(true);
+			isReverse(DIR::LEFT);
 			angle_ = 0.0f; // ‰º‚Í’ÊíŒü‚«
 			break;
 
 		case DESTINATION_PLACE::UNDER_LEFT:
 			nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT;
-			isReverse(false);
+			isReverse(DIR::RIGHT);
 			angle_ = 0.0f; // ‰º‚Í’ÊíŒü‚«
 			break;
 
 		case DESTINATION_PLACE::TOP_RIGHT:
 			nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT;
-			isReverse(false);
+			isReverse(DIR::RIGHT);
 			angle_ = DX_PI_F; // ã‚Í‹t‚³‚Ü
 			break;
 
 		case DESTINATION_PLACE::TOP_LEFT:
 			nextDestPlace_ = DESTINATION_PLACE::TOP_RIGHT;
-			isReverse(true);
+			isReverse(DIR::LEFT);
 			angle_ = DX_PI_F; // ã‚Í‹t‚³‚Ü
 			break;
 		}
@@ -247,6 +256,10 @@ void Crab::Attack(void)
 			bubble_->Init();
 			ChangeMotion((int)MOTION::ATTACK3);
 			break;
+		case Crab::ATTACK_KINDS::SCISSOR:
+			scissor_->Init();
+			ChangeMotion((int)MOTION::ATTACK2);
+			break;
 		case Crab::ATTACK_KINDS::MAX:
 			break;
 		}
@@ -262,6 +275,11 @@ void Crab::Attack(void)
 			attackEnd_ = true;
 		}
 		break;
+	case Crab::ATTACK_KINDS::SCISSOR:
+		if (scissor_->End()) {
+			attackEnd_ = true;
+		}
+		break;
 	case Crab::ATTACK_KINDS::MAX:
 		break;
 	}
@@ -271,12 +289,14 @@ void Crab::Attack(void)
 		attackInit_ = false;
 	}
 
-
+#ifdef _DEBUG
 	// ƒfƒoƒbƒN—pˆ—
 	if (CheckHitKey(KEY_INPUT_1)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT; }
 	if (CheckHitKey(KEY_INPUT_2)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT; }
 	if (CheckHitKey(KEY_INPUT_3)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::TOP_RIGHT; }
 	if (CheckHitKey(KEY_INPUT_4)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT; }
+#endif // _DEBUG
+
 }
 
 void Crab::Damage(void)
@@ -308,9 +328,9 @@ void Crab::Death(void)
 	}
 }
 
-void Crab::isReverse(bool isReverse)
+void Crab::isReverse(DIR dir)
 {
-	reverse_ = isReverse;
+	reverse_ = (int)dir;
 
 	if (reverse_)
 	{
@@ -325,14 +345,26 @@ void Crab::isReverse(bool isReverse)
 void Crab::AttackUpdate(void)
 {
 	bubble_->Update();
+	scissor_->Update();
 }
 
 void Crab::AttackDraw(void)
 {
 	bubble_->Draw();
+	scissor_->Draw();
 }
 
 void Crab::AttackRelease(void)
 {
-	bubble_->Release();
+	if (bubble_) {
+		bubble_->Release();
+		delete bubble_;
+		bubble_ = nullptr;
+	}
+
+	if (scissor_) {
+		scissor_->Release();
+		delete scissor_;
+		scissor_ = nullptr;
+	}
 }

@@ -2,12 +2,12 @@
 
 #include<DxLib.h>
 
-#include "../../../../Application/Application.h"
-#include "../../../../Scene/Game/GameScene.h"
-#include "../../../../Manager/BlastEffect/BlastEffectManager.h"
-#include "../../../../Manager/Sound/SoundManager.h"
+#include "../../../../../Application/Application.h"
+#include "../../../../../Scene/Game/GameScene.h"
+#include "../../../../../Manager/BlastEffect/BlastEffectManager.h"
+#include "../../../../../Manager/Sound/SoundManager.h"
 
-#include "../../../Player/Player.h"
+#include "../../../../Player/Player.h"
 
 Bubble::Bubble(int img):
 	img_(img),

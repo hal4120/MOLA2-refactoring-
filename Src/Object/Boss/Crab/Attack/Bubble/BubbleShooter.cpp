@@ -18,8 +18,7 @@ BubbleShooter::~BubbleShooter()
 
 void BubbleShooter::Load(void)
 {
-    //img_ = LoadGraph("Data/Image/Boss/Clab/Attack/Bubble.png");
-
+    Utility::LoadImg(img_, "Data/Image/Boss/Clab/Attack/Bubble.png");
     bubbles_.reserve(BUBBLE_NUM);
     for (int i = 0; i < BUBBLE_NUM; i++) {
         bubbles_.emplace_back(new Bubble(img_));
@@ -56,6 +55,9 @@ void BubbleShooter::Release(void)
     for (auto& b : bubbles_) {
         b->Release();
     }
+
+    DeleteGraph(img_);
+    
     bubbles_.clear();
 }
 
