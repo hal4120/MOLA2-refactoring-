@@ -70,6 +70,7 @@ void Kraken::Load(void)
 	sphere_->Load();
 	tentacle_ = new TentacleShooter(playerPos_.x);
 	tentacle_->Load();
+	tackle_ = new KrakenTackle(unit_.pos_, angle_, playerPos_);
 }
 
 void Kraken::Init(void)
@@ -96,6 +97,7 @@ void Kraken::Init(void)
 	end_ = false;
 
 	sumi_->Init();
+	tackle_->Init();
 }
 
 void Kraken::OnCollision(UnitBase* other)
@@ -240,6 +242,8 @@ void Kraken::Attack(void)
 			sphere_->On();
 			break;
 		case Kraken::ATTACK_KINDS::TACKLE:
+			tackle_->On();
+			ChangeMotion((int)MOTION::SPECIAL);
 			break;
 		}
 	}
@@ -260,6 +264,7 @@ void Kraken::Attack(void)
 		attackEnd_ = true;
 		break;
 	case Kraken::ATTACK_KINDS::TACKLE:
+		if (tackle_->GetState() == KrakenTackle::STATE::NON) { attackEnd_ = true; }
 		break;
 	}
 #pragma endregion
@@ -301,11 +306,39 @@ void Kraken::Death(void)
 	}
 }
 
+Kraken::ATTACK_KINDS Kraken::AttackLottery(void)
+{
+	//return ATTACK_KINDS::TACKLE;
+
+	ATTACK_KINDS ret = ATTACK_KINDS::NON;
+
+	int rand = GetRand(10000);
+
+	if (rand <= 2000) {
+		ret = ATTACK_KINDS::SUMI;
+	}
+	else if (rand <= 4000) {
+		ret = ATTACK_KINDS::SPHERE;
+	}
+	else if (rand <= 6000) {
+		ret = ATTACK_KINDS::TENTACLE;
+	}
+	else if (rand <= 8000) {
+		ret = ATTACK_KINDS::TACKLE;
+	}
+	else if (rand <= 10000) {
+		ret = ATTACK_KINDS::TACKLE;
+	}
+
+	return ret;
+}
+
 void Kraken::AttackUpdate(void)
 {
 	sumi_->Update();
 	sphere_->Update();
 	tentacle_->Update();
+	tackle_->Update();
 }
 
 void Kraken::AttackDraw(void)
@@ -313,6 +346,7 @@ void Kraken::AttackDraw(void)
 	sumi_->Draw();
 	sphere_->Draw();
 	tentacle_->Draw();
+	tackle_->Draw();
 }
 
 void Kraken::AttackRelease(void)
@@ -331,6 +365,10 @@ void Kraken::AttackRelease(void)
 		tentacle_->Release();
 		delete tentacle_;
 		tentacle_ = nullptr;
+	}
+	if (tackle_) {
+		delete tackle_;
+		tackle_ = nullptr;
 	}
 }
 

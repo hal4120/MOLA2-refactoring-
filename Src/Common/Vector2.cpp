@@ -363,6 +363,11 @@ bool Vector2::operator<=(const float value) const
 	return (x <= value && y <= value);
 }
 
+Vector2 Vector2::operator-(void) const
+{
+	return Vector2(-x, -y);
+}
+
 Vector2I Vector2::ToVector2I(void) const
 {
 	return Vector2I(Utility::Round(x), Utility::Round(y));
@@ -371,6 +376,29 @@ Vector2I Vector2::ToVector2I(void) const
 float Vector2::Length(void) const
 {
 	return sqrtf(x * x + y * y);
+}
+
+Vector2 Vector2::Normalize(void) const
+{
+	if (Length() == 0.0f) { return {}; }
+	return Vector2(x, y) / Length();
+}
+
+void Vector2::Normalized(void)
+{
+	float len = Length();
+	if (len == 0.0f) { return; }
+	x /=len; y /= len;
+}
+
+Vector2 Vector2::Vertical(void) const
+{
+	if (x != 0.0f) {
+		return { -x,y };
+	}
+	else {
+		return{ y,0.0f };
+	}
 }
 
 Vector2 Vector2::Abs(void) const

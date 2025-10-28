@@ -139,10 +139,13 @@
     <ClCompile Include="Src\Object\Boss\Crab\Attack\Bubble.cpp" />
     <ClCompile Include="Src\Object\Boss\Crab\Attack\BubbleShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Crab\Crab.cpp" />
+    <ClCompile Include="Src\Object\Boss\Kraken\Attack\Involute\Involute.cpp" />
+    <ClCompile Include="Src\Object\Boss\Kraken\Attack\Involute\InvoluteShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sphere\Sphere.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sphere\SphereShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sumi\Sumi.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Sumi\SumiShooter.cpp" />
+    <ClCompile Include="Src\Object\Boss\Kraken\Attack\Tackle\KrakenTackle.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Tentacle\Tentacle.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Attack\Tentacle\TentacleShooter.cpp" />
     <ClCompile Include="Src\Object\Boss\Kraken\Kraken.cpp" />
@@ -208,10 +211,13 @@
     <ClInclude Include="Src\Object\Boss\Crab\Attack\Bubble.h" />
     <ClInclude Include="Src\Object\Boss\Crab\Attack\BubbleShooter.h" />
     <ClInclude Include="Src\Object\Boss\Crab\Crab.h" />
+    <ClInclude Include="Src\Object\Boss\Kraken\Attack\Involute\Involute.h" />
+    <ClInclude Include="Src\Object\Boss\Kraken\Attack\Involute\InvoluteShooter.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sphere\Sphere.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sphere\SphereShooter.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sumi\Sumi.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Sumi\SumiShooter.h" />
+    <ClInclude Include="Src\Object\Boss\Kraken\Attack\Tackle\KrakenTackle.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Tentacle\Tentacle.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Attack\Tentacle\TentacleShooter.h" />
     <ClInclude Include="Src\Object\Boss\Kraken\Kraken.h" />

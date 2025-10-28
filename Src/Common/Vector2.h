@@ -148,9 +148,16 @@ public:
 	bool operator<=(const float value)const;
 
 
+	Vector2 operator-(void)const;
+
 	Vector2I ToVector2I(void)const;
 
 	float Length(void)const;
+
+	Vector2 Normalize(void)const;
+	void Normalized(void);
+
+	Vector2 Vertical(void)const;
 
 	Vector2 Abs(void)const;
 };
