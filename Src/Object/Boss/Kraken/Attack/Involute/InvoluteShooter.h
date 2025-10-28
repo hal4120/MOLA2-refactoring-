@@ -10,7 +10,7 @@ public:
 
 	static constexpr VECTOR LOCAL_POS = { 30.0f,0.0f,0.0f };
 
-	InvoluteShooter();
+	InvoluteShooter(const Vector2& bossPos, const float& bossAngle);
 	~InvoluteShooter();
 
 	void Load(void);
@@ -18,9 +18,20 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	void On(void);
+	void On(void) { shotCount_ = ONE_SHOT_NUM; }
+
+	bool End(void) { return shotCount_ <= 0; }
 
 private:
 	std::vector<int>image_;
 	std::vector<Involute*>involute_;
+
+	int shotCount_;
+
+	const int SHOT_INTERVAL = 12;
+	int shotInterval_;
+	void Shot(void);
+
+	const Vector2& bossPos;
+	const float& bossAngle;
 };

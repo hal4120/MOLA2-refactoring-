@@ -5,7 +5,7 @@
 #include"Attack/Sumi/SumiShooter.h"
 #include"Attack/Sphere/SphereShooter.h"
 #include"Attack/Tentacle/TentacleShooter.h"
-
+#include"Attack/Involute/InvoluteShooter.h"
 #include"Attack/Tackle/KrakenTackle.h"
 
 class Kraken : public BossBase
@@ -168,6 +168,7 @@ private:
 	SphereShooter* sphere_;
 	TentacleShooter* tentacle_;
 	KrakenTackle* tackle_;
+	InvoluteShooter* involute_;
 	//------------------------
 
 	// UŒ‚‚ÌŠeå—vŠÖ”‚ğŒÄ‚Ño‚·êŠ---

@@ -16,11 +16,18 @@ public:
 
 	void OnCollision(UnitBase* other)override;
 
+	void On(Vector2 bossPos);
 
 private:
 	std::vector<int>image_;
 
 	float angle_;
+
+	bool parry_;
+
+	Vector2 bossPos_;
+
+	float radius_;
 
 	const int ANIME_INTERVAL = 10;
 	int animeInterval_;

@@ -145,7 +145,7 @@ void Player::Draw(void)
 
 	// ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	if (unit_.inviciCounter_ / 10 % 2 == 1) { SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100); }
-	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, angle_, img_[animCounter_], true, (bool)dir_);
+	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1.4, angle_, img_[animCounter_], true, (bool)dir_);
 	if (unit_.inviciCounter_ / 10 % 2 == 1) { SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); }
 
 	parry_->Draw();
@@ -206,7 +206,7 @@ void Player::Release(void)
 
 void Player::OnCollision(UnitBase* other)
 {
-	if (state_ == STATE::DEATH) { return; }
+	if (state_ == STATE::DEATH || state_ == STATE::OVER) { return; }
 	GameScene::Shake(ShakeKinds::ROUND, ShakeSize::MEDIUM,10);
 	GameScene::Slow(10);
 
@@ -303,7 +303,16 @@ void Player::Over(void)
 {
 	GameScene::Slow();
 	GameScene::Shake(ShakeKinds::ROUND, ShakeSize::BIG, 20);
-	BlastEffectManager::On(unit_.pos_);
+
+	if ((int)Utility::Rad2DegF(angle_) % 30 == 0) {
+		Vector2 point = unit_.pos_;
+		point += Vector2(
+			(float)(GetRand((int)(unit_.para_.size.x)) - unit_.para_.size.x / 2.0f),
+			(float)(GetRand((int)(unit_.para_.size.y)) - unit_.para_.size.y / 2.0f)
+		);
+		BlastEffectManager::On(point);
+	}
+
 	Smng::GetIns().Play(SOUND::GAME_END);
 
 	unit_.pos_ += knockBackVec_;

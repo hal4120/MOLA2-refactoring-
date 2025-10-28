@@ -2,9 +2,17 @@
 
 #include<string>
 
-InvoluteShooter::InvoluteShooter():
+#include"../../../../../Manager/Collision/Collision.h"
+
+InvoluteShooter::InvoluteShooter(const Vector2& bossPos, const float& bossAngle):
+	bossPos(bossPos),
+	bossAngle(bossAngle),
+
 	image_(),
-	involute_()
+	involute_(),
+
+	shotCount_(0),
+	shotInterval_(0)
 {
 }
 
@@ -22,6 +30,7 @@ void InvoluteShooter::Load(void)
 
 void InvoluteShooter::Update(void)
 {
+	if (shotCount_ > 0) { Shot(); }
 	for (auto& i : involute_) { i->Update(); }
 }
 
@@ -32,12 +41,23 @@ void InvoluteShooter::Draw(void)
 
 void InvoluteShooter::Release(void)
 {
+	for (auto& i : involute_) {
+		if (!i) { continue; }
+		i->Release();
+		delete i;
+		i = nullptr;
+	}
+	involute_.clear();
+
 	for (auto& id : image_) { DeleteGraph(id); }
 }
 
-void InvoluteShooter::On(void)
+void InvoluteShooter::Shot(void)
 {
-	for (int i = 0; i < ONE_SHOT_NUM; i++) {
+	if (++shotInterval_ > SHOT_INTERVAL) {
+		shotInterval_ = 0;
+
+		if (--shotCount_ < 0) { shotCount_ = 0; }
 
 		bool recycle = false;
 
@@ -47,11 +67,12 @@ void InvoluteShooter::On(void)
 
 		}
 
-		if (recycle) { continue; }
+		if (recycle) { return; }
 
 		involute_.emplace_back(new Involute(image_));
 		involute_.back()->Load();
 		involute_.back()->Init();
 
+		Collision::Add(involute_.back());
 	}
 }

@@ -27,7 +27,9 @@ Kraken::Kraken(const Vector2& playerPos) :
 
 	sumi_(nullptr),
 	sphere_(nullptr),
-	tentacle_(nullptr)
+	tentacle_(nullptr),
+	involute_(nullptr),
+	tackle_(nullptr)
 {
 }
 
@@ -70,6 +72,8 @@ void Kraken::Load(void)
 	sphere_->Load();
 	tentacle_ = new TentacleShooter(playerPos_.x);
 	tentacle_->Load();
+	involute_ = new InvoluteShooter(unit_.pos_, angle_);
+	involute_->Load();
 	tackle_ = new KrakenTackle(unit_.pos_, angle_, playerPos_);
 }
 
@@ -308,7 +312,7 @@ void Kraken::Death(void)
 
 Kraken::ATTACK_KINDS Kraken::AttackLottery(void)
 {
-	//return ATTACK_KINDS::TACKLE;
+	return ATTACK_KINDS::INVOLUTE;
 
 	ATTACK_KINDS ret = ATTACK_KINDS::NON;
 
@@ -338,6 +342,7 @@ void Kraken::AttackUpdate(void)
 	sumi_->Update();
 	sphere_->Update();
 	tentacle_->Update();
+	involute_->Update();
 	tackle_->Update();
 }
 
@@ -346,6 +351,7 @@ void Kraken::AttackDraw(void)
 	sumi_->Draw();
 	sphere_->Draw();
 	tentacle_->Draw();
+	involute_->Draw();
 	tackle_->Draw();
 }
 
@@ -365,6 +371,11 @@ void Kraken::AttackRelease(void)
 		tentacle_->Release();
 		delete tentacle_;
 		tentacle_ = nullptr;
+	}
+	if (involute_) {
+		involute_->Release();
+		delete involute_;
+		involute_ = nullptr;
 	}
 	if (tackle_) {
 		delete tackle_;
