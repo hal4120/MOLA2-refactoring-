@@ -18,7 +18,7 @@ BubbleShooter::~BubbleShooter()
 
 void BubbleShooter::Load(void)
 {
-    Utility::LoadImg(img_, "Data/Image/Boss/Clab/Attack/Bubble.png");
+    Utility::LoadImg(img_, "Data/Image/Boss/Crab/Attack/Bubble.png");
     bubbles_.reserve(BUBBLE_NUM);
     for (int i = 0; i < BUBBLE_NUM; i++) {
         bubbles_.emplace_back(new Bubble(img_));
@@ -68,7 +68,7 @@ void BubbleShooter::Shot(void)
 
     // 発射方向（プレイヤー方向）
     Vector2 dir = playerPos_ - bossPos_;
-    float len = sqrtf(dir.x * dir.x + dir.y * dir.y);
+    float len = Utility::Magnitude(dir);
     if (len != 0.0f) {
         dir.x /= len;
         dir.y /= len;

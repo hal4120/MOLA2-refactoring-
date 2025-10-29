@@ -47,6 +47,7 @@ void Crab::Load(void)
 	SET_STATE(STATE::ATTACK, &Crab::Attack);
 	SET_STATE(STATE::DAMAGE, &Crab::Damage);
 	SET_STATE(STATE::DEATH, &Crab::Death);
+	SET_STATE(STATE::IDLE, &Crab::Idle);
 
 #pragma region çUåÇÇÃÉçÅ[Éh
 
@@ -67,7 +68,7 @@ void Crab::Init(void)
 	unit_.pos_ = DESTINATION[DESTINATION_PLACE::UNDER_RIGHT];
 	nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT;
 
-	state_ = (int)STATE::MOVE;
+	state_ = (int)STATE::IDLE;
 
 	moveVec_ = { 0.0f, 0.0f };
 
@@ -77,7 +78,7 @@ void Crab::Init(void)
 
 	unit_.hp_ = HP_MAX;
 
-	isReverse(DIR::LEFT);
+	WhichDir(DIR::LEFT);
 
 	angle_ = 0.0f;
 
@@ -154,12 +155,25 @@ bool Crab::Timer(void)
 	return true;
 }
 
+void Crab::Idle(void)
+{
+	static int cnt = 0;
+
+	ChangeMotion((int)MOTION::IDLE);
+
+	cnt++;
+	if (cnt > 120) {
+		state_ = (int)STATE::MOVE;
+		cnt = 0;
+	}
+}
+
 void Crab::Move(void)
 {	
 	Vector2 target = DESTINATION[nextDestPlace_];
 	Vector2 moveDir = { target.x - unit_.pos_.x, target.y - unit_.pos_.y };
 
-	float len = sqrtf(moveDir.x * moveDir.x + moveDir.y * moveDir.y);
+	float len = Utility::Magnitude(moveDir);
 
 	if (len > 1.0f)
 	{
@@ -184,8 +198,13 @@ void Crab::Move(void)
 
 			// êiçsìx 0.0 (â∫) Å® 1.0 (è„)
 			float t = (bottomY - unit_.pos_.y) / (bottomY - topY);
-			if (t < 0.0f) t = 0.0f;
-			else if (t > 1.0f) t = 1.0f;
+
+			if (t < 0.0f) {
+				t = 0.0f;
+			}
+			else if (t > 1.0f) {
+				t = 1.0f;
+			}
 
 			if (moveVec_.y < 0) {
 				// è„ï˚å¸Ç…à⁄ìÆíÜÅiâ∫ Å® è„Åj
@@ -208,30 +227,28 @@ void Crab::Move(void)
 		{
 		case DESTINATION_PLACE::UNDER_RIGHT:
 			nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT;
-			isReverse(DIR::LEFT);
+			WhichDir(DIR::LEFT);
 			angle_ = 0.0f; // â∫ÇÕí èÌå¸Ç´
 			break;
 
 		case DESTINATION_PLACE::UNDER_LEFT:
 			nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT;
-			isReverse(DIR::RIGHT);
+			WhichDir(DIR::RIGHT);
 			angle_ = 0.0f; // â∫ÇÕí èÌå¸Ç´
 			break;
 
 		case DESTINATION_PLACE::TOP_RIGHT:
 			nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT;
-			isReverse(DIR::RIGHT);
+			WhichDir(DIR::RIGHT);
 			angle_ = DX_PI_F; // è„ÇÕãtÇ≥Ç‹
 			break;
 
 		case DESTINATION_PLACE::TOP_LEFT:
 			nextDestPlace_ = DESTINATION_PLACE::TOP_RIGHT;
-			isReverse(DIR::LEFT);
+			WhichDir(DIR::LEFT);
 			angle_ = DX_PI_F; // è„ÇÕãtÇ≥Ç‹
 			break;
 		}
-
-
 
 		unit_.para_.speed = MOVE_SPEED;
 		state_ = (int)STATE::ATTACK;
@@ -240,6 +257,7 @@ void Crab::Move(void)
 
 void Crab::Attack(void)
 {
+	//çUåÇÇÃèâä˙âª
 	if (!attackInit_)
 	{
 		attackInterval_ = ATTACK_INTERVAL;
@@ -265,6 +283,8 @@ void Crab::Attack(void)
 		}
 	}
 
+
+	//çUåÇÇÃèIóπèàóù
 	switch (attackState_)
 	{
 	case Crab::ATTACK_KINDS::NON:
@@ -284,8 +304,9 @@ void Crab::Attack(void)
 		break;
 	}
 
+	//çUåÇÇ™èIÇÌÇ¡ÇΩÇÁÉAÉCÉhÉãÇ…à⁄çs
 	if (attackEnd_) {
-		state_ = (int)STATE::MOVE;
+		state_ = (int)STATE::IDLE;
 		attackInit_ = false;
 	}
 
@@ -328,7 +349,8 @@ void Crab::Death(void)
 	}
 }
 
-void Crab::isReverse(DIR dir)
+// Ç«ÇÃå¸Ç´Çå¸Ç¢ÇƒÇ¢ÇÈÇ©
+void Crab::WhichDir(DIR dir)
 {
 	reverse_ = (int)dir;
 
@@ -340,6 +362,31 @@ void Crab::isReverse(DIR dir)
 	{
 		drawCenter_ = DRAW_CENTER_POS;
 	}
+
+	switch (nextDestPlace_)
+	{
+	case DESTINATION_PLACE::UNDER_RIGHT:
+		angle_ = 0.0f; // â∫ÇÕí èÌå¸Ç´
+		break;
+	case DESTINATION_PLACE::UNDER_LEFT:
+		angle_ = 0.0f; // â∫ÇÕí èÌå¸Ç´
+		break;
+	case DESTINATION_PLACE::TOP_RIGHT:
+		angle_ = DX_PI_F; // è„ÇÕãtÇ≥Ç‹
+		break;
+	case DESTINATION_PLACE::TOP_LEFT:
+		angle_ = DX_PI_F; // è„ÇÕãtÇ≥Ç‹
+		break;
+	}
+}
+
+Crab::ATTACK_KINDS Crab::AttackLottery(void)
+{
+	ATTACK_KINDS ret;
+	ret = (ATTACK_KINDS)GetRand((int)ATTACK_KINDS::MAX - 1);
+	//ret = ATTACK_KINDS::SCISSOR;
+
+	return ret;
 }
 
 void Crab::AttackUpdate(void)
