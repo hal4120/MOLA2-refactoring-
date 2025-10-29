@@ -148,6 +148,8 @@ void Player::Draw(void)
 	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1.4, angle_, img_[animCounter_], true, (bool)dir_);
 	if (unit_.inviciCounter_ / 10 % 2 == 1) { SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); }
 
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
+
 	parry_->Draw();
 	laser_->Draw();
 }

@@ -58,6 +58,7 @@ void Uni::Draw(void)
 	if (state_ == STATE::NON || state_ == STATE::BLAST) { return; }
 	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, SCALE, angle_, img_[(int)imgState_], true);
 	if (arrow_) { DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, arrowAngle_, arrowImg_, true); }
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void Uni::OnCollision(UnitBase* other)

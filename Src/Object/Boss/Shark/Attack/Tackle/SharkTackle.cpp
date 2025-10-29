@@ -78,6 +78,7 @@ void SharkTackle::Draw(void)
 	}
 
 	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, DRAW_SCALE, angle_, img_[animeCounter_], true, reverse_);
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void SharkTackle::Release(void)

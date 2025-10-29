@@ -60,6 +60,7 @@ void EnemyBase::Draw(void)
 	if (arrow_) {
 		DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, arrowAngle_, arrowImg_, true);
 	}
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void EnemyBase::Release(void)

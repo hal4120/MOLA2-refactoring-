@@ -83,6 +83,7 @@ void Mizu::Draw(void)
 	if (!unit_.isAlive_) { return; }
 	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, CENTER_X, CENTER_Y, SCALE, SCALE, angle_, img_, true);
 	if (arrow_) { DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, arrowAngle_, arrowImg_, true); }
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void Mizu::Release(void)

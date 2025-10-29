@@ -8,8 +8,6 @@ public:
 
 	static constexpr int ANIME_NUM = 4;
 
-	static constexpr VECTOR LOCAL_POS = { 30.0f,0.0f,0.0f };
-
 	InvoluteShooter(const Vector2& bossPos, const float& bossAngle);
 	~InvoluteShooter();
 

@@ -149,9 +149,9 @@ private:
 	enum class ATTACK_KINDS
 	{
 		NON = -1,
-		SUMI,
 		TENTACLE,
 		SPHERE,
+		SUMI,
 		INVOLUTE,
 		TACKLE,
 
@@ -162,6 +162,15 @@ private:
 	ATTACK_KINDS attackState_;
 	// 攻撃の種類の抽選を行う関数
 	ATTACK_KINDS AttackLottery(void);
+
+	static constexpr int PROBABILITY_NUM = 3;
+	float ATTACK_PROBABILITY[PROBABILITY_NUM][(int)ATTACK_KINDS::MAX] =
+	{
+		{ 0.5f,/*TENTACLE*/	0.5f,/*SPHERE*/	0.0f,/*SUMI*/	0.0f,/*INVOLUTE*/	0.0f/*TACKLE*/ },
+		{ 0.2f,/*TENTACLE*/	0.2f,/*SPHERE*/	0.3f,/*SUMI*/	0.3f,/*INVOLUTE*/	0.0f/*TACKLE*/ },
+		{ 0.2f,/*TENTACLE*/	0.2f,/*SPHERE*/	0.2f,/*SUMI*/	0.2f,/*INVOLUTE*/	0.2f/*TACKLE*/ }
+	};
+
 
 	//各攻撃のインスタンス----
 	SumiShooter* sumi_;

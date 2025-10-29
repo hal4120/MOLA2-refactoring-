@@ -24,7 +24,7 @@ void InvoluteShooter::Load(void)
 {
 	std::string path = "Data/Image/Boss/Kraken/Attack/Involute/";
 	for (int i = 1; i <= ANIME_NUM; i++) {
-		image_.emplace_back(Utility::LoadImg((path + std::to_string(i)).c_str()));
+		image_.emplace_back(Utility::LoadImg((path + std::to_string(i) + ".png").c_str()));
 	}
 }
 
@@ -64,7 +64,7 @@ void InvoluteShooter::Shot(void)
 		for (auto& i : involute_) {
 			if (i->GetUnit().isAlive_) { continue; }
 			recycle = true;
-
+			i->On(bossPos);
 		}
 
 		if (recycle) { return; }
@@ -72,7 +72,7 @@ void InvoluteShooter::Shot(void)
 		involute_.emplace_back(new Involute(image_));
 		involute_.back()->Load();
 		involute_.back()->Init();
-
+		involute_.back()->On(bossPos);
 		Collision::Add(involute_.back());
 	}
 }

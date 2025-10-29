@@ -55,24 +55,6 @@ void BossBase::Draw(void)
 	if (!unit_.isAlive_) { return; }
 	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, drawCenter_.x, drawCenter_.y, SCALE, SCALE, totalAngle_, imgs_.at((int)motion_).at(animCounter_), true, reverse_);
 
-
-	// “–‚½‚è”»’è‚Ì•`‰æ‚Ìƒ‰ƒ€ƒ_ŠÖ”
-	auto DrawDebug = [&](void)->void {
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-		switch (unit_.para_.colliShape)
-		{
-		case CollisionShape::CIRCLE:
-			DrawCircleAA(unit_.pos_.x, unit_.pos_.y, unit_.para_.radius, 30, 0xffffff);
-			break;
-		case CollisionShape::RECTANGLE:
-			DrawBoxAA(unit_.pos_.x - unit_.para_.size.x / 2, unit_.pos_.y - unit_.para_.size.y / 2, unit_.pos_.x + unit_.para_.size.x / 2, unit_.pos_.y + unit_.para_.size.y / 2, 0xffffff, true);
-			break;
-		case CollisionShape::ELLIPSE:
-			DrawOvalAA(unit_.pos_.x, unit_.pos_.y, unit_.para_.size.x / 2, unit_.para_.size.y / 2, 30, 0xffffff, true);
-			break;
-		}
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		};
 	// “–‚½‚è”»’è‚Ì•`‰æ
 	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }

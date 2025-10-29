@@ -45,6 +45,7 @@ void Ikura::Draw(void)
 {
 	if (!unit_.isAlive_) { return; }
 	DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, 0, img_, true);
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void Ikura::OnCollision(UnitBase* other)

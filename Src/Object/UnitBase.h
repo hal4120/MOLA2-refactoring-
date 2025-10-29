@@ -57,5 +57,8 @@ public:
 protected:
 	Base unit_;
 	void Invi(void);
+
+	// “–‚½‚è”»’è‚Ì•`‰æ‚Ìƒ‰ƒ€ƒ_ŠÖ”
+	void DrawDebug(void);
 };
 

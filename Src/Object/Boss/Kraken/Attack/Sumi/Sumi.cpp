@@ -46,6 +46,7 @@ void Sumi::Draw(void)
 	if (!unit_.isAlive_) { return; }
 
 	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, 37.5f, 25.0f, 1, 1, atan2f(moveVec_.y, moveVec_.x), img_, true);
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void Sumi::OnCollision(UnitBase* other)

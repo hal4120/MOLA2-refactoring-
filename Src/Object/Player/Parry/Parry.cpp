@@ -98,6 +98,7 @@ void Parry::Draw(void)
 
 	if (!unit_.isAlive_) { return; }
 	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, (playerDir_ == DIR::RIGHT) ? 0.0f : LOAD_SIZE_X, LOAD_SIZE_Y / 2.0f, mag_, mag_, 0, img_[counter_], true, (bool)playerDir_);
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void Parry::Release(void)

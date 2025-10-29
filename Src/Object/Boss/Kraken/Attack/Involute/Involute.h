@@ -23,13 +23,13 @@ private:
 
 	float angle_;
 
-	bool parry_;
+	Vector2 centerPos_;
 
-	Vector2 bossPos_;
+	float centerDiff_;
 
-	float radius_;
+	VECTOR DrawDiff = { 0.0f,-20.0f,0.0f };
 
-	const int ANIME_INTERVAL = 10;
+	const int ANIME_INTERVAL = 5;
 	int animeInterval_;
 	int animeCounter_;
 	void Animation(void);

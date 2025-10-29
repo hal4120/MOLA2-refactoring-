@@ -91,6 +91,9 @@ void PlayerLaser::Draw(void)
 	if (state_ == STATE::NON) { return; }
 
 	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, (playerDir_ == DIR::RIGHT) ? 0.0f :(float)SIZE_X, SIZE_Y / 2.0f, 1, 1, 0, img_[state_][counter_ % img_[state_].size()], true, (bool)playerDir_);
+
+
+	if (unit_.isAlive_ && Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void PlayerLaser::Release(void)

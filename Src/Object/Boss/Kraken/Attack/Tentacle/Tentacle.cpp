@@ -55,6 +55,7 @@ void Tentacle::Draw(void)
 	}
 
 	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, SIZE_X / 2, 0.0f, 1, 1, 0, image_, true);
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void Tentacle::Release(void)

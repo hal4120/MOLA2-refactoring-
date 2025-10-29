@@ -1,5 +1,6 @@
 #include "SharkLaser.h"
 
+#include"../../../../../Application/Application.h"
 #include"../../../../../Manager/BlastEffect/BlastEffectManager.h"
 #include"../../../../../Manager/Sound/SoundManager.h"
 
@@ -87,6 +88,7 @@ void SharkLaser::Draw(void)
 	if (state_ == STATE::NON) { return; }
 
 	DrawRotaGraph3F(unit_.pos_.x, unit_.pos_.y, SIZE_X, SIZE_Y / 2.0f, 1, 2, 0, img_[state_][counter_ % img_[state_].size()], true);
+	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
 
 void SharkLaser::Release(void)
