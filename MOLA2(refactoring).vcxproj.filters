@@ -213,7 +213,10 @@
     <ClCompile Include="Src\Object\Boss\Crab\Attack\Scissors\Scissors.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Boss\Crab\Attack\Tornado\Tornado.cpp">
+    <ClCompile Include="Src\Object\Boss\Crab\Attack\FireBall\FireBall.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Object\Boss\Crab\Attack\Burst\Burst.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -416,7 +419,10 @@
     <ClInclude Include="Src\Object\Boss\Crab\Attack\Scissors\Scissors.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Boss\Crab\Attack\Tornado\Tornado.h">
+    <ClInclude Include="Src\Object\Boss\Crab\Attack\FireBall\FireBall.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Object\Boss\Crab\Attack\Burst\Burst.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

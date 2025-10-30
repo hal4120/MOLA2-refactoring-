@@ -5,6 +5,8 @@
 
 #include "Attack/Bubble/BubbleShooter.h"
 #include "Attack/Scissors/Scissors.h"
+#include "Attack/FireBall/FireBall.h"
+#include "Attack/Burst/Burst.h"
 
 class Crab : public BossBase
 {
@@ -43,6 +45,13 @@ public:
 	{
 		RIGHT,
 		LEFT,
+	};
+
+	// 体力が半分きったら強くなる
+	enum class MODE
+	{
+		NORMAL,
+		HARD
 	};
 
 	// 各モーションのファイルパス(読み込みを簡略化するための定義)
@@ -142,6 +151,8 @@ private:
 	// 死亡演出のカウンター
 	int deathCou_;
 
+	MODE mode_;
+
 #pragma region 攻撃関係
 
 	// 攻撃の種類
@@ -151,6 +162,8 @@ private:
 
 		BUBBLE,
 		SCISSOR,
+		FIRE,
+		LIGHTNING,
 
 		MAX
 	};
@@ -172,6 +185,8 @@ private:
 	//各攻撃のインスタンス----
 	BubbleShooter* bubble_;
 	Scissors* scissor_;
+	FireBall* fire_;
+	Burst* burst_;
 	//------------------------
 
 	// 攻撃の各主要関数を呼び出す場所---
