@@ -164,7 +164,7 @@ void GameScene::Update(void)
 
 	boss_->Update();
 
-	collision_->Check();
+	if (boss_->Timer()) { collision_->Check(); }
 	blast_->Update();
 
 

@@ -9,6 +9,7 @@ InvoluteShooter::InvoluteShooter(const Vector2& bossPos, const float& bossAngle)
 	bossAngle(bossAngle),
 
 	image_(),
+	arrowImg_(-1),
 	involute_(),
 
 	shotCount_(0),
@@ -26,6 +27,7 @@ void InvoluteShooter::Load(void)
 	for (int i = 1; i <= ANIME_NUM; i++) {
 		image_.emplace_back(Utility::LoadImg((path + std::to_string(i) + ".png").c_str()));
 	}
+	Utility::LoadImg(arrowImg_, "Data/Image/Effect/Arrow.png");
 }
 
 void InvoluteShooter::Update(void)
@@ -69,7 +71,7 @@ void InvoluteShooter::Shot(void)
 
 		if (recycle) { return; }
 
-		involute_.emplace_back(new Involute(image_));
+		involute_.emplace_back(new Involute(image_,arrowImg_));
 		involute_.back()->Load();
 		involute_.back()->Init();
 		involute_.back()->On(bossPos);

@@ -1,9 +1,20 @@
 #include"Involute.h"
 
 #include"../../../../../Application/Application.h"
+#include"../../../../../Manager/BlastEffect/BlastEffectManager.h"
+#include"../../../../../Manager/Sound/SoundManager.h"
 
-Involute::Involute(std::vector<int>image) :
+#include"../../../../../Scene/Game/GameScene.h"
+
+#include"../../../BossBase.h"
+#include"../../../../Player/Player.h"
+#include"../../../../Enemy/EnemyBase.h"
+
+Involute::Involute(std::vector<int>image, int arrowImg) :
 	image_(image),
+	arrowImg_(arrowImg),
+	arrowAngle_(0.0f),
+	arrow_(false),
 
 	centerPos_(),
 
@@ -34,6 +45,7 @@ void Involute::Init(void)
 
 void Involute::Update(void)
 {
+	arrow_ = false;
 	if (unit_.isAlive_ == false) { return; }
 
 	if (unit_.para_.colliType == CollisionType::ENEMY) {
@@ -46,7 +58,14 @@ void Involute::Update(void)
 		if (centerDiff_ > 1500.0f) { unit_.isAlive_ = false; }
 	}
 	else if (unit_.para_.colliType == CollisionType::ALLY) {
-
+		unit_.pos_ += parryVec_ * PARRY_SPEED;
+		if (unit_.pos_.x + unit_.para_.radius < 0.0f ||
+			unit_.pos_.x - unit_.para_.radius > Application::SCREEN_SIZE_X ||
+			unit_.pos_.y + unit_.para_.radius < 0.0f ||
+			unit_.pos_.y - unit_.para_.radius > Application::SCREEN_SIZE_Y)
+		{
+			unit_.isAlive_ = false;
+		}
 	}
 
 	Animation();
@@ -60,6 +79,7 @@ void Involute::Draw(void)
 	Vector2 drawPos = unit_.pos_ + Vector2(drawOfset.x, drawOfset.y);
 
 	DrawRotaGraphF(drawPos.x, drawPos.y, 2, angle_ + Utility::Deg2RadF(180.0f), image_.at(animeCounter_), true);
+	if (arrow_) { DrawRotaGraphF(unit_.pos_.x, unit_.pos_.y, 1, arrowAngle_, arrowImg_, true); }
 
 	if (Application::GetInstance().IsDebug()) { DrawDebug(); }
 }
@@ -71,7 +91,35 @@ void Involute::Release(void)
 
 void Involute::OnCollision(UnitBase* other)
 {
-	unit_.isAlive_ = false;
+	if (dynamic_cast<Parry*>(other)) {
+		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
+		if (other->GetUnit().isAlive_) {
+			unit_.para_.colliType = CollisionType::ALLY;
+			parryVec_ = vec.Normalize();
+			GameScene::HitStop(10);
+		}
+		else {
+			arrow_ = true;
+			arrowAngle_ = atan2f(vec.y, vec.x);
+		}
+		return;
+	}
+	if ((dynamic_cast<EnemyBase*>(other) || dynamic_cast<Involute*>(other))) {
+		unit_.para_.colliType = CollisionType::ALLY;
+		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
+		parryVec_ = vec.Normalize();
+		GameScene::HitStop(5);
+		return;
+	}
+
+	if (dynamic_cast<BossBase*>(other) ||
+		dynamic_cast<Player*>(other) ||
+		dynamic_cast<PlayerLaser*>(other)) {
+		BlastEffectManager::On(unit_.pos_);
+		angle_ = 0.0f;
+		unit_.isAlive_ = false;
+		return;
+	}
 }
 
 void Involute::On(Vector2 bossPos)
@@ -79,6 +127,7 @@ void Involute::On(Vector2 bossPos)
 	centerPos_ = bossPos;
 	centerDiff_ = 0.0f;
 	angle_ = 0.0f;
+	unit_.para_.colliType = CollisionType::ENEMY;
 	unit_.isAlive_ = true;
 }
 

@@ -320,7 +320,7 @@ void Kraken::Death(void)
 
 Kraken::ATTACK_KINDS Kraken::AttackLottery(void)
 {
-	return ATTACK_KINDS::INVOLUTE;
+	//return ATTACK_KINDS::INVOLUTE;
 
 	ATTACK_KINDS ret = ATTACK_KINDS::NON;
 
@@ -337,7 +337,7 @@ Kraken::ATTACK_KINDS Kraken::AttackLottery(void)
 	auto probaSorty = [&](int i)->int {
 		int ret = 0;
 		for (; i >= 0; i--) {
-			ret += maxRand * ATTACK_PROBABILITY[hpDife][i];
+			ret += maxRand * ATTACK_PROBABILITY_TABLE[hpDife][i];
 		}
 		return ret;
 		};

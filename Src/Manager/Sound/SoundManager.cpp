@@ -116,20 +116,22 @@ void SoundManager::Init(void)
 	sounds_[SOUND::PLAYER_LASER].path_ = "SE/Laser.mp3";
 	sounds_[SOUND::PLAYER_LASER_CHARGE].path_ = "SE/LaserCharge.mp3";
 
-	sounds_[SOUND::BOSS_LASER].path_ = "SE/Laser.mp3";
-	sounds_[SOUND::BOSS_LASER_CHARGE].path_ = "SE/LaserCharge.mp3";
-
-	sounds_[SOUND::IKURA].path_ = "SE/‚Õ‚¿‚Õ‚¿.mp3";
-
-	sounds_[SOUND::SELECT].path_ = "SE/Select.mp3";
-	sounds_[SOUND::BUTTON].path_ = "SE/Button.mp3";
-
-	sounds_[SOUND::WARNING].path_ = "SE/Warning.mp3";
 
 	sounds_[SOUND::BLAST].path_ = "SE/Blast.mp3";
 
+	sounds_[SOUND::WARNING].path_ = "SE/Warning.mp3";
+
 	sounds_[SOUND::GAME_END].path_ = "SE/GameEnd.mp3";
 	sounds_[SOUND::CLEAR].path_ = "SE/Clear.mp3";
+
+	sounds_[SOUND::IKURA].path_ = "SE/‚Õ‚¿‚Õ‚¿.mp3";
+	sounds_[SOUND::BOSS_LASER].path_ = "SE/Laser.mp3";
+	sounds_[SOUND::BOSS_LASER_CHARGE].path_ = "SE/LaserCharge.mp3";
+
+	sounds_[SOUND::SPHERE_SHOT].path_ = "SE/Game/Boss/Kraken/Attack/Sphere/Shot.mp3";
+
+	sounds_[SOUND::SELECT].path_ = "SE/Select.mp3";
+	sounds_[SOUND::BUTTON].path_ = "SE/Button.mp3";
 
 }
 
@@ -139,4 +141,6 @@ void SoundManager:: Release(void)
 	for (auto& sound : sounds_) {
 		if (sound.id_ != -1) { DeleteSoundMem(sound.id_); }
 	}
+
+	Smng::GetIns().Delete(SOUND::SPHERE_SHOT);
 }

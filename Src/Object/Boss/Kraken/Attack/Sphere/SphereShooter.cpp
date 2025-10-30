@@ -2,6 +2,7 @@
 
 #include"../../../../../Utility/Utility.h"
 
+#include"../../../../../Manager/Sound/SoundManager.h"
 #include"../../../../../Manager/Collision/Collision.h"
 
 SphereShooter::SphereShooter(const Vector2& bossPos, const float& bossAngle, const Vector2& playerPos) :
@@ -25,6 +26,7 @@ void SphereShooter::Load(void)
 	Utility::LoadArrayImg("Data/Image/Boss/Kraken/Attack/Sphere/Csphere.png", ANIME_NUM, ANIME_NUM, 1, 60, 60, load);
 	image_.insert(image_.end(), load, load + ANIME_NUM);
 
+	Smng::GetIns().Load(SOUND::SPHERE_SHOT);
 }
 
 void SphereShooter::Update(void)

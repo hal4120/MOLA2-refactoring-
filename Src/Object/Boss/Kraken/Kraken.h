@@ -164,11 +164,11 @@ private:
 	ATTACK_KINDS AttackLottery(void);
 
 	static constexpr int PROBABILITY_NUM = 3;
-	float ATTACK_PROBABILITY[PROBABILITY_NUM][(int)ATTACK_KINDS::MAX] =
+	float ATTACK_PROBABILITY_TABLE[PROBABILITY_NUM][(int)ATTACK_KINDS::MAX] =
 	{
 		{ 0.5f,/*TENTACLE*/	0.5f,/*SPHERE*/	0.0f,/*SUMI*/	0.0f,/*INVOLUTE*/	0.0f/*TACKLE*/ },
 		{ 0.2f,/*TENTACLE*/	0.2f,/*SPHERE*/	0.3f,/*SUMI*/	0.3f,/*INVOLUTE*/	0.0f/*TACKLE*/ },
-		{ 0.2f,/*TENTACLE*/	0.2f,/*SPHERE*/	0.2f,/*SUMI*/	0.2f,/*INVOLUTE*/	0.2f/*TACKLE*/ }
+		{ 0.15f,/*TENTACLE*/	0.15f,/*SPHERE*/	0.15f,/*SUMI*/	0.15f,/*INVOLUTE*/	0.4f/*TACKLE*/ }
 	};
 
 

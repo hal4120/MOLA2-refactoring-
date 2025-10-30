@@ -22,6 +22,7 @@ public:
 
 private:
 	std::vector<int>image_;
+	int arrowImg_;
 	std::vector<Involute*>involute_;
 
 	int shotCount_;

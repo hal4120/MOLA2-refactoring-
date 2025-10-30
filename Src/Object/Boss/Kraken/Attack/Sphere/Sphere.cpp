@@ -2,9 +2,11 @@
 
 #include<DxLib.h>
 
-#include"../../../../../Application/Application.h"
 #include"../../../../../Utility/Utility.h"
 
+#include"../../../../../Manager/Sound/SoundManager.h"
+
+#include"../../../../../Application/Application.h"
 #include"../../../../../Scene/Game/GameScene.h"
 
 #include"../../Kraken.h"
@@ -46,7 +48,7 @@ void Sphere::Init(void)
 {
 	unit_.para_.colliShape = CollisionShape::CIRCLE;
 	unit_.para_.colliType = CollisionType::ENEMY;
-	unit_.para_.radius = RADIUS * 3;
+	unit_.para_.radius = RADIUS * 2.3;
 
 	unit_.para_.speed = 3.0f;
 
@@ -155,4 +157,6 @@ void Sphere::On(void)
 	moveVec_ = (vec / vec.Length()) * unit_.para_.speed;
 
 	unit_.isAlive_ = true;
+
+	Smng::GetIns().Play(SOUND::SPHERE_SHOT, true, 150);
 }

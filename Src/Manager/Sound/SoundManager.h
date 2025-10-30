@@ -25,29 +25,48 @@ public:
 
 		//-------------------
 
-		//SE-----------------
+		//SEÅ`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`
+
+		//GAME------------------
+
+		// ÉvÉåÉCÉÑÅ[
 		PLAYER_ATTACK,
 		PARRY,
-
 		PLAYER_LASER,
 		PLAYER_LASER_CHARGE,
 
+		// îöî≠
+		BLAST,
+
+		// É{ÉXìoèÍ
+		WARNING,
+
+		// ÉQÅ[ÉÄÉIÅ[ÉoÅ[
+		GAME_END,
+		// ÉQÅ[ÉÄÉNÉäÉA
+		CLEAR,
+
+
+		// ÉTÉÅ
+		IKURA,
 		BOSS_LASER,
 		BOSS_LASER_CHARGE,
 
-		IKURA,
+		// ÉCÉJ
+		SPHERE_SHOT,
 
+		
+
+		//-----------------------
+
+		//System----------------
 		SELECT,	//ÉvÉbÇ¡Çƒä¥Ç∂
 		BUTTON,	//ÉsÉbÇ¡Çƒä¥Ç∂
-		
-		WARNING,
 
-		BLAST,
+		//----------------------
 
-		GAME_END,
-		CLEAR,
 
-		//-------------------
+		//Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`Å`
 
 
 		MAX,

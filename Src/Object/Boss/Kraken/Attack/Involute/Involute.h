@@ -5,7 +5,7 @@
 class Involute : public UnitBase
 {
 public:
-	Involute(std::vector<int>image);
+	Involute(std::vector<int>image,int arrowImg);
 	~Involute();
 
 	void Load(void)override;
@@ -23,11 +23,19 @@ private:
 
 	float angle_;
 
+	Vector2 parryVec_;
+
 	Vector2 centerPos_;
 
 	float centerDiff_;
 
 	VECTOR DrawDiff = { 0.0f,-20.0f,0.0f };
+
+	int arrowImg_;
+	float arrowAngle_;
+	bool arrow_;
+
+	const float PARRY_SPEED = 15.0f;
 
 	const int ANIME_INTERVAL = 5;
 	int animeInterval_;
