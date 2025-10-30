@@ -113,11 +113,15 @@ void Kraken::OnCollision(UnitBase* other)
 	}
 
 	if (dynamic_cast<PlayerLaser*>(other)) {
-		HpDecrease(5);
+		HpDecrease(3);
 		return;
 	}
 
 	if (dynamic_cast<Sphere*>(other)) {
+		HpDecrease(5);
+		return;
+	}
+	if (dynamic_cast<Involute*>(other)) {
 		HpDecrease(5);
 		return;
 	}
