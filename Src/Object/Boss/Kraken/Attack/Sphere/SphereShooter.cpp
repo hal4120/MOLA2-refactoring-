@@ -41,6 +41,8 @@ void SphereShooter::Draw(void)
 
 void SphereShooter::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::SPHERE_SHOT);
+
 	for (auto& s : spheres_) {
 		if (!s) { continue; }
 		s->Release();

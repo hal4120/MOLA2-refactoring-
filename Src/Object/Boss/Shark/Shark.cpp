@@ -297,7 +297,7 @@ void Shark::HpDecrease(int damage)
 	ChangeMotion((int)MOTION::DAMAGE, false);
 	animCounter_ = 1;
 
-	Smng::GetIns().Play(SOUND::BLAST, true);
+	Smng::GetIns().Play(SOUND::BLAST, true, 150);
 
 	laser_->Off();
 

@@ -3,6 +3,7 @@
 #include"../../../../../Utility/Utility.h"
 
 #include"../../../../../Manager/Collision/Collision.h"
+#include"../../../../../Manager/Sound/SoundManager.h"
 
 TentacleShooter::TentacleShooter(const float& playerPosX) :
 	playerPosX(playerPosX)
@@ -16,7 +17,7 @@ TentacleShooter::~TentacleShooter()
 void TentacleShooter::Load(void)
 {
 	Utility::LoadImg(image_, "Data/Image/Boss/Kraken/Attack/Tentacle/Tentacle.png");
-
+	Smng::GetIns().Load(SOUND::TENTACLE_SLAM);
 }
 
 void TentacleShooter::Update(void)
@@ -31,7 +32,8 @@ void TentacleShooter::Draw(void)
 
 void TentacleShooter::Release(void)
 {
-
+	Smng::GetIns().Delete(SOUND::TENTACLE_SLAM);
+	DeleteGraph(image_);
 }
 
 void TentacleShooter::On(void)

@@ -9,6 +9,7 @@
 #include"../../Enemy/EnemyBase.h"
 #include"../../Boss/Shark/Shark.h"
 #include"../../Boss/SharkHard/SharkHard.h"
+#include"../../Boss/Kraken/Kraken.h"
 
 Parry::Parry(const Vector2& playerPos, const DIR& dir):
 	img_(),
@@ -128,9 +129,13 @@ void Parry::OnCollision(UnitBase* other)
 		dynamic_cast<Uni*>(other) ||
 		dynamic_cast<Mizu*>(other) ||
 		dynamic_cast<SharkTackle*>(other) ||
+
 		dynamic_cast<HardUni*>(other) ||
 		dynamic_cast<HardMizu*>(other) ||
-		dynamic_cast<HardSharkTackle*>(other)
+		dynamic_cast<HardSharkTackle*>(other) ||
+
+		dynamic_cast<Involute*>(other) ||
+		dynamic_cast<Sphere*>(other) 
 		) {
 
 		mag_ += MAG_ONE_SIZE_UP;

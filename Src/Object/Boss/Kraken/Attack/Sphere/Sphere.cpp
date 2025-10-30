@@ -131,7 +131,8 @@ void Sphere::OnCollision(UnitBase* other)
 		return;
 	}
 
-	if (dynamic_cast<Player*>(other)) {
+	if (dynamic_cast<Player*>(other) ||
+		dynamic_cast<PlayerLaser*>(other)) {
 		unit_.isAlive_ = false;
 		return;
 	}

@@ -129,6 +129,8 @@ void Involute::On(Vector2 bossPos)
 	angle_ = 0.0f;
 	unit_.para_.colliType = CollisionType::ENEMY;
 	unit_.isAlive_ = true;
+
+	Smng::GetIns().Play(SOUND::SPHERE_SHOT, true, 150);
 }
 
 

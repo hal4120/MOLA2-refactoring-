@@ -66,23 +66,23 @@ void GamePauseScene::Update(void)
 	case GamePauseScene::PAUSE_SELECT::PLAY:
 		if (downKey_.down) {
 			nowSelect_ = PAUSE_SELECT::REPLAY;
-			Smng::GetIns().Play(SOUND::SELECT, true);
+			Smng::GetIns().Play(SOUND::SELECT, true, 100);
 		}
 		break;
 	case GamePauseScene::PAUSE_SELECT::REPLAY:
 		if (upKey_.down) {
 			nowSelect_ = PAUSE_SELECT::PLAY;
-			Smng::GetIns().Play(SOUND::SELECT, true);
+			Smng::GetIns().Play(SOUND::SELECT, true, 100);
 		}
 		if (downKey_.down) {
 			nowSelect_ = PAUSE_SELECT::TITLE;
-			Smng::GetIns().Play(SOUND::SELECT, true);
+			Smng::GetIns().Play(SOUND::SELECT, true, 100);
 		}
 		break;
 	case GamePauseScene::PAUSE_SELECT::TITLE:
 		if (upKey_.down) {
 			nowSelect_ = PAUSE_SELECT::REPLAY;
-			Smng::GetIns().Play(SOUND::SELECT, true);
+			Smng::GetIns().Play(SOUND::SELECT, true, 100);
 		}
 		break;
 	}
@@ -101,7 +101,7 @@ void GamePauseScene::Update(void)
 			SceneManager::GetInstance().JumpScene(SCENE_ID::TITLE);
 			break;
 		}
-		Smng::GetIns().Play(SOUND::BUTTON, true);
+		Smng::GetIns().Play(SOUND::BUTTON, true, 100);
 
 		return;
 	}

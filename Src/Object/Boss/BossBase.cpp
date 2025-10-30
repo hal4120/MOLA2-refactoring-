@@ -102,7 +102,7 @@ void BossBase::EnCount(void)
 		if (unit_.pos_.x + unit_.para_.radius <= Application::SCREEN_SIZE_X) {
 			enCount_ = false; 
 			Smng::GetIns().Stop(SOUND::WARNING);
-			Smng::GetIns().Play(SOUND::BGM_BOSS, true, 150, true);
+			Smng::GetIns().Play(SOUND::BGM_BOSS, true, 120, true);
 		}
 	}
 
@@ -110,7 +110,7 @@ void BossBase::EnCount(void)
 		if (unit_.pos_.x + unit_.para_.size.x / 2 <= Application::SCREEN_SIZE_X) {
 			enCount_ = false; 
 			Smng::GetIns().Stop(SOUND::WARNING);
-			Smng::GetIns().Play(SOUND::BGM_BOSS, true, 150, true);
+			Smng::GetIns().Play(SOUND::BGM_BOSS, true, 120, true);
 		}
 	}
 }

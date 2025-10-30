@@ -108,18 +108,18 @@ void SelectScene::Update(void)
 
 		if (upKey_.down) {
 
-			Smng::GetIns().Play(SOUND::SELECT, true);
+			Smng::GetIns().Play(SOUND::SELECT, true, 100);
 
 			selectAnimeCounter_ = 0;
 
-			nowBoss_ = (BOSS_KINDS)( ((int)nowBoss_) - 1 );
+			nowBoss_ = (BOSS_KINDS)(((int)nowBoss_) - 1);
 			if (((int)nowBoss_) <= (int)BOSS_KINDS::NON) { nowBoss_ = (BOSS_KINDS)(((int)BOSS_KINDS::MAX) - 1); }
 
 		}
 
 		if (downKey_.down) {
 
-			Smng::GetIns().Play(SOUND::SELECT, true);
+			Smng::GetIns().Play(SOUND::SELECT, true, 100);
 
 			selectAnimeCounter_ = 0;
 			nowBoss_ = (BOSS_KINDS)(((int)nowBoss_) + 1);

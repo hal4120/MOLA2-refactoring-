@@ -116,6 +116,7 @@ void SoundManager::Init(void)
 	sounds_[SOUND::PLAYER_LASER].path_ = "SE/Laser.mp3";
 	sounds_[SOUND::PLAYER_LASER_CHARGE].path_ = "SE/LaserCharge.mp3";
 
+	sounds_[SOUND::CHAIN].path_ = "SE/Game/òAçΩ.mp3";
 
 	sounds_[SOUND::BLAST].path_ = "SE/Blast.mp3";
 
@@ -129,6 +130,7 @@ void SoundManager::Init(void)
 	sounds_[SOUND::BOSS_LASER_CHARGE].path_ = "SE/LaserCharge.mp3";
 
 	sounds_[SOUND::SPHERE_SHOT].path_ = "SE/Game/Boss/Kraken/Attack/Sphere/Shot.mp3";
+	sounds_[SOUND::TENTACLE_SLAM].path_ = "SE/Game/Boss/Kraken/Attack/Tentacle/Slam.mp3";
 
 	sounds_[SOUND::SELECT].path_ = "SE/Select.mp3";
 	sounds_[SOUND::BUTTON].path_ = "SE/Button.mp3";

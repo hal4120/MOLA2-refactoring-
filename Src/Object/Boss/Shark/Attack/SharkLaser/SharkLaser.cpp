@@ -71,12 +71,12 @@ void SharkLaser::Update(void)
 		}
 	}
 
-	if (state_ == STATE::CHARGE) { Smng::GetIns().Play(SOUND::BOSS_LASER_CHARGE, false, 255, true); }
+	if (state_ == STATE::CHARGE) { Smng::GetIns().Play(SOUND::BOSS_LASER_CHARGE, false, 200, true); }
 	else { Smng::GetIns().Stop(SOUND::BOSS_LASER_CHARGE); }
 
 	if (state_ == STATE::ACTIVE) {
 		unit_.isAlive_ = true;
-		Smng::GetIns().Play(SOUND::BOSS_LASER, false, 255, true);
+		Smng::GetIns().Play(SOUND::BOSS_LASER, false, 150, true);
 	} else {
 		unit_.isAlive_ = false;
 		Smng::GetIns().Stop(SOUND::BOSS_LASER);

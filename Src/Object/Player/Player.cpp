@@ -212,7 +212,7 @@ void Player::OnCollision(UnitBase* other)
 	GameScene::Shake(ShakeKinds::ROUND, ShakeSize::MEDIUM,10);
 	GameScene::Slow(10);
 
-	Smng::GetIns().Play(SOUND::BLAST, true);
+	Smng::GetIns().Play(SOUND::BLAST, true,150);
 
 	BlastEffectManager::On(unit_.pos_);
 

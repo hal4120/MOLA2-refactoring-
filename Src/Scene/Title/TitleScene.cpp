@@ -74,7 +74,7 @@ void TitleScene::Update(void)
 	shark_->Update();
 	player_->Update();
 
-	if (selectKey_.down) { nowSelect_ = (SELECT)(1 - (int)nowSelect_); Smng::GetIns().Play(SOUND::SELECT, true, 200); }
+	if (selectKey_.down) { nowSelect_ = (SELECT)(1 - (int)nowSelect_); Smng::GetIns().Play(SOUND::SELECT, true, 100); }
 
 	if (deciKey_.down) {
 		switch (nowSelect_)
@@ -87,7 +87,7 @@ void TitleScene::Update(void)
 			SceneManager::GetInstance().PushScene(std::make_shared< GameEndScene>());
 			break;
 		}
-		Smng::GetIns().Play(SOUND::BUTTON, true, 200);
+		Smng::GetIns().Play(SOUND::BUTTON, true, 100);
 		return;
 	}
 }

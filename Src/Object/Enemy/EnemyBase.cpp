@@ -1,11 +1,14 @@
 #include "EnemyBase.h"
 
-#include"../../Scene/Game/GameScene.h"
 #include"../../Manager/BlastEffect/BlastEffectManager.h"
+#include"../../Manager/Sound/SoundManager.h"
+
+#include"../../Scene/Game/GameScene.h"
 
 #include"../Player/Player.h"
 #include"../Boss/Shark/Shark.h"
 #include"../Boss/SharkHard/SharkHard.h"
+#include"../Boss/Kraken/Kraken.h"
 
 EnemyBase::EnemyBase(NUMBER num):
 	number_(num),
@@ -93,7 +96,7 @@ void EnemyBase::OnCollision(UnitBase* other)
 		if (other->GetUnit().isAlive_) {
 			unit_.para_.colliType = CollisionType::ALLY;
 			parry_ = true;
-			moveVec_ = vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
+			moveVec_ = vec.Normalize();
 			GameScene::HitStop(10);
 		}
 		else {
@@ -103,16 +106,21 @@ void EnemyBase::OnCollision(UnitBase* other)
 		return;
 	}
 
-	if ((dynamic_cast<Uni*>(other) ||
+	if (dynamic_cast<Uni*>(other) ||
 		dynamic_cast<Mizu*>(other) ||
-		dynamic_cast<EnemyBase*>(other))
-		&& unit_.para_.colliType == CollisionType::ENEMY) {
+
+		dynamic_cast<Sphere*>(other) ||
+		dynamic_cast<Involute*>(other) ||
+
+		dynamic_cast<EnemyBase*>(other)
+		) {
 
 		Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
 		unit_.para_.colliType = CollisionType::ALLY;
 		parry_ = true;
-		moveVec_ = vec / sqrtf(vec.x * vec.x + vec.y * vec.y);
+		moveVec_ = vec.Normalize();
 		GameScene::HitStop(10);
+		Smng::GetIns().Play(SOUND::CHAIN, true, 200);
 		return;
 	}
 

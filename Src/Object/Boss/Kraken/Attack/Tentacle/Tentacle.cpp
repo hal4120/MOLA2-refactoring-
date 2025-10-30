@@ -1,5 +1,7 @@
 #include"Tentacle.h"
 
+#include"../../../../../Manager/Sound/SoundManager.h"
+
 #include"../../../../../Application/Application.h"
 #include"../../../../../Scene/Game/GameScene.h"
 
@@ -90,7 +92,11 @@ void Tentacle::Stretch(void)
 {
 	if (unit_.pos_.y < 0) {
 		unit_.pos_.y += unit_.para_.speed;
-		if (unit_.pos_.y >= 0) { GameScene::Shake(); end_ = true; }
+		if (unit_.pos_.y >= 0) {
+			GameScene::Shake();
+			Smng::GetIns().Play(SOUND::TENTACLE_SLAM, true, 150);
+			end_ = true; 
+		}
 	}
 	else {
 		if (--stretchIdleCou_ <= 0) {

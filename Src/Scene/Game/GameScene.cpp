@@ -116,6 +116,7 @@ void GameScene::Load(void)
 	Smng::GetIns().Load(SOUND::BLAST);
 	Smng::GetIns().Load(SOUND::GAME_END);
 	Smng::GetIns().Load(SOUND::WARNING);
+	Smng::GetIns().Load(SOUND::CHAIN);
 }
 
 void GameScene::Init(void)
@@ -147,7 +148,7 @@ void GameScene::Update(void)
 {
 	if (KEY::GetIns().GetInfo(KEY_TYPE::PAUSE).down) {
 		SceneManager::GetInstance().PushScene(std::make_shared<GamePauseScene>());
-		Smng::GetIns().Play(SOUND::SELECT, true);
+		Smng::GetIns().Play(SOUND::SELECT, true,150);
 		return;
 	}
 
@@ -235,6 +236,7 @@ void GameScene::Release(void)
 	Smng::GetIns().Delete(SOUND::BLAST);
 	Smng::GetIns().Delete(SOUND::GAME_END);
 	Smng::GetIns().Delete(SOUND::WARNING);
+	Smng::GetIns().Delete(SOUND::CHAIN);
 
 	if (stage_) {
 		stage_->Release();

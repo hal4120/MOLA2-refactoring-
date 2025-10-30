@@ -136,7 +136,7 @@ void Kraken::HpDecrease(int damage)
 	ChangeMotion((int)MOTION::DAMAGE, false);
 	animCounter_ = 1;
 
-	Smng::GetIns().Play(SOUND::BLAST, true);
+	Smng::GetIns().Play(SOUND::BLAST, true, 150);
 
 	unit_.hp_ -= damage;
 	if (unit_.hp_ <= 0) {

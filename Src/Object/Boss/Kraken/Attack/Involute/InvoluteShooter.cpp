@@ -3,6 +3,7 @@
 #include<string>
 
 #include"../../../../../Manager/Collision/Collision.h"
+#include"../../../../../Manager/Sound/SoundManager.h"
 
 InvoluteShooter::InvoluteShooter(const Vector2& bossPos, const float& bossAngle):
 	bossPos(bossPos),
@@ -28,6 +29,8 @@ void InvoluteShooter::Load(void)
 		image_.emplace_back(Utility::LoadImg((path + std::to_string(i) + ".png").c_str()));
 	}
 	Utility::LoadImg(arrowImg_, "Data/Image/Effect/Arrow.png");
+
+	Smng::GetIns().Load(SOUND::SPHERE_SHOT);
 }
 
 void InvoluteShooter::Update(void)
@@ -43,6 +46,8 @@ void InvoluteShooter::Draw(void)
 
 void InvoluteShooter::Release(void)
 {
+	Smng::GetIns().Delete(SOUND::SPHERE_SHOT);
+
 	for (auto& i : involute_) {
 		if (!i) { continue; }
 		i->Release();

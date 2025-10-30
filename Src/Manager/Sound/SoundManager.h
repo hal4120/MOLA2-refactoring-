@@ -38,6 +38,9 @@ public:
 		// 爆発
 		BLAST,
 
+		// 連鎖
+		CHAIN,
+
 		// ボス登場
 		WARNING,
 
@@ -54,6 +57,7 @@ public:
 
 		// イカ
 		SPHERE_SHOT,
+		TENTACLE_SLAM,
 
 		
 

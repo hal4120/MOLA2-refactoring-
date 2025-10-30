@@ -51,10 +51,10 @@ void GameEndScene::Update(void)
 		if (upKey_.down) { nowSelect_ = SELECT::YES; push = true; }
 		break;
 	}
-	if(push){ Smng::GetIns().Play(SOUND::SELECT, true, 200); }
+	if(push){ Smng::GetIns().Play(SOUND::SELECT, true, 100); }
 
 	if (deciKey_.down) {
-		Smng::GetIns().Play(SOUND::BUTTON, true, 200);
+		Smng::GetIns().Play(SOUND::BUTTON, true, 100);
 		switch (nowSelect_)
 		{
 		case GameEndScene::SELECT::YES:
