@@ -103,6 +103,7 @@ void Crab::Init(void)
 
 void Crab::OnCollision(UnitBase* other)
 {
+	if (state_ == (int)STATE::DEATH) { return; }
 	if (dynamic_cast<EnemyBase*>(other))
 	{
 		HpDecrease(5);
@@ -353,6 +354,20 @@ void Crab::Attack(void)
 		if (attackEnd_) {
 			state_ = (int)STATE::IDLE;
 			attackInit_ = false;
+
+			if (unit_.hp_ > HP_MAX / 2)
+			{
+				mode_ = MODE::NORMAL;
+			}
+			else
+			{
+				static bool is = false;
+				if (!is) {
+					is = true;
+					attackEnd_ = true;
+				}
+				mode_ = MODE::HARD;
+			}
 		}
 		break;
 	case Crab::MODE::HARD:
@@ -510,19 +525,7 @@ Crab::ATTACK_KINDS Crab::AttackLottery(void)
 
 void Crab::AttackUpdate(void)
 {
-	if (unit_.hp_ > HP_MAX / 2)
-	{
-		mode_ = MODE::NORMAL;
-	}
-	else
-	{
-		static bool is = false;
-		if (!is) {
-			is = true;
-			attackEnd_ = true;
-		}
-		mode_ = MODE::HARD;
-	}
+
 	bubble_->Update();
 	scissor_->Update();
 	fire_->Update();
