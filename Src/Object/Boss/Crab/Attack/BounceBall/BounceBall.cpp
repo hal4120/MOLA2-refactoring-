@@ -1,30 +1,36 @@
-#include "FireBall.h"
+#include "BounceBall.h"
 #include <DxLib.h>
 #include "../../../../../Application/Application.h"
 #include "../../../../Player/Player.h"
 #include "../../../../Boss/BossBase.h"
 #include "../../../../../Scene/Game/GameScene.h"
 
-FireBall::FireBall(const Vector2& boss, const Vector2& player)
-    : bossPos_(boss), playerPos_(player), img_(-1), timer_(LIFE_TIME)
+BounceBall::BounceBall(const Vector2& boss, const Vector2& player)
+    : bossPos_(boss), playerPos_(player), img_(), bounceCount_(0)
 {
 }
 
-FireBall::~FireBall() {}
+BounceBall::~BounceBall() {}
 
-void FireBall::Load(void)
+void BounceBall::Load(void)
 {
-    Utility::LoadImg(img_, "Data/Image/Boss/Crab/Attack/FireBall.png");
+    //Utility::LoadImg(img_, "Data/Image/Boss/Crab/Attack/Bound.png");
+    Utility::LoadArrayImg(
+        "Data/Image/Boss/Crab/Attack/Bound.png",
+        IMG_NUM_MAX, 
+        IMG_NUM_X, IMG_NUM_Y,
+        IMG_SIZE_X, IMG_SIZE_Y, 
+        img_);
 }
 
-void FireBall::Init(void)
+void BounceBall::Init(void)
 {
     unit_.para_.colliShape = CollisionShape::CIRCLE;
     unit_.para_.colliType = CollisionType::ENEMY;
     unit_.para_.radius = RADIUS;
     unit_.para_.speed = SPEED;
     unit_.isAlive_ = true;
-    timer_ = LIFE_TIME;
+    bounceCount_ = 0;
 
     // 発射方向（プレイヤー方向）
     Vector2 dir = playerPos_ - bossPos_;
@@ -32,13 +38,12 @@ void FireBall::Init(void)
     unit_.pos_ = bossPos_;
 }
 
-void FireBall::Update(void)
+void BounceBall::Update(void)
 {
     if (!unit_.isAlive_) return;
 
     // 移動
     unit_.pos_ += moveVec_ * unit_.para_.speed;
-    timer_--;
 
     // === 壁反射処理 ===
     const float left = 0.0f;
@@ -76,38 +81,60 @@ void FireBall::Update(void)
         bounced = true;
     }
 
-    // 跳ね返った瞬間に少し効果をつけたい場合（任意）
+    // 跳ね返った瞬間の処理
     if (bounced)
     {
-        // ちょっとスピード減衰 or 音再生など
-        unit_.para_.speed *= 0.95f; // ←減衰効果（不要なら消してOK）
-        // Smng::GetIns().Play(SOUND::BOUNCE); // 反射音を鳴らすなど
+        bounceCount_++;               // 跳ね返り回数カウント
+        unit_.para_.speed *= 0.95f;   // 減衰（お好みで）
+        // Smng::GetIns().Play(SOUND::BOUNCE);
     }
 
-    // 寿命が尽きたら消滅
-    if (timer_ <= 0)
+    // 一定回数跳ね返ったら消滅
+    if (bounceCount_ >= MAX_BOUNCE_COUNT)
         unit_.isAlive_ = false;
 }
 
-void FireBall::Draw(void)
+
+void BounceBall::Draw(void)
 {
     if (!unit_.isAlive_) return;
-    DrawRotaGraph(unit_.pos_.x, unit_.pos_.y, 3.0f, 0.0f, img_, true);
-    DrawCircle(unit_.pos_.x, unit_.pos_.y, unit_.para_.radius, 0xffffff, true);
+    static int i = 0;
+    if (i < IMG_NUM_MAX) {
+        i++;
+    }
+    else {
+        i = 0;
+    }
+
+    if (unit_.para_.colliType == CollisionType::ENEMY) {
+        SetDrawBright(255, 0, 0);
+        DrawRotaGraph(unit_.pos_.x, unit_.pos_.y, 1.5f, 0.0f, img_[i], true);
+        SetDrawBright(255, 255, 255);
+    }
+    else {
+        DrawRotaGraph(unit_.pos_.x, unit_.pos_.y, 1.5f, 0.0f, img_[i], true);
+    }
+
+#ifdef _DEBUG
+    DrawCircle(unit_.pos_.x, unit_.pos_.y, unit_.para_.radius, 0xffffff, false);
+#endif // _DEBUG
 }
 
-void FireBall::Release(void)
+void BounceBall::Release(void)
 {
-    DeleteGraph(img_);
+    for (int i = 0; i < IMG_NUM_MAX; i++) {
+        DeleteGraph(img_[i]);
+    }
 }
 
-void FireBall::OnCollision(UnitBase* other)
+void BounceBall::OnCollision(UnitBase* other)
 {
     if (dynamic_cast<Parry*>(other)) {
         Vector2 vec = unit_.pos_ - other->GetUnit().pos_;
         if (other->GetUnit().isAlive_) {
             unit_.para_.colliType = CollisionType::ALLY;
-            moveVec_ = (vec / vec.length()) * unit_.para_.speed / 2;
+            moveVec_ = (vec / vec.length()) * unit_.para_.speed / 3;
+            bounceCount_ = 0;
             GameScene::HitStop(10);
         }
         return;

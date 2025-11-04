@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../UnitBase.h"
 
-class Burst : public UnitBase
+class UFO : public UnitBase
 {
 public:
     static constexpr int LIFE_TIME = 600;
@@ -21,8 +21,8 @@ public:
         COOLDOWN  // •Ç‚É“ž’B‚µ‚½Œã‚Ì‘Ò‹@’†
     };
 
-    Burst(const Vector2& playerPos);
-    ~Burst() override;
+    UFO(const Vector2& playerPos);
+    ~UFO() override;
 
     void Load(void) override;
     void Init(void) override;
@@ -34,6 +34,9 @@ public:
     bool End(void) const { return end_; }
 
 private:
+    int dengerImg_;
+    int burstImg_;
+
     SIDE side_;
     STATE state_;
     const Vector2* playerPos_;
@@ -44,6 +47,5 @@ private:
     bool end_;
     float moveDir_;
     int bounceCount_;
-    int dengerImg_;
     float fixedY_;
 };

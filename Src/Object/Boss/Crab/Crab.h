@@ -5,8 +5,8 @@
 
 #include "Attack/Bubble/BubbleShooter.h"
 #include "Attack/Scissors/Scissors.h"
-#include "Attack/FireBall/FireBall.h"
-#include "Attack/Burst/Burst.h"
+#include "Attack/BounceBall/BounceBall.h"
+#include "Attack/UFO/UFO.h"
 
 class Crab : public BossBase
 {
@@ -162,8 +162,8 @@ private:
 
 		BUBBLE,
 		SCISSOR,
-		FIRE,
-		LIGHTNING,
+		BOUNCE,
+		UFO,
 
 		MAX
 	};
@@ -185,8 +185,8 @@ private:
 	//各攻撃のインスタンス----
 	BubbleShooter* bubble_;
 	Scissors* scissor_;
-	FireBall* fire_;
-	Burst* burst_;
+	BounceBall* fire_;
+	UFO* burst_;
 	//------------------------
 
 	// 攻撃の各主要関数を呼び出す場所---

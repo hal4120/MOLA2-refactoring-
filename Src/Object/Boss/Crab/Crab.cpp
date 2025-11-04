@@ -59,10 +59,10 @@ void Crab::Load(void)
 	scissor_ = new Scissors(unit_.pos_, playerPos_);
 	scissor_->Load();
 
-	fire_ = new FireBall(unit_.pos_, playerPos_);
+	fire_ = new BounceBall(unit_.pos_, playerPos_);
 	fire_->Load();
 
-	burst_ = new Burst(playerPos_);
+	burst_ = new UFO(playerPos_);
 	burst_->Load();
 
 #pragma endregion
@@ -77,6 +77,7 @@ void Crab::Init(void)
 	nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT;
 
 	state_ = (int)STATE::IDLE;
+	attackState_ = AttackLottery();
 
 	moveVec_ = { 0.0f, 0.0f };
 
@@ -119,11 +120,11 @@ void Crab::OnCollision(UnitBase* other)
 		HpDecrease(7);
 	}
 
-	if (dynamic_cast<FireBall*> (other)) {
+	if (dynamic_cast<BounceBall*> (other)) {
 		HpDecrease(7);
 	}
 
-	if (dynamic_cast<Burst*>(other)) {
+	if (dynamic_cast<UFO*>(other)) {
 		HpDecrease(5);
 		unit_.inviciCounter_ = 10;
 	}
@@ -305,11 +306,11 @@ void Crab::Attack(void)
 				scissor_->Init();
 				ChangeMotion((int)MOTION::ATTACK2);
 				break;
-			case Crab::ATTACK_KINDS::FIRE:
+			case Crab::ATTACK_KINDS::BOUNCE:
 				fire_->Init();
 				ChangeMotion((int)MOTION::ATTACK2);
 				break;
-			case Crab::ATTACK_KINDS::LIGHTNING:
+			case Crab::ATTACK_KINDS::UFO:
 				burst_->Init();
 				break;
 			case Crab::ATTACK_KINDS::MAX:
@@ -334,12 +335,12 @@ void Crab::Attack(void)
 				attackEnd_ = true;
 			}
 			break;
-		case Crab::ATTACK_KINDS::FIRE:
+		case Crab::ATTACK_KINDS::BOUNCE:
 			if (fire_->End()) {
 				attackEnd_ = true;
 			}
 			break;
-		case Crab::ATTACK_KINDS::LIGHTNING:
+		case Crab::ATTACK_KINDS::UFO:
 			if (burst_->End()) {
 				attackEnd_ = true;
 			}
@@ -379,7 +380,7 @@ void Crab::Attack(void)
 				scissor_->Init();
 				ChangeMotion((int)MOTION::ATTACK2);
 				break;
-			case Crab::ATTACK_KINDS::FIRE:
+			case Crab::ATTACK_KINDS::BOUNCE:
 				fire_->Init();
 				bubble_->Init();
 				ChangeMotion((int)MOTION::ATTACK2);
@@ -408,7 +409,7 @@ void Crab::Attack(void)
 				attackEnd_ = true;
 			}
 			break;
-		case Crab::ATTACK_KINDS::FIRE:
+		case Crab::ATTACK_KINDS::BOUNCE:
 			if (fire_->End() || bubble_->End()) {
 				attackEnd_ = true;
 			}
@@ -502,7 +503,7 @@ Crab::ATTACK_KINDS Crab::AttackLottery(void)
 	else {
 		ret = (ATTACK_KINDS)GetRand((int)ATTACK_KINDS::MAX - 2);
 	}
-	//ret = ATTACK_KINDS::LIGHTNING;
+	//ret = ATTACK_KINDS::FIRE;
 
 	return ret;
 }
