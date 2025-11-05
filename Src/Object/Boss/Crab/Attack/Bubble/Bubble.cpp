@@ -2,12 +2,12 @@
 
 #include<DxLib.h>
 
-#include "../../../../Application/Application.h"
-#include "../../../../Scene/Game/GameScene.h"
-#include "../../../../Manager/BlastEffect/BlastEffectManager.h"
-#include "../../../../Manager/Sound/SoundManager.h"
+#include "../../../../../Application/Application.h"
+#include "../../../../../Scene/Game/GameScene.h"
+#include "../../../../../Manager/BlastEffect/BlastEffectManager.h"
+#include "../../../../../Manager/Sound/SoundManager.h"
 
-#include "../../../Player/Player.h"
+#include "../../../../Player/Player.h"
 
 Bubble::Bubble(int img):
 	img_(img),
@@ -45,13 +45,8 @@ void Bubble::Draw(void)
 {
 	if (!unit_.isAlive_) { return; }
 
-	DrawCircle(
-		unit_.pos_.x, 
-		unit_.pos_.y, 
-		unit_.para_.radius,
-		0xffffff,
-		false
-	);
+	DrawRotaGraph(unit_.pos_.x, unit_.pos_.y, 1.0f, 0.0f, img_, true);
+
 }
 
 void Bubble::OnCollision(UnitBase* other)

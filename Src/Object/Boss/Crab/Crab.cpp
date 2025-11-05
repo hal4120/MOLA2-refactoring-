@@ -42,16 +42,28 @@ void Crab::Load(void)
 
 	unit_.para_.colliShape = CollisionShape::ELLIPSE;
 
+	mode_ = MODE::NORMAL;
+
 #define SET_STATE(state, func) stateFuncPtr[(int)(state)] = static_cast<STATEFUNC>(func)
 	SET_STATE(STATE::MOVE, &Crab::Move);
 	SET_STATE(STATE::ATTACK, &Crab::Attack);
 	SET_STATE(STATE::DAMAGE, &Crab::Damage);
 	SET_STATE(STATE::DEATH, &Crab::Death);
+	SET_STATE(STATE::IDLE, &Crab::Idle);
 
 #pragma region 攻撃のロード
 
 	bubble_ = new BubbleShooter(unit_.pos_, playerPos_);
 	bubble_->Load();
+
+	scissor_ = new Scissors(unit_.pos_, playerPos_);
+	scissor_->Load();
+
+	fire_ = new BounceBall(unit_.pos_, playerPos_);
+	fire_->Load();
+
+	burst_ = new UFO(playerPos_);
+	burst_->Load();
 
 #pragma endregion
 }
@@ -64,7 +76,8 @@ void Crab::Init(void)
 	unit_.pos_ = DESTINATION[DESTINATION_PLACE::UNDER_RIGHT];
 	nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT;
 
-	state_ = (int)STATE::MOVE;
+	state_ = (int)STATE::IDLE;
+	attackState_ = AttackLottery();
 
 	moveVec_ = { 0.0f, 0.0f };
 
@@ -74,7 +87,7 @@ void Crab::Init(void)
 
 	unit_.hp_ = HP_MAX;
 
-	isReverse(true);
+	WhichDir(DIR::LEFT);
 
 	angle_ = 0.0f;
 
@@ -82,11 +95,15 @@ void Crab::Init(void)
 
 #pragma region 攻撃の初期化
 	bubble_->Init();
+	scissor_->Init();
+	//fire_->Init();
+	//burst_->Init();
 #pragma endregion
 }
 
 void Crab::OnCollision(UnitBase* other)
 {
+	if (state_ == (int)STATE::DEATH) { return; }
 	if (dynamic_cast<EnemyBase*>(other))
 	{
 		HpDecrease(5);
@@ -98,6 +115,19 @@ void Crab::OnCollision(UnitBase* other)
 		HpDecrease(3);
 		unit_.inviciCounter_ = 5;
 		return;
+	}
+
+	if (dynamic_cast<Scissors*>(other)) {
+		HpDecrease(7);
+	}
+
+	if (dynamic_cast<BounceBall*> (other)) {
+		HpDecrease(7);
+	}
+
+	if (dynamic_cast<UFO*>(other)) {
+		HpDecrease(5);
+		unit_.inviciCounter_ = 10;
 	}
 }
 
@@ -136,6 +166,9 @@ std::vector<UnitBase*> Crab::AttackIns(void)
 	std::vector<UnitBase*> ret;
 
 	for (auto& ins : bubble_->Bubbles()) { ret.emplace_back(ins); }
+	ret.emplace_back(scissor_);
+	ret.emplace_back(fire_);
+	ret.emplace_back(burst_);
 	return ret;
 }
 
@@ -145,25 +178,38 @@ bool Crab::Timer(void)
 	return true;
 }
 
+void Crab::Idle(void)
+{
+	static int cnt = 0;
+
+	ChangeMotion((int)MOTION::IDLE);
+
+	cnt++;
+	if (cnt > 60) {
+		state_ = (int)STATE::MOVE;
+		cnt = 0;
+	}
+}
+
 void Crab::Move(void)
 {	
 	Vector2 target = DESTINATION[nextDestPlace_];
-	Vector2 dir = { target.x - unit_.pos_.x, target.y - unit_.pos_.y };
+	Vector2 moveDir = { target.x - unit_.pos_.x, target.y - unit_.pos_.y };
 
-	float len = sqrtf(dir.x * dir.x + dir.y * dir.y);
+	float len = Utility::Magnitude(moveDir);
 
 	if (len > 1.0f)
 	{
 		// 正規化
-		dir /= len;
+		moveDir /= len;
 
 		// 補間で滑らかに方向転換
-		moveVec_ = moveVec_ * 0.9f + dir * 0.1f;
+		moveVec_ = moveVec_ * 0.9f + moveDir * 0.1f;
 
 		// 移動
 		unit_.pos_ += moveVec_ * unit_.para_.speed;
 
-		// ★縦移動のときだけ回転
+		// 縦移動のときだけ回転
 		if ((nextDestPlace_ == DESTINATION_PLACE::TOP_RIGHT) ||
 			(nextDestPlace_ == DESTINATION_PLACE::TOP_LEFT) ||
 			(nextDestPlace_ == DESTINATION_PLACE::UNDER_RIGHT) ||
@@ -175,8 +221,13 @@ void Crab::Move(void)
 
 			// 進行度 0.0 (下) → 1.0 (上)
 			float t = (bottomY - unit_.pos_.y) / (bottomY - topY);
-			if (t < 0.0f) t = 0.0f;
-			else if (t > 1.0f) t = 1.0f;
+
+			if (t < 0.0f) {
+				t = 0.0f;
+			}
+			else if (t > 1.0f) {
+				t = 1.0f;
+			}
 
 			if (moveVec_.y < 0) {
 				// 上方向に移動中（下 → 上）
@@ -199,30 +250,28 @@ void Crab::Move(void)
 		{
 		case DESTINATION_PLACE::UNDER_RIGHT:
 			nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT;
-			isReverse(true);
+			WhichDir(DIR::LEFT);
 			angle_ = 0.0f; // 下は通常向き
 			break;
 
 		case DESTINATION_PLACE::UNDER_LEFT:
 			nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT;
-			isReverse(false);
+			WhichDir(DIR::RIGHT);
 			angle_ = 0.0f; // 下は通常向き
 			break;
 
 		case DESTINATION_PLACE::TOP_RIGHT:
 			nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT;
-			isReverse(false);
+			WhichDir(DIR::RIGHT);
 			angle_ = DX_PI_F; // 上は逆さま
 			break;
 
 		case DESTINATION_PLACE::TOP_LEFT:
 			nextDestPlace_ = DESTINATION_PLACE::TOP_RIGHT;
-			isReverse(true);
+			WhichDir(DIR::LEFT);
 			angle_ = DX_PI_F; // 上は逆さま
 			break;
 		}
-
-
 
 		unit_.para_.speed = MOVE_SPEED;
 		state_ = (int)STATE::ATTACK;
@@ -231,52 +280,172 @@ void Crab::Move(void)
 
 void Crab::Attack(void)
 {
-	if (!attackInit_)
+
+	switch (mode_)
 	{
-		attackInterval_ = ATTACK_INTERVAL;
-		attackInit_ = true;
-		attackEnd_ = false;
+	case Crab::MODE::NORMAL:
+		//攻撃の初期化
+		if (!attackInit_)
+		{
+			attackInterval_ = ATTACK_INTERVAL;
+			attackInit_ = true;
+			attackEnd_ = false;
 
-		attackState_ = AttackLottery();
+			attackState_ = AttackLottery();
 
+
+
+			switch (attackState_)
+			{
+			case Crab::ATTACK_KINDS::NON:
+				break;
+			case Crab::ATTACK_KINDS::BUBBLE:
+				bubble_->Init();
+				ChangeMotion((int)MOTION::ATTACK3);
+				break;
+			case Crab::ATTACK_KINDS::SCISSOR:
+				scissor_->Init();
+				ChangeMotion((int)MOTION::ATTACK2);
+				break;
+			case Crab::ATTACK_KINDS::BOUNCE:
+				fire_->Init();
+				ChangeMotion((int)MOTION::ATTACK2);
+				break;
+			case Crab::ATTACK_KINDS::UFO:
+				burst_->Init();
+				break;
+			case Crab::ATTACK_KINDS::MAX:
+				break;
+			}
+		}
+
+
+		//攻撃の終了処理
 		switch (attackState_)
 		{
 		case Crab::ATTACK_KINDS::NON:
 			break;
 		case Crab::ATTACK_KINDS::BUBBLE:
-			bubble_->Init();
-			ChangeMotion((int)MOTION::ATTACK3);
+			bubble_->Shot();
+			if (bubble_->End()) {
+				attackEnd_ = true;
+			}
+			break;
+		case Crab::ATTACK_KINDS::SCISSOR:
+			if (scissor_->End()) {
+				attackEnd_ = true;
+			}
+			break;
+		case Crab::ATTACK_KINDS::BOUNCE:
+			if (fire_->End()) {
+				attackEnd_ = true;
+			}
+			break;
+		case Crab::ATTACK_KINDS::UFO:
+			if (burst_->End()) {
+				attackEnd_ = true;
+			}
 			break;
 		case Crab::ATTACK_KINDS::MAX:
 			break;
 		}
-	}
 
-	switch (attackState_)
-	{
-	case Crab::ATTACK_KINDS::NON:
-		break;
-	case Crab::ATTACK_KINDS::BUBBLE:
-		 bubble_->Shot();
-		if (bubble_->End()) {
-			attackEnd_ = true;
+		//攻撃が終わったらアイドルに移行
+		if (attackEnd_) {
+			state_ = (int)STATE::IDLE;
+			attackInit_ = false;
+
+			if (unit_.hp_ > HP_MAX / 2)
+			{
+				mode_ = MODE::NORMAL;
+			}
+			else
+			{
+				static bool is = false;
+				if (!is) {
+					is = true;
+					attackEnd_ = true;
+				}
+				mode_ = MODE::HARD;
+			}
 		}
 		break;
-	case Crab::ATTACK_KINDS::MAX:
+	case Crab::MODE::HARD:
+		//攻撃の初期化
+		if (!attackInit_)
+		{
+			attackInterval_ = ATTACK_INTERVAL;
+			attackInit_ = true;
+			attackEnd_ = false;
+
+			attackState_ = AttackLottery();
+
+			switch (attackState_)
+			{
+			case Crab::ATTACK_KINDS::NON:
+				break;
+			case Crab::ATTACK_KINDS::BUBBLE:
+				bubble_->Init();
+				burst_->Init();
+				ChangeMotion((int)MOTION::ATTACK3);
+				break;
+			case Crab::ATTACK_KINDS::SCISSOR:
+				fire_->Init();
+				bubble_->Init();
+				scissor_->Init();
+				ChangeMotion((int)MOTION::ATTACK2);
+				break;
+			case Crab::ATTACK_KINDS::BOUNCE:
+				fire_->Init();
+				bubble_->Init();
+				ChangeMotion((int)MOTION::ATTACK2);
+				break;
+				//case Crab::ATTACK_KINDS::LIGHTNING:
+				//	burst_->Init();
+				//	break;
+				//case Crab::ATTACK_KINDS::MAX:
+				//	break;
+			}
+		}
+		//攻撃の終了処理
+		switch (attackState_)
+		{
+		case Crab::ATTACK_KINDS::NON:
+			break;
+		case Crab::ATTACK_KINDS::BUBBLE:
+			bubble_->Shot();
+			if (bubble_->End() || burst_->End()) {
+				attackEnd_ = true;
+			}
+			break;
+		case Crab::ATTACK_KINDS::SCISSOR:
+			bubble_->Shot();
+			if (scissor_->End() || fire_->End() || bubble_->End()) {
+				attackEnd_ = true;
+			}
+			break;
+		case Crab::ATTACK_KINDS::BOUNCE:
+			if (fire_->End() || bubble_->End()) {
+				attackEnd_ = true;
+			}
+			break;
+			//case Crab::ATTACK_KINDS::LIGHTNING:
+			//	if (burst_->End()) {
+			//		attackEnd_ = true;
+			//	}
+			//	break;
+			//case Crab::ATTACK_KINDS::MAX:
+			//	break;
+		}
+
+		//攻撃が終わったらアイドルに移行
+		if (attackEnd_) {
+			state_ = (int)STATE::IDLE;
+			attackInit_ = false;
+		}
 		break;
 	}
 
-	if (attackEnd_) {
-		state_ = (int)STATE::MOVE;
-		attackInit_ = false;
-	}
-
-
-	// デバック用処理
-	if (CheckHitKey(KEY_INPUT_1)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::UNDER_RIGHT; }
-	if (CheckHitKey(KEY_INPUT_2)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::UNDER_LEFT; }
-	if (CheckHitKey(KEY_INPUT_3)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::TOP_RIGHT; }
-	if (CheckHitKey(KEY_INPUT_4)) { state_ = (int)STATE::MOVE; nextDestPlace_ = DESTINATION_PLACE::TOP_LEFT; }
 }
 
 void Crab::Damage(void)
@@ -308,9 +477,10 @@ void Crab::Death(void)
 	}
 }
 
-void Crab::isReverse(bool isReverse)
+// どの向きを向いているか
+void Crab::WhichDir(DIR dir)
 {
-	reverse_ = isReverse;
+	reverse_ = (int)dir;
 
 	if (reverse_)
 	{
@@ -320,19 +490,79 @@ void Crab::isReverse(bool isReverse)
 	{
 		drawCenter_ = DRAW_CENTER_POS;
 	}
+
+	switch (nextDestPlace_)
+	{
+	case DESTINATION_PLACE::UNDER_RIGHT:
+		angle_ = 0.0f; // 下は通常向き
+		break;
+	case DESTINATION_PLACE::UNDER_LEFT:
+		angle_ = 0.0f; // 下は通常向き
+		break;
+	case DESTINATION_PLACE::TOP_RIGHT:
+		angle_ = DX_PI_F; // 上は逆さま
+		break;
+	case DESTINATION_PLACE::TOP_LEFT:
+		angle_ = DX_PI_F; // 上は逆さま
+		break;
+	}
+}
+
+Crab::ATTACK_KINDS Crab::AttackLottery(void)
+{
+	ATTACK_KINDS ret;
+
+	if (unit_.hp_ > HP_MAX / 3) {
+		ret = (ATTACK_KINDS)GetRand((int)ATTACK_KINDS::MAX - 1);
+	}
+	else {
+		ret = (ATTACK_KINDS)GetRand((int)ATTACK_KINDS::MAX - 2);
+	}
+	//ret = ATTACK_KINDS::FIRE;
+
+	return ret;
 }
 
 void Crab::AttackUpdate(void)
 {
+
 	bubble_->Update();
+	scissor_->Update();
+	fire_->Update();
+	burst_->Update();
 }
 
 void Crab::AttackDraw(void)
 {
 	bubble_->Draw();
+	scissor_->Draw();
+	fire_->Draw();
+	burst_->Draw();
 }
 
 void Crab::AttackRelease(void)
 {
-	bubble_->Release();
+	if (bubble_) {
+		bubble_->Release();
+		delete bubble_;
+		bubble_ = nullptr;
+	}
+
+	if (scissor_) {
+		scissor_->Release();
+		delete scissor_;
+		scissor_ = nullptr;
+	}
+
+	if (fire_) {
+		fire_->Release();
+		delete fire_;
+		fire_ = nullptr;
+	}
+
+	if (burst_) {
+		burst_->Release();
+		delete burst_;
+		burst_ = nullptr;
+	}
 }

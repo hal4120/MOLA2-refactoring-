@@ -1,10 +1,10 @@
 #pragma once
-#include "../../../UnitBase.h"
+#include "../../../../UnitBase.h"
 
 class Bubble : public UnitBase
 {
 public:
-	static constexpr int SIZE = 40;
+	static constexpr int SIZE = 64;
 	static constexpr float SPEED = 8.0f;
 
 	Bubble(int img);

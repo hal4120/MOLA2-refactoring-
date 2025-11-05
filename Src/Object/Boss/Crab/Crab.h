@@ -3,7 +3,10 @@
 
 #include"../../../Application/Application.h"
 
-#include "Attack/BubbleShooter.h"
+#include "Attack/Bubble/BubbleShooter.h"
+#include "Attack/Scissors/Scissors.h"
+#include "Attack/BounceBall/BounceBall.h"
+#include "Attack/UFO/UFO.h"
 
 class Crab : public BossBase
 {
@@ -28,14 +31,28 @@ public:
 	enum class MOTION {
 		MOVE,
 		IDLE,
-		ATTACK1, 
+		ATTACK1,
 		ATTACK2,
 		ATTACK3,
 		ATTACK4,
 		SPECIAL,
-		DAMAGE, 
+		DAMAGE,
 		DEATH,
-		MAX };
+		MAX
+	};
+
+	enum class DIR
+	{
+		RIGHT,
+		LEFT,
+	};
+
+	// 体力が半分きったら強くなる
+	enum class MODE
+	{
+		NORMAL,
+		HARD
+	};
 
 	// 各モーションのファイルパス(読み込みを簡略化するための定義)
 	static constexpr const char* MOTION_PATH[(int)MOTION::MAX] =
@@ -90,17 +107,18 @@ public:
 private:
 
 	// 状態の列挙型定義
-	enum class STATE { MOVE, ATTACK, DAMAGE, DEATH, MAX };
+	enum class STATE { IDLE, MOVE, ATTACK, DAMAGE, DEATH, MAX };
 
 	// 状態別関数------------------------------------------
+	void Idle(void);
 	void Move(void);
 	void Attack(void);
 	void Damage(void);
 	void Death(void);
 	//-----------------------------------------------------
 
-	// true : 左向き / false : 右向き
-	void isReverse(bool isReverse);
+	// どの向きを向いているか
+	void WhichDir(DIR dir);
 
 	// HP減少関数
 	void HpDecrease(int damage);
@@ -133,7 +151,22 @@ private:
 	// 死亡演出のカウンター
 	int deathCou_;
 
+	MODE mode_;
+
 #pragma region 攻撃関係
+
+	// 攻撃の種類
+	enum class ATTACK_KINDS
+	{
+		NON = -1,
+
+		BUBBLE,
+		SCISSOR,
+		BOUNCE,
+		UFO,
+
+		MAX
+	};
 
 	// 攻撃の間隔を管理するカウンター
 	int attackInterval_;
@@ -143,23 +176,17 @@ private:
 	// 攻撃終了を見分ける変数
 	bool attackEnd_;
 
-	// 攻撃の種類
-	enum class ATTACK_KINDS
-	{
-		NON = -1,
-
-		BUBBLE,
-
-		MAX
-	};
-
 	// 現在の攻撃
 	ATTACK_KINDS attackState_;
+
 	// 攻撃の種類の抽選を行う関数
-	ATTACK_KINDS AttackLottery(void) { return ATTACK_KINDS::BUBBLE; }
+	ATTACK_KINDS AttackLottery(void);
 
 	//各攻撃のインスタンス----
 	BubbleShooter* bubble_;
+	Scissors* scissor_;
+	BounceBall* fire_;
+	UFO* burst_;
 	//------------------------
 
 	// 攻撃の各主要関数を呼び出す場所---
@@ -168,8 +195,8 @@ private:
 	void AttackRelease(void)override;
 	//---------------------------------
 
-	static constexpr int SP_ATTACK_MEASU = 1800;
-	int spAttackMeasu_;
+	//static constexpr int SP_ATTACK_MEASU = 1800;
+	//int spAttackMeasu_;
 
 
 #pragma endregion
